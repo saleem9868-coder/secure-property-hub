@@ -1,0 +1,45 @@
+{% extends 'base.html' %}{% block title %}{{ T.doc_title }}{% endblock %}{% block content %}
+<div class="page-hdr hdr-verif"><div class="container"><h1>📄 {{ T.doc_title }}</h1><p>{{ T.doc_sub }}</p></div></div>
+<div class="container py-5">
+    <div class="row g-4">
+        {% if lang == 'ur' %}
+        {% set docs = [
+            ('file-earmark-text-fill','#e3f0ff','کرایہ نامہ','اسٹامپ پیپر پر مکمل کرایہ نامہ۔','کرایہ نامہ'),
+            ('file-earmark-check-fill','#fff4e3','سیل ایگریمنٹ','خریدار اور بیچنے والے کے لیے قانونی معاہدہ۔','سیل ایگریمنٹ'),
+            ('patch-check-fill','#e8f5e9','حلف نامہ','نام درست کرنا، جائیداد، آمدن — ہر مقصد کے لیے۔','حلف نامہ'),
+            ('translate','#f3e5f5','اردو-انگریزی ترجمہ','قانونی اور سرکاری دستاویزات کا ترجمہ۔','ترجمہ'),
+            ('keyboard-fill','#fce4ec','اردو/انگریزی ٹائپنگ','درخواست، خط، فارم — تیز اور درست۔','ٹائپنگ'),
+            ('file-person-fill','#e0f2f1','CV بنانا','نوکری کے لیے پیشہ ورانہ CV۔','CV'),
+            ('person-bounding-box','#e8edf5','پاسپورٹ سائز فوٹو','سرکاری دستاویزات کے لیے تصاویر۔','فوٹو'),
+        ] %}
+        {% else %}
+        {% set docs = [
+            ('file-earmark-text-fill','#e3f0ff','Rent Agreement','Professional rent agreement on stamp paper with all clauses.','Rent+Agreement'),
+            ('file-earmark-check-fill','#fff4e3','Sale Agreement','Legally sound sale agreement for buyer and seller.','Sale+Agreement'),
+            ('patch-check-fill','#e8f5e9','Affidavit','Name correction, property, income — all types of affidavits.','Affidavit'),
+            ('translate','#f3e5f5','Urdu-English Translation','Translation of legal and official documents.','Translation'),
+            ('keyboard-fill','#fce4ec','Urdu/English Typing','Applications, letters, NOC, forms — fast and accurate.','Typing'),
+            ('file-person-fill','#e0f2f1','CV Making','Professional CV design for job applications.','CV+Making'),
+            ('person-bounding-box','#e8edf5','Passport Size Photos','Standard size photos for all official purposes.','Photos'),
+        ] %}
+        {% endif %}
+        {% for icon,bg,name,desc,msg in docs %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                <div class="mb-3"><span style="background:{{ bg }};border-radius:14px;padding:14px;display:inline-block;"><i class="bi bi-{{ icon }}" style="font-size:1.8rem;color:var(--primary-light);"></i></span></div>
+                <h5 class="fw-bold">{{ name }}</h5>
+                <p class="text-muted" style="font-size:.9rem;">{{ desc }}</p>
+                <a href="https://wa.me/923111820660?text=Hello%2C%20I%20need%20{{ msg }}%20service." target="_blank" class="btn btn-sm btn-whatsapp rounded-pill mt-auto"><i class="bi bi-whatsapp me-1"></i>{{ T.get_quote }}</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="card border-0 rounded-4 p-5 mt-5" style="background:var(--primary);text-align:center;">
+        <h2 style="color:#fff;">{{ T.doc_more }}</h2>
+        <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
+            <a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp btn-lg rounded-pill px-4 fw-bold"><i class="bi bi-whatsapp me-2"></i>WhatsApp</a>
+            <a href="tel:03111820660" class="btn btn-outline-light btn-lg rounded-pill px-4"><i class="bi bi-telephone me-2"></i>0311-1820660</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

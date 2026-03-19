@@ -1,0 +1,102 @@
+{% extends 'base.html' %}{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div style="background:var(--primary);color:#fff;padding:30px 0;">
+    <div class="container d-flex align-items-center gap-3">
+        <div style="width:55px;height:55px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff;">{{ session.user_name[0].upper() }}</div>
+        <div><h2 style="color:#fff;font-size:1.5rem;" class="mb-0">Mera Dashboard</h2><p class="mb-0" style="color:rgba(255,255,255,.7);font-size:.9rem;">{{ session.user_email }}</p></div>
+    </div>
+</div>
+<div class="container py-4">
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3"><div class="card border-0 rounded-4 p-3 text-center" style="background:#e3f0ff;"><div style="font-size:1.8rem;font-weight:700;color:#1565c0;">{{ my_rent|length }}</div><div class="small text-muted">Rent Properties</div></div></div>
+        <div class="col-6 col-md-3"><div class="card border-0 rounded-4 p-3 text-center" style="background:#e8f5e9;"><div style="font-size:1.8rem;font-weight:700;color:#2e7d32;">{{ my_sale|length }}</div><div class="small text-muted">Sale Properties</div></div></div>
+        <div class="col-6 col-md-3"><div class="card border-0 rounded-4 p-3 text-center" style="background:#fff3e0;"><div style="font-size:1.8rem;font-weight:700;color:#e65100;">{{ (my_rent_reqs|length) + (my_buy_reqs|length) }}</div><div class="small text-muted">Requirements</div></div></div>
+        <div class="col-6 col-md-3"><div class="card border-0 rounded-4 p-3 text-center" style="background:#f3e5f5;"><div style="font-size:1.8rem;font-weight:700;color:#6a1b9a;">{{ my_verifs|length }}</div><div class="small text-muted">Verifications</div></div></div>
+    </div>
+    <!-- Quick Actions -->
+    <div class="row g-2 mb-4">
+        <div class="col-6 col-md-3"><a href="{{ url_for('rent_dena') }}" class="btn w-100 rounded-pill" style="background:#e65100;color:#fff;font-size:.85rem;"><i class="bi bi-plus me-1"></i>Kiraye Par Dein</a></div>
+        <div class="col-6 col-md-3"><a href="{{ url_for('sale_dena') }}" class="btn w-100 rounded-pill" style="background:#2e7d32;color:#fff;font-size:.85rem;"><i class="bi bi-plus me-1"></i>Sale Listing</a></div>
+        <div class="col-6 col-md-3"><a href="{{ url_for('rent_chahiye') }}" class="btn w-100 rounded-pill" style="background:#1565c0;color:#fff;font-size:.85rem;"><i class="bi bi-clipboard me-1"></i>Kiraya Chahiye</a></div>
+        <div class="col-6 col-md-3"><a href="{{ url_for('tenant_verification') }}" class="btn w-100 rounded-pill" style="background:#6a1b9a;color:#fff;font-size:.85rem;"><i class="bi bi-person-check me-1"></i>Verification</a></div>
+    </div>
+    <!-- Tabs -->
+    <ul class="nav nav-tabs border-0 mb-4 flex-wrap">
+        <li class="nav-item"><a class="nav-link active fw-semibold" data-bs-toggle="tab" href="#myRent">🔑 Kiraya</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#mySale">🏡 Sale</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#myReqs">📋 Requirements</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#mySaved">❤️ Saved</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#myVerif">✅ Verification</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#myProfile">👤 Profile</a></li>
+    </ul>
+    <div class="tab-content">
+        <!-- Rent Properties -->
+        <div class="tab-pane fade show active" id="myRent">
+            <h6 class="fw-bold mb-3">Meri Rent Listings</h6>
+            {% if my_rent %}<div class="row g-3">{% for p in my_rent %}
+            <div class="col-md-4"><div class="prop-card">
+                {% if p.filename %}<img src="/uploads/{{ p.filename }}" style="height:150px;object-fit:cover;width:100%;" alt="">{% else %}<div class="img-ph" style="height:150px;"><i class="bi bi-building" style="font-size:2rem;"></i></div>{% endif %}
+                <div class="p-3"><h6 class="fw-bold mb-1" style="font-size:.9rem;">{{ p.title }}</h6><span class="prop-price" style="font-size:1rem;">Rs. {{ p.price }}/maah</span>
+                <div class="d-flex gap-2 mt-2"><a href="{{ url_for('rent_detail', pid=p.id) }}" class="btn btn-sm btn-outline-primary rounded-pill flex-grow-1">Dekhen</a><a href="{{ url_for('delete_property', cat='rent', pid=p.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></div></div>
+            </div></div>{% endfor %}</div>
+            {% else %}<div class="text-center py-4" style="background:var(--light-bg);border-radius:12px;"><p class="text-muted mb-2">Koi rent listing nahi.</p><a href="{{ url_for('rent_dena') }}" class="btn btn-sm btn-primary rounded-pill">Property List Karein</a></div>{% endif %}
+        </div>
+        <!-- Sale Properties -->
+        <div class="tab-pane fade" id="mySale">
+            <h6 class="fw-bold mb-3">Meri Sale Listings</h6>
+            {% if my_sale %}<div class="row g-3">{% for p in my_sale %}
+            <div class="col-md-4"><div class="prop-card">
+                {% if p.filename %}<img src="/uploads/{{ p.filename }}" style="height:150px;object-fit:cover;width:100%;" alt="">{% else %}<div class="img-ph" style="height:150px;"><i class="bi bi-building" style="font-size:2rem;"></i></div>{% endif %}
+                <div class="p-3"><h6 class="fw-bold mb-1" style="font-size:.9rem;">{{ p.title }}</h6><span class="prop-price" style="font-size:1rem;">Rs. {{ p.price }}</span>
+                <div class="d-flex gap-2 mt-2"><a href="{{ url_for('sale_detail', pid=p.id) }}" class="btn btn-sm btn-outline-primary rounded-pill flex-grow-1">Dekhen</a><a href="{{ url_for('delete_property', cat='sale', pid=p.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></div></div>
+            </div></div>{% endfor %}</div>
+            {% else %}<div class="text-center py-4" style="background:var(--light-bg);border-radius:12px;"><p class="text-muted mb-2">Koi sale listing nahi.</p><a href="{{ url_for('sale_dena') }}" class="btn btn-sm btn-primary rounded-pill">Sale Listing Karein</a></div>{% endif %}
+        </div>
+        <!-- Requirements -->
+        <div class="tab-pane fade" id="myReqs">
+            <h6 class="fw-bold mb-2">Kiraye Ki Requirements</h6>
+            {% if my_rent_reqs %}<div class="table-responsive mb-3"><table class="table table-sm align-middle"><thead style="background:var(--light-bg);"><tr><th>Area</th><th>Budget</th><th>Type</th><th>Status</th><th>Date</th></tr></thead><tbody>
+            {% for r in my_rent_reqs %}<tr><td>{{ r.preferred_area }}</td><td>Rs. {{ r.max_budget }}</td><td>{{ r.tenant_type }}</td><td><span class="badge bg-info">{{ r.status }}</span></td><td class="text-muted small">{{ r.created_at[:10] }}</td></tr>{% endfor %}
+            </tbody></table></div>{% else %}<p class="text-muted small">Koi requirement nahi.</p>{% endif %}
+            <h6 class="fw-bold mb-2 mt-3">Purchase Requirements</h6>
+            {% if my_buy_reqs %}<div class="table-responsive"><table class="table table-sm align-middle"><thead style="background:var(--light-bg);"><tr><th>Area</th><th>Budget</th><th>Type</th><th>Status</th><th>Date</th></tr></thead><tbody>
+            {% for r in my_buy_reqs %}<tr><td>{{ r.preferred_area }}</td><td>Rs. {{ r.max_budget }}</td><td>{{ r.payment_method }}</td><td><span class="badge bg-info">{{ r.status }}</span></td><td class="text-muted small">{{ r.created_at[:10] }}</td></tr>{% endfor %}
+            </tbody></table></div>{% else %}<p class="text-muted small">Koi purchase requirement nahi.</p>{% endif %}
+        </div>
+        <!-- Saved -->
+        <div class="tab-pane fade" id="mySaved">
+            <h6 class="fw-bold mb-2">Saved Rent Properties</h6>
+            {% if saved_rent %}<div class="row g-3 mb-3">{% for p in saved_rent %}<div class="col-md-4"><div class="prop-card">
+                {% if p.filename %}<img src="/uploads/{{ p.filename }}" style="height:130px;object-fit:cover;width:100%;" alt="">{% else %}<div class="img-ph" style="height:130px;"><i class="bi bi-building"></i></div>{% endif %}
+                <div class="p-2"><h6 style="font-size:.85rem;" class="fw-bold mb-1">{{ p.title }}</h6><a href="{{ url_for('rent_detail', pid=p.id) }}" class="btn btn-sm btn-primary rounded-pill w-100 mt-1" style="font-size:.8rem;">Dekhen</a></div>
+            </div></div>{% endfor %}</div>{% else %}<p class="text-muted small">Koi saved rent property nahi.</p>{% endif %}
+            <h6 class="fw-bold mb-2 mt-3">Saved Sale Properties</h6>
+            {% if saved_sale %}<div class="row g-3">{% for p in saved_sale %}<div class="col-md-4"><div class="prop-card">
+                {% if p.filename %}<img src="/uploads/{{ p.filename }}" style="height:130px;object-fit:cover;width:100%;" alt="">{% else %}<div class="img-ph" style="height:130px;"><i class="bi bi-building"></i></div>{% endif %}
+                <div class="p-2"><h6 style="font-size:.85rem;" class="fw-bold mb-1">{{ p.title }}</h6><a href="{{ url_for('sale_detail', pid=p.id) }}" class="btn btn-sm btn-primary rounded-pill w-100 mt-1" style="font-size:.8rem;">Dekhen</a></div>
+            </div></div>{% endfor %}</div>{% else %}<p class="text-muted small">Koi saved sale property nahi.</p>{% endif %}
+        </div>
+        <!-- Verifications -->
+        <div class="tab-pane fade" id="myVerif">
+            <div class="d-flex justify-content-between mb-3"><h6 class="fw-bold mb-0">Tenant Verifications</h6><a href="{{ url_for('tenant_verification') }}" class="btn btn-sm btn-primary rounded-pill">+ Nayi Request</a></div>
+            {% if my_verifs %}<div class="table-responsive"><table class="table align-middle"><thead style="background:var(--light-bg);"><tr><th>Naam</th><th>CNIC</th><th>Mobile</th><th>Status</th><th>Date</th></tr></thead><tbody>
+            {% for v in my_verifs %}<tr><td>{{ v.tenant_name }}</td><td>{{ v.cnic }}</td><td>{{ v.mobile }}</td><td><span class="st-{{ v.status|lower }}">{{ v.status }}</span></td><td class="text-muted small">{{ v.created_at[:10] }}</td></tr>{% endfor %}
+            </tbody></table></div>{% else %}<div class="text-center py-4" style="background:var(--light-bg);border-radius:12px;"><p class="text-muted mb-2">Koi verification nahi.</p><a href="{{ url_for('tenant_verification') }}" class="btn btn-sm btn-primary rounded-pill">Request Karein</a></div>{% endif %}
+        </div>
+        <!-- Profile -->
+        <div class="tab-pane fade" id="myProfile">
+            <div class="row justify-content-center"><div class="col-md-6">
+            <div class="card border-0 rounded-4 p-4" style="background:var(--light-bg);">
+                <h6 class="fw-bold mb-4">Profile Settings</h6>
+                <form method="POST" action="{{ url_for('update_profile') }}">
+                    <div class="mb-3"><label class="form-label">Aapka Naam</label><input type="text" name="name" class="form-control" value="{{ user.name }}" required></div>
+                    <div class="mb-3"><label class="form-label">Email</label><input type="email" class="form-control" value="{{ user.email }}" disabled></div>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">Save Karein</button>
+                </form>
+                <hr><a href="{{ url_for('logout') }}" class="btn btn-outline-danger rounded-pill"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
+            </div></div></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

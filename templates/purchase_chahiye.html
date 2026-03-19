@@ -1,0 +1,33 @@
+{% extends 'base.html' %}{% block title %}{{ T.nav_buy_req }}{% endblock %}
+{% block content %}
+<div class="page-hdr hdr-buy"><div class="container"><h1>📋 {{ T.nav_buy_req }}</h1><p>{{ T.buy_req_sub }}</p></div></div>
+<div class="container py-4"><div class="row g-4">
+<div class="col-lg-8"><div class="card border-0 shadow-sm rounded-4 p-4">
+    <form method="POST">
+        <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">{{ T.your_name }} *</label><input type="text" name="name" class="form-control" required value="{{ session.user_name if session.user_id else '' }}"></div>
+            <div class="col-md-6"><label class="form-label">{{ T.your_phone }} *</label><input type="text" name="phone" class="form-control" required placeholder="03xxxxxxxxx"></div>
+            <div class="col-md-6"><label class="form-label">{{ T.pref_area }} *</label><input type="text" name="preferred_area" class="form-control" required placeholder="e.g. Gulshan, DHA"></div>
+            <div class="col-md-6"><label class="form-label">{{ T.prop_type }} *</label>
+            <select name="property_type" class="form-select" required><option value="">---</option><option>House</option><option>Flat</option><option>Shop</option><option>Office</option><option>Plot</option><option>Any</option></select></div>
+            <div class="col-md-6"><label class="form-label">{{ T.max_budget }} *</label><input type="text" name="max_budget" class="form-control" required placeholder="e.g. 1.5 Crore"></div>
+            <div class="col-md-6"><label class="form-label">{{ T.bedrooms }}</label>
+            <select name="bedrooms" class="form-select"><option value="">N/A</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></div>
+            <div class="col-md-6"><label class="form-label">{{ T.payment_method }}</label>
+            <select name="payment_method" class="form-select"><option>Cash</option><option>Bank Loan</option><option>Installments</option></select></div>
+            <div class="col-md-6"><label class="form-label">{{ T.purpose }}</label>
+            <select name="purpose" class="form-select"><option>Own Use</option><option>Investment</option><option>Rental Income</option></select></div>
+            <div class="col-12"><label class="form-label">{{ T.special }}</label><textarea name="special_needs" class="form-control" rows="3"></textarea></div>
+        </div>
+        <div class="mt-4"><button type="submit" class="btn rounded-pill px-5 py-2 fw-semibold" style="background:#2e7d32;color:#fff;">📤 {{ T.submit }}</button></div>
+    </form>
+</div></div>
+<div class="col-lg-4"><div class="card border-0 rounded-4 p-4" style="background:#e8f5e9;">
+    <h6 class="fw-bold mb-3" style="color:#2e7d32;">{{ T.how_works }}</h6>
+    {% for n,s in [('1',T.step1),('2',T.step2),('3',T.step3),('4',T.step4)] %}
+    <div class="d-flex gap-3 mb-3"><div style="width:30px;height:30px;border-radius:50%;background:#2e7d32;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">{{ n }}</div><small>{{ s }}</small></div>
+    {% endfor %}
+    <a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp btn-sm w-100 rounded-pill mt-2"><i class="bi bi-whatsapp me-1"></i>{{ T.wa_direct }}</a>
+</div></div>
+</div></div>
+{% endblock %}

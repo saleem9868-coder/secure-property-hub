@@ -1,0 +1,79 @@
+{% extends 'base.html' %}{% block title %}{{ prop.title }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}">{{ T.nav_home }}</a></li>
+            {% if cat == 'rent' %}
+            <li class="breadcrumb-item"><a href="{{ url_for('rent_lena') }}">{{ T.rent_lena_title }}</a></li>
+            {% else %}
+            <li class="breadcrumb-item"><a href="{{ url_for('purchase_lena') }}">{{ T.nav_buy }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active">{{ prop.title[:30] }}</li>
+        </ol>
+    </nav>
+    <div class="row g-4">
+        <div class="col-lg-7">
+            {% if images %}
+            <div id="imgC" class="carousel slide rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for img in images %}<div class="carousel-item {% if loop.first %}active{% endif %}"><img src="/uploads/{{ img.filename }}" class="d-block w-100" style="height:380px;object-fit:cover;"></div>{% endfor %}
+                </div>
+                {% if images|length > 1 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#imgC" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                <button class="carousel-control-next" type="button" data-bs-target="#imgC" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="rounded-4" style="height:380px;background:linear-gradient(135deg,#e8edf5,#d0d9ec);display:flex;align-items:center;justify-content:center;"><i class="bi bi-building" style="font-size:5rem;color:#6b7a99;"></i></div>
+            {% endif %}
+        </div>
+        <div class="col-lg-5">
+            {% if cat == 'rent' %}<span class="badge-rent mb-2 d-inline-block">🔑 {{ T.footer_rent }}</span>
+            {% else %}<span class="badge-sale mb-2 d-inline-block">🏡 Sale</span>{% endif %}
+            <span class="badge-type ms-2">{{ prop.property_type }}</span>
+            <h1 style="font-size:1.5rem;" class="mt-2 mb-2">{{ prop.title }}</h1>
+            <p class="text-muted mb-3"><i class="bi bi-geo-alt-fill me-1" style="color:var(--accent);"></i>{{ prop.location }}</p>
+            <div class="p-3 rounded-3 mb-3" style="background:var(--light-bg);">
+                {% if cat == 'rent' %}
+                <div style="font-size:1.8rem;font-weight:700;color:var(--accent);">Rs. {{ prop.price }}<small style="font-size:1rem;font-weight:400;color:#6b7a99;">{{ T.month }}</small></div>
+                {% else %}
+                <div style="font-size:1.8rem;font-weight:700;color:var(--accent);">Rs. {{ prop.price }}</div>
+                {% endif %}
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                {% if prop.bedrooms and prop.bedrooms != '0' %}<span class="badge bg-light text-dark p-2"><i class="bi bi-door-open me-1"></i>{{ prop.bedrooms }} {{ T.beds }}</span>{% endif %}
+                {% if prop.bathrooms %}<span class="badge bg-light text-dark p-2"><i class="bi bi-droplet me-1"></i>{{ prop.bathrooms }} {{ T.baths }}</span>{% endif %}
+                {% if cat=='rent' and prop.furnished %}<span class="badge bg-light text-dark p-2">{{ prop.furnished }}</span>{% endif %}
+                {% if cat=='sale' and prop.possession %}<span class="badge bg-light text-dark p-2">📦 {{ prop.possession }}</span>{% endif %}
+            </div>
+            {% set wa_msg = "Hello%2C%20I%20need%20info%20about%3A%20" + prop.title|urlencode %}
+            <a href="https://wa.me/923111820660?text={{ wa_msg }}" target="_blank" class="btn btn-whatsapp w-100 rounded-pill py-3 mb-2 fw-bold fs-6"><i class="bi bi-whatsapp me-2"></i>{{ T.wa_contact }}</a>
+            <a href="tel:{{ prop.owner_phone or '03111820660' }}" class="btn btn-outline-primary w-100 rounded-pill py-2 mb-2"><i class="bi bi-telephone me-2"></i>{{ T.call_now }}: {{ prop.owner_phone or '0311-1820660' }}</a>
+            {% if session.user_id %}
+            <a href="{{ url_for('save_property', cat=cat, pid=prop.id) }}" class="btn btn-outline-secondary w-100 rounded-pill py-2">
+                <i class="bi bi-bookmark{% if is_saved %}-fill{% endif %} me-1"></i>{% if is_saved %}{{ T.unsave }}{% else %}{{ T.save }}{% endif %}
+            </a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-outline-secondary w-100 rounded-pill py-2"><i class="bi bi-bookmark me-1"></i>{{ T.login_save }}</a>
+            {% endif %}
+            <div class="mt-3 p-3 rounded-3" style="background:var(--light-bg);font-size:.85rem;">
+                <span class="text-muted">{{ T.listed_by }}: </span><span class="fw-semibold">{{ prop.owner_name or 'Secure Property Hub' }}</span>
+                <br><span class="text-muted">{{ T.date_posted }}: </span>{{ prop.created_at[:10] }}
+            </div>
+        </div>
+    </div>
+    {% if prop.description %}
+    <div class="card border-0 rounded-4 p-4 mt-4 shadow-sm">
+        <h4 style="color:var(--primary);">{{ T.prop_desc }}</h4>
+        <p class="mt-3" style="line-height:1.9;">{{ prop.description }}</p>
+    </div>
+    {% endif %}
+    <div class="card border-0 rounded-4 p-4 mt-4" style="background:var(--light-bg);">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <div><h5 class="mb-1">{{ T.interested }}</h5><p class="text-muted mb-0 small">{{ T.contact_sub }}</p></div>
+            <a href="https://wa.me/923111820660?text={{ wa_msg }}" target="_blank" class="btn btn-whatsapp rounded-pill px-4 fw-bold"><i class="bi bi-whatsapp me-2"></i>WhatsApp</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

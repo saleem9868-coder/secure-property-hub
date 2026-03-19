@@ -1,0 +1,146 @@
+{% extends 'base.html' %}{% block title %}Admin Panel{% endblock %}
+{% block content %}
+<div style="background:var(--primary);color:#fff;padding:18px 0;">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div><h4 class="mb-0" style="color:#fff;"><i class="bi bi-shield-check me-2"></i>Admin Panel</h4><small style="color:rgba(255,255,255,.7);">Secure Property Hub Management</small></div>
+        <a href="{{ url_for('index') }}" class="btn btn-sm btn-outline-light rounded-pill">← Website</a>
+    </div>
+</div>
+<div class="container py-4">
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:var(--primary-light);">{{ stats.users }}</div><div class="text-muted small">Users</div></div></div>
+        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#1565c0;">{{ stats.rent }}</div><div class="text-muted small">Rent</div></div></div>
+        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#2e7d32;">{{ stats.sale }}</div><div class="text-muted small">Sale</div></div></div>
+        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#e65100;">{{ stats.rent_reqs }}</div><div class="text-muted small">Rent Reqs</div></div></div>
+        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#6a1b9a;">{{ stats.buy_reqs }}</div><div class="text-muted small">Buy Reqs</div></div></div>
+        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#c62828;">{{ stats.verifs }}</div><div class="text-muted small">Verifs</div></div></div>
+    </div>
+
+    <ul class="nav nav-tabs border-0 mb-4 flex-wrap">
+        <li class="nav-item"><a class="nav-link active fw-semibold" data-bs-toggle="tab" href="#aUsers">👤 Users</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aRent">🔑 Rent</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aSale">🏡 Sale</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aRentReqs">📋 Rent Reqs</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aBuyReqs">📋 Buy Reqs</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aVerifs">✅ Verifications</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- Users -->
+        <div class="tab-pane fade show active" id="aUsers">
+            <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:var(--light-bg);"><tr><th>#</th><th>Naam</th><th>Email</th><th>Joined</th><th>Action</th></tr></thead><tbody>
+            {% for u in users %}<tr><td>{{ u.id }}</td><td>{{ u.name }}</td><td>{{ u.email }}</td><td class="text-muted small">{{ u.created_at[:10] }}</td>
+            <td><a href="{{ url_for('admin_delete', table='users', rid=u.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></td></tr>{% endfor %}
+            </tbody></table></div>
+        </div>
+
+        <!-- Rent Properties -->
+        <div class="tab-pane fade" id="aRent">
+            <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:#e3f0ff;"><tr><th>#</th><th>Title</th><th>Location</th><th>Price</th><th>Featured</th><th>Approved</th><th>Action</th></tr></thead><tbody>
+            {% for p in rent_props %}<tr>
+                <td>{{ p.id }}</td>
+                <td><a href="{{ url_for('rent_detail', pid=p.id) }}" target="_blank" style="font-size:.85rem;">{{ p.title[:30] }}</a></td>
+                <td class="small text-muted">{{ p.location }}</td>
+                <td class="small">Rs. {{ p.price }}</td>
+                <td><a href="{{ url_for('admin_toggle', table='rent_properties', field='is_featured', pid=p.id) }}" class="badge text-decoration-none {% if p.is_featured %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{% if p.is_featured %}⭐ Yes{% else %}No{% endif %}</a></td>
+                <td><a href="{{ url_for('admin_toggle', table='rent_properties', field='is_approved', pid=p.id) }}" class="badge text-decoration-none {% if p.is_approved %}bg-success{% else %}bg-danger{% endif %}">{% if p.is_approved %}✓{% else %}✗{% endif %}</a></td>
+                <td><a href="{{ url_for('admin_delete', table='rent_properties', rid=p.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></td>
+            </tr>{% endfor %}</tbody></table></div>
+        </div>
+
+        <!-- Sale Properties -->
+        <div class="tab-pane fade" id="aSale">
+            <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:#e8f5e9;"><tr><th>#</th><th>Title</th><th>Location</th><th>Price</th><th>Featured</th><th>Approved</th><th>Action</th></tr></thead><tbody>
+            {% for p in sale_props %}<tr>
+                <td>{{ p.id }}</td>
+                <td><a href="{{ url_for('sale_detail', pid=p.id) }}" target="_blank" style="font-size:.85rem;">{{ p.title[:30] }}</a></td>
+                <td class="small text-muted">{{ p.location }}</td>
+                <td class="small">Rs. {{ p.price }}</td>
+                <td><a href="{{ url_for('admin_toggle', table='sale_properties', field='is_featured', pid=p.id) }}" class="badge text-decoration-none {% if p.is_featured %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{% if p.is_featured %}⭐ Yes{% else %}No{% endif %}</a></td>
+                <td><a href="{{ url_for('admin_toggle', table='sale_properties', field='is_approved', pid=p.id) }}" class="badge text-decoration-none {% if p.is_approved %}bg-success{% else %}bg-danger{% endif %}">{% if p.is_approved %}✓{% else %}✗{% endif %}</a></td>
+                <td><a href="{{ url_for('admin_delete', table='sale_properties', rid=p.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></td>
+            </tr>{% endfor %}</tbody></table></div>
+        </div>
+
+        <!-- Rent Requirements -->
+        <div class="tab-pane fade" id="aRentReqs">
+            <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:#fff3e0;"><tr><th>#</th><th>Naam</th><th>Phone</th><th>Area</th><th>Budget</th><th>Type</th><th>Date</th><th>Action</th></tr></thead><tbody>
+            {% for r in rent_reqs %}<tr>
+                <td>{{ r.id }}</td><td>{{ r.name }}</td><td class="small">{{ r.phone }}</td><td class="small">{{ r.preferred_area }}</td>
+                <td class="small">Rs. {{ r.max_budget }}</td><td class="small">{{ r.tenant_type }}</td>
+                <td class="text-muted small">{{ r.created_at[:10] }}</td>
+                <td><a href="{{ url_for('admin_delete', table='rent_requirements', rid=r.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></td>
+            </tr>{% endfor %}</tbody></table></div>
+        </div>
+
+        <!-- Buy Requirements -->
+        <div class="tab-pane fade" id="aBuyReqs">
+            <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:#e8f5e9;"><tr><th>#</th><th>Naam</th><th>Phone</th><th>Area</th><th>Budget</th><th>Payment</th><th>Date</th><th>Action</th></tr></thead><tbody>
+            {% for r in buy_reqs %}<tr>
+                <td>{{ r.id }}</td><td>{{ r.name }}</td><td class="small">{{ r.phone }}</td><td class="small">{{ r.preferred_area }}</td>
+                <td class="small">Rs. {{ r.max_budget }}</td><td class="small">{{ r.payment_method }}</td>
+                <td class="text-muted small">{{ r.created_at[:10] }}</td>
+                <td><a href="{{ url_for('admin_delete', table='purchase_requirements', rid=r.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></td>
+            </tr>{% endfor %}</tbody></table></div>
+        </div>
+
+        <!-- Verifications -->
+        <div class="tab-pane fade" id="aVerifs">
+            <div class="accordion" id="verifAcc">
+            {% for v in verifs %}
+            <div class="accordion-item border-0 mb-2 rounded-3 overflow-hidden shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button {% if not loop.first %}collapsed{% endif %} fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#v{{ v.id }}">
+                        <div class="d-flex align-items-center gap-3 w-100">
+                            <span>{{ v.tenant_name }}</span><span class="text-muted small">{{ v.cnic }}</span>
+                            <span class="ms-auto st-{{ v.status|lower }}">{{ v.status }}</span>
+                        </div>
+                    </button>
+                </h2>
+                <div id="v{{ v.id }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}">
+                    <div class="accordion-body" style="background:var(--light-bg);">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <table class="table table-sm">
+                                    <tr><td class="text-muted">Naam</td><td><strong>{{ v.tenant_name }}</strong></td></tr>
+                                    <tr><td class="text-muted">CNIC</td><td>{{ v.cnic }}</td></tr>
+                                    <tr><td class="text-muted">Mobile</td><td>{{ v.mobile }}</td></tr>
+                                    <tr><td class="text-muted">Pata</td><td>{{ v.address }}</td></tr>
+                                    <tr><td class="text-muted">Pesha</td><td>{{ v.occupation }}</td></tr>
+                                    <tr><td class="text-muted">Tarikh</td><td>{{ v.created_at[:10] }}</td></tr>
+                                </table>
+                                <div class="d-flex gap-2">
+                                    {% if v.cnic_file %}<a href="/uploads/{{ v.cnic_file }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill"><i class="bi bi-card-text me-1"></i>CNIC</a>{% endif %}
+                                    {% if v.photo_file %}<a href="/uploads/{{ v.photo_file }}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill"><i class="bi bi-person-circle me-1"></i>Photo</a>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 p-3 rounded-3">
+                                    <h6 class="fw-bold mb-3">Status Update Karein</h6>
+                                    <form method="POST" action="{{ url_for('update_verification', vid=v.id) }}">
+                                        <select name="status" class="form-select form-select-sm mb-2">
+                                            <option {% if v.status=='Pending' %}selected{% endif %}>Pending</option>
+                                            <option {% if v.status=='Approved' %}selected{% endif %}>Approved</option>
+                                            <option {% if v.status=='Rejected' %}selected{% endif %}>Rejected</option>
+                                        </select>
+                                        <textarea name="notes" class="form-control form-control-sm mb-2" rows="2" placeholder="Admin notes...">{{ v.notes or '' }}</textarea>
+                                        <button type="submit" class="btn btn-sm btn-primary rounded-pill w-100">Update Karein</button>
+                                    </form>
+                                    <hr>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ url_for('generate_pdf', vid=v.id) }}" class="btn btn-sm btn-accent rounded-pill flex-grow-1"><i class="bi bi-file-pdf me-1"></i>PDF Download</a>
+                                        <a href="{{ url_for('admin_delete', table='tenant_verification', rid=v.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}<div class="text-center py-4"><p class="text-muted">Abhi tak koi verification request nahi.</p></div>{% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
