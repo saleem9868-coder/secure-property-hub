@@ -1012,7 +1012,7 @@ def generate_pdf(vid):
 
 if __name__ == '__main__':
     os.makedirs('uploads', exist_ok=True)
-    init_db()
+    # init_db()
     print("\n" + "="*55)
     print("  ✅  Secure Property Hub V2 - Chal gaya!")
     print("  🌐  Website: http://localhost:5000")
