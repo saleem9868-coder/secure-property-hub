@@ -1008,11 +1008,14 @@ def generate_pdf(vid):
         flash('reportlab install karein: pip install reportlab', 'danger')
         return redirect(url_for('admin_panel'))
 
+# ─── STARTUP — runs for both gunicorn and direct python ──────────────────────
+
+os.makedirs('uploads', exist_ok=True)
+init_db()
+
 # ─── RUN ──────────────────────────────────────────────────────────────────────
 
 if __name__ == '__main__':
-    os.makedirs('uploads', exist_ok=True)
-    # init_db()
     print("\n" + "="*55)
     print("  ✅  Secure Property Hub V2 - Chal gaya!")
     print("  🌐  Website: http://localhost:5000")
