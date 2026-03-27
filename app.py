@@ -1008,6 +1008,20 @@ def generate_pdf(vid):
         flash('reportlab install karein: pip install reportlab', 'danger')
         return redirect(url_for('admin_panel'))
 
+# ─── EXTRA PAGES ──────────────────────────────────────────────────────────────
+
+@app.route('/property-laws')
+def property_laws():
+    return render_template('property_laws.html')
+
+@app.route('/calculators')
+def calculators():
+    return render_template('calculators.html')
+
+@app.route('/area-guide')
+def area_guide():
+    return render_template('area_guide.html')
+
 # ─── STARTUP — runs for both gunicorn and direct python ──────────────────────
 
 os.makedirs('uploads', exist_ok=True)
