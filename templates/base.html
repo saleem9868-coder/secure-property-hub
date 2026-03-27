@@ -306,6 +306,33 @@
                     </a>
                 </li>
 
+                <!-- Resources Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="bi bi-info-circle me-1"></i>Resources
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('property_laws') }}">
+                                <em class="di">⚖️</em>
+                                <span class="dt">Property Laws</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('calculators') }}">
+                                <em class="di">🧮</em>
+                                <span class="dt">Calculators</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('area_guide') }}">
+                                <em class="di">🗺️</em>
+                                <span class="dt">Karachi Area Guide</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 {% if session.user_id %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('dashboard') }}">
