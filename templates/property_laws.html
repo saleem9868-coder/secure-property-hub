@@ -28,39 +28,75 @@
                 <div class="col-lg-8">
                     <h3 class="sec-title mb-4">Kiraye Daar ke Huqooq</h3>
 
-                    {% for title, points in [
-                        ('Basic Rights — Bunyadi Huqooq', [
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">Basic Rights — Bunyadi Huqooq</h5>
+                        {% for point in [
                             'Aap ko rent receipt lene ka haq hai — har mahine',
                             'Maalik bina notice ke ghar mein andar nahi aa sakta',
                             'Advance/Security 2-3 mahine se zyada nahi ho sakti',
-                            'Ghar ki basic maintenance maalik ki zimmedari hai',
-                            'Bijli, paani, gas connection maalik ki zimmedari hai',
-                        ]),
-                        ('Notice Period', [
-                            'Maalik ko ghar khali karne ke liye 30-90 din ka notice dena hoga',
+                            'Ghar ki basic structural maintenance maalik ki zimmedari hai',
                             'Kiraya 20% se zyada ek saal mein nahi barh sakta',
                             'Lease period khatam hone se pehle nahi nikal sakte',
-                            'Security wapas karne ki zimmedari maalik ki hai',
-                        ]),
-                        ('Aap Kya Karen — Agar Maalik Zulm Kare', [
+                            'Security departure ke waqt wapas milni chahiye',
+                        ] %}
+                        <li class="d-flex gap-2 mb-2 list-unstyled">
+                            <i class="bi bi-check-circle-fill text-success flex-shrink-0 mt-1"></i>
+                            <span>{{ point }}</span>
+                        </li>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Utility Bills — Important Section -->
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#fff3e0;">
+                        <h5 class="fw-bold mb-3" style="color:#e65100;">💡 Bijli, Gas, Paani Bills — Kaun Bharega?</h5>
+                        <div class="alert border-0 rounded-3 mb-3" style="background:#fff8e1;">
+                            <strong>⚠️ Zaroori Baat:</strong> Bills ki zimmedari agreement mein likhi honi chahiye — jo bhi agreement mein tay ho woh apply hoga!
+                        </div>
+                        {% for item in [
+                            ('Aam tor par', 'Bijli, gas, paani ke monthly bills kiraye dar bharta hai — kyunki woh use karta hai', 'text-danger'),
+                            ('Maalik ki zimmedari', 'Connection charges, meter installation, society maintenance charges — yeh maalik bharta hai', 'text-primary'),
+                            ('Mutual Understanding', 'Agar agreement mein likha ho ke maalik bharega — tab maalik bharega. Jo bhi tay ho — agreement mein ZAROOR likhwayein', 'text-success'),
+                            ('Agar agreement mein kuch na likha ho', 'Tab aam rule apply hoga — kiraye dar monthly bills bhare ga', 'text-warning'),
+                        ] %}
+                        <div class="d-flex gap-2 mb-3">
+                            <i class="bi bi-lightning-fill {{ item[2] }} flex-shrink-0 mt-1"></i>
+                            <div><strong>{{ item[0] }}:</strong> {{ item[1] }}</div>
+                        </div>
+                        {% endfor %}
+                        <div class="p-3 rounded-3" style="background:#e8f5e9;">
+                            <strong>✅ Saleem Properties ka mashwara:</strong> Agreement mein clearly likhwayein — "Bijli, gas, paani ke monthly bills kiraye dar ki zimmedari hai" — aur connection charges maalik ki zimmedari hai. Isse baad mein koi jhagra nahi hoga!
+                        </div>
+                    </div>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">Notice Period</h5>
+                        {% for point in [
+                            'Maalik ko ghar khali karne ke liye 30-90 din ka written notice dena hoga',
+                            'Emergency mein bhi — bina notice ke nahi nikal sakte',
+                            'Notice period agreement mein clearly likhna chahiye',
+                        ] %}
+                        <li class="d-flex gap-2 mb-2 list-unstyled">
+                            <i class="bi bi-check-circle-fill text-success flex-shrink-0 mt-1"></i>
+                            <span>{{ point }}</span>
+                        </li>
+                        {% endfor %}
+                    </div>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">Agar Maalik Zulm Kare — Kya Karein</h5>
+                        {% for point in [
                             'Rent Controller Court mein case karein — Karachi',
                             'Police complaint karein agar zorzi se nikala jaye',
                             'Tehsil ya Union Council se madad lein',
-                            'Rent agreement ko save rakhen hamesha',
-                        ]),
-                    ] %}
-                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
-                        <h5 class="fw-bold mb-3" style="color:var(--primary);">{{ title }}</h5>
-                        <ul class="list-unstyled mb-0">
-                            {% for point in points %}
-                            <li class="d-flex gap-2 mb-2">
-                                <i class="bi bi-check-circle-fill text-success flex-shrink-0 mt-1"></i>
-                                <span>{{ point }}</span>
-                            </li>
-                            {% endfor %}
-                        </ul>
+                            'Rent agreement ko hamesha safe rakhen — original',
+                        ] %}
+                        <li class="d-flex gap-2 mb-2 list-unstyled">
+                            <i class="bi bi-shield-check text-primary flex-shrink-0 mt-1"></i>
+                            <span>{{ point }}</span>
+                        </li>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
+
                 </div>
                 <div class="col-lg-4">
                     <div class="card border-0 rounded-4 p-4" style="background:#e3f0ff;">
@@ -86,42 +122,89 @@
         <div class="tab-pane fade" id="owner">
             <div class="row g-4">
                 <div class="col-lg-8">
-                    <h3 class="sec-title mb-4">Maalik ke Huqooq</h3>
-                    {% for title, points in [
-                        ('Aapke Huqooq as Maalik', [
-                            'Kiraya time par lene ka haq',
+                    <h3 class="sec-title mb-4">Maalik Makan ke Huqooq</h3>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">Bunyadi Huqooq</h5>
+                        {% for point in [
+                            'Maahana kiraya time par lene ka haq',
                             'Ghar ki proper condition mein wapsi ka haq',
-                            'Kiraye dari ka agreement khatam karne ka haq — notice de ke',
+                            'Agreement khatam karne ka haq — notice de ke',
                             'Kiraye daar ke CNIC ki copy lene ka haq',
                             'Security amount rakhne ka haq — damage hone par',
-                        ]),
-                        ('Kiraya Nahi De Raha — Kya Karein', [
-                            'Pehle written notice dein',
-                            'Rent Controller Court mein case karein',
-                            'Eviction order hasil karein court se',
-                            'Police ki madad lein court order ke baad',
-                            'Kabhi bhi khud zorzi se mat nikalein — illegal hai',
-                        ]),
-                        ('Apni Property Protect Karein', [
-                            'Rent agreement ZAROOR banwayein — notarized',
-                            'Kiraye dar ka CNIC verify karwayein',
-                            'References zaroor check karein',
-                            'Advance + Security lein',
-                            'Ghar ki condition ka record rakhein',
-                        ]),
-                    ] %}
-                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
-                        <h5 class="fw-bold mb-3" style="color:var(--primary);">{{ title }}</h5>
-                        <ul class="list-unstyled mb-0">
-                            {% for point in points %}
-                            <li class="d-flex gap-2 mb-2">
-                                <i class="bi bi-shield-check text-primary flex-shrink-0 mt-1"></i>
-                                <span>{{ point }}</span>
-                            </li>
-                            {% endfor %}
-                        </ul>
+                            'References check karne ka haq — pehle se',
+                            'Property inspect karne ka haq — notice de ke',
+                        ] %}
+                        <li class="d-flex gap-2 mb-2 list-unstyled">
+                            <i class="bi bi-shield-check text-primary flex-shrink-0 mt-1"></i>
+                            <span>{{ point }}</span>
+                        </li>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
+
+                    <!-- Utility Bills for Owner -->
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#fff3e0;">
+                        <h5 class="fw-bold mb-3" style="color:#e65100;">💡 Bills ki Zimmedari — Maalik ke Liye</h5>
+                        {% for item, detail in [
+                            ('Monthly bijli, gas, paani bills', 'Aam tor par KIRAYE DAAR bharta hai — kyunki woh use karta hai'),
+                            ('Meter/connection charges', 'MAALIK ki zimmedari — yeh aik dafa ka kharcha hai'),
+                            ('Society/maintenance charges', 'MAALIK bharta hai — kiraye daar nahi'),
+                            ('Property tax', 'MAALIK bharta hai — sarkari tax'),
+                            ('Major repairs — leakage, structure', 'MAALIK ki zimmedari — kiraye dar ka nahi'),
+                            ('Minor repairs — bulb, tap', 'KIRAYE DAAR ki zimmedari — daily use cheezein'),
+                        ] %}
+                        <div class="d-flex gap-2 mb-2">
+                            <i class="bi bi-lightning-fill text-warning flex-shrink-0 mt-1"></i>
+                            <div><strong>{{ item }}:</strong> <span class="text-muted">{{ detail }}</span></div>
+                        </div>
+                        {% endfor %}
+                        <div class="alert border-0 rounded-3 mt-2 mb-0" style="background:#e8f5e9;">
+                            <strong>✅ Best Practice:</strong> Agreement mein har cheez clearly likhein — baad mein koi jhagra nahi hoga!
+                        </div>
+                    </div>
+
+                    <!-- Kiraya na dene ka rule - NEW SECTION -->
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#fce4ec;">
+                        <h5 class="fw-bold mb-3" style="color:#c62828;">🚨 Kiraya Nahi De Raha — Step by Step Kya Karein</h5>
+
+                        {% for step, title, detail, color in [
+                            ('1', 'Pehle Verbal Warning Dein', 'Directly milein — politely reminder dein. Aksar log bhool jaate hain ya mushkil mein hote hain.', '#1565c0'),
+                            ('2', 'Written Notice Bhejein', 'Ek hafte baad — written notice dein. WhatsApp message bhi valid hai — screenshot rakhein.', '#e65100'),
+                            ('3', 'Legal Notice Bhejein', '2 hafte baad bhi nahi diya — lawyer se legal notice bhijwayein. Rs. 2,000-5,000 mein ho jata hai.', '#6a1b9a'),
+                            ('4', 'Rent Controller Court', 'Karachi mein Rent Controller Court hai — case file karein. Saboot laayein — agreement, notices.', '#c62828'),
+                            ('5', 'Eviction Order', 'Court eviction order dega — tab police ki madad se ghar khali karwa sakte hain.', '#2e7d32'),
+                        ] %}
+                        <div class="d-flex gap-3 mb-3">
+                            <div style="width:36px;height:36px;border-radius:50%;background:{{ color }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">{{ step }}</div>
+                            <div>
+                                <strong style="color:{{ color }};">{{ title }}</strong>
+                                <div class="text-muted small mt-1">{{ detail }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <div class="alert border-0 rounded-3 mt-2 mb-0" style="background:#fff3cd;">
+                            <strong>⚠️ Zaroori:</strong> Kabhi bhi khud se zorzi se nahi nikaal sakte — yeh ILLEGAL hai! Court order lena ZAROOR hai. Bina order ke nikaalain to maalik par case ho sakta hai!
+                        </div>
+                    </div>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">Apni Property Protect Karein</h5>
+                        {% for point in [
+                            'Rent agreement ZAROOR banwayein — notarized stamp paper par',
+                            'Kiraye dar ka CNIC verify karwayein — PEHLE se',
+                            'References zaroor check karein — 2 references lein',
+                            'Advance + Security lein — 2-3 mahine',
+                            'Ghar ki condition ka photo record rakhein — pehle din',
+                            'Monthly receipt zaroor dein — apna record bhi rakhein',
+                        ] %}
+                        <li class="d-flex gap-2 mb-2 list-unstyled">
+                            <i class="bi bi-shield-fill-check text-success flex-shrink-0 mt-1"></i>
+                            <span>{{ point }}</span>
+                        </li>
+                        {% endfor %}
+                    </div>
+
                 </div>
                 <div class="col-lg-4">
                     <div class="card border-0 rounded-4 p-4" style="background:#e8f5e9;">
