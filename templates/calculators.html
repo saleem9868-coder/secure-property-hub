@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+{% block title %}Calculators - Secure Property Hub{% endblock %}
+{% block content %}
+
+<div class="page-hdr hdr-verif">
+    <div class="container">
+        <h1>🧮 Property Calculators</h1>
+        <p>Kiraya, Stamp Duty aur EMI calculate karein — bilkul free</p>
+    </div>
+</div>
+
+<div class="container py-5">
+
+    <div class="row g-4">
+
+        <!-- Rent Calculator -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                <div class="text-center mb-3">
+                    <span style="background:#e3f0ff;border-radius:14px;padding:14px;display:inline-block;">
+                        <i class="bi bi-key-fill" style="font-size:2rem;color:#1565c0;"></i>
+                    </span>
+                    <h4 class="mt-2 fw-bold" style="color:#1565c0;">Rent Calculator</h4>
+                    <p class="text-muted small">Maahana kiraya se saalana hisaab</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Maahana Kiraya (Rs.)</label>
+                    <input type="number" id="monthlyRent" class="form-control form-control-lg" placeholder="e.g. 35000" oninput="calcRent()">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Advance (Mahine)</label>
+                    <select id="advanceMonths" class="form-select" onchange="calcRent()">
+                        <option value="1">1 Mahina</option>
+                        <option value="2" selected>2 Mahine</option>
+                        <option value="3">3 Mahine</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Security (Mahine)</label>
+                    <select id="securityMonths" class="form-select" onchange="calcRent()">
+                        <option value="1">1 Mahina</option>
+                        <option value="2" selected>2 Mahine</option>
+                        <option value="3">3 Mahine</option>
+                    </select>
+                </div>
+                <div id="rentResult" class="card border-0 rounded-3 p-3" style="background:var(--light-bg);display:none;">
+                    <div class="row g-2 text-center">
+                        <div class="col-6">
+                            <div class="small text-muted">Saalana Kiraya</div>
+                            <div class="fw-bold" style="color:var(--primary);" id="yearlyRent">-</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="small text-muted">Advance</div>
+                            <div class="fw-bold" style="color:#e65100;" id="advanceAmt">-</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="small text-muted">Security</div>
+                            <div class="fw-bold" style="color:#2e7d32;" id="securityAmt">-</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="small text-muted">Pehle Din Total</div>
+                            <div class="fw-bold" style="color:var(--accent);" id="firstDayTotal">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stamp Duty Calculator -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                <div class="text-center mb-3">
+                    <span style="background:#e8f5e9;border-radius:14px;padding:14px;display:inline-block;">
+                        <i class="bi bi-file-earmark-text-fill" style="font-size:2rem;color:#2e7d32;"></i>
+                    </span>
+                    <h4 class="mt-2 fw-bold" style="color:#2e7d32;">Stamp Duty Calculator</h4>
+                    <p class="text-muted small">Property sale par government fees</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Property Ki Qeemat (Rs.)</label>
+                    <input type="number" id="propValue" class="form-control form-control-lg" placeholder="e.g. 10000000" oninput="calcStamp()">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Property Type</label>
+                    <select id="propType" class="form-select" onchange="calcStamp()">
+                        <option value="residential">Residential (Rehaishy)</option>
+                        <option value="commercial">Commercial (Tijaarti)</option>
+                    </select>
+                </div>
+                <div id="stampResult" class="card border-0 rounded-3 p-3 mt-2" style="background:var(--light-bg);display:none;">
+                    <div class="small text-muted mb-1">Estimated Charges:</div>
+                    <div class="row g-2">
+                        <div class="col-6"><div class="small text-muted">Stamp Duty (3%)</div><div class="fw-bold" style="color:#2e7d32;" id="stampDuty">-</div></div>
+                        <div class="col-6"><div class="small text-muted">CVT (2%)</div><div class="fw-bold" style="color:#1565c0;" id="cvt">-</div></div>
+                        <div class="col-6"><div class="small text-muted">Registration</div><div class="fw-bold" style="color:#e65100;" id="regFee">-</div></div>
+                        <div class="col-6"><div class="small text-muted">Total Approx.</div><div class="fw-bold" style="color:var(--accent);" id="stampTotal">-</div></div>
+                    </div>
+                    <div class="alert alert-warning mt-2 p-2 mb-0" style="font-size:.78rem;">
+                        ⚠️ Yeh approximate hai — actual fees vary ho sakti hain
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EMI Calculator -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                <div class="text-center mb-3">
+                    <span style="background:#f3e5f5;border-radius:14px;padding:14px;display:inline-block;">
+                        <i class="bi bi-bank" style="font-size:2rem;color:#6a1b9a;"></i>
+                    </span>
+                    <h4 class="mt-2 fw-bold" style="color:#6a1b9a;">EMI Calculator</h4>
+                    <p class="text-muted small">Bank loan ki maahana qist</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Loan Amount (Rs.)</label>
+                    <input type="number" id="loanAmt" class="form-control form-control-lg" placeholder="e.g. 5000000" oninput="calcEMI()">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Sood / Interest Rate (% per year)</label>
+                    <input type="number" id="interestRate" class="form-control" placeholder="e.g. 22" step="0.1" oninput="calcEMI()">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Loan Ki Muddat (Saal)</label>
+                    <select id="loanYears" class="form-select" onchange="calcEMI()">
+                        <option value="5">5 Saal</option>
+                        <option value="10" selected>10 Saal</option>
+                        <option value="15">15 Saal</option>
+                        <option value="20">20 Saal</option>
+                    </select>
+                </div>
+                <div id="emiResult" class="card border-0 rounded-3 p-3" style="background:var(--light-bg);display:none;">
+                    <div class="row g-2 text-center">
+                        <div class="col-6"><div class="small text-muted">Maahana EMI</div><div class="fw-bold" style="color:#6a1b9a;font-size:1.1rem;" id="emiAmt">-</div></div>
+                        <div class="col-6"><div class="small text-muted">Total Payment</div><div class="fw-bold" style="color:#c62828;" id="totalPayment">-</div></div>
+                        <div class="col-12"><div class="small text-muted">Total Interest</div><div class="fw-bold" style="color:#e65100;" id="totalInterest">-</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Rent Increase Calculator -->
+    <div class="row g-4 mt-2">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <span style="background:#fff3e0;border-radius:12px;padding:12px;"><i class="bi bi-graph-up-arrow" style="font-size:1.5rem;color:#e65100;"></i></span>
+                    <div><h5 class="fw-bold mb-0" style="color:#e65100;">Rent Increase Calculator</h5><small class="text-muted">Kiraya barha kar dekhein</small></div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <label class="form-label small fw-semibold">Maujuda Kiraya (Rs.)</label>
+                        <input type="number" id="currentRent" class="form-control" placeholder="35000" oninput="calcRentIncrease()">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small fw-semibold">Izafa (%)</label>
+                        <select id="increasePercent" class="form-select" onchange="calcRentIncrease()">
+                            <option value="10">10%</option>
+                            <option value="15">15%</option>
+                            <option value="20" selected>20%</option>
+                            <option value="25">25%</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="increaseResult" class="mt-3 p-3 rounded-3" style="background:var(--light-bg);display:none;">
+                    <div class="d-flex justify-content-between">
+                        <span>Nayi Maahana Raqam:</span>
+                        <strong id="newRentAmt" style="color:var(--accent);">-</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mt-1">
+                        <span>Izafa ki Raqam:</span>
+                        <strong id="increaseAmt" style="color:#2e7d32;">-</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <span style="background:#e0f2f1;border-radius:12px;padding:12px;"><i class="bi bi-house-check" style="font-size:1.5rem;color:#00796b;"></i></span>
+                    <div><h5 class="fw-bold mb-0" style="color:#00796b;">Rent vs Buy</h5><small class="text-muted">Kiraya lena behtar ya khareedna?</small></div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <label class="form-label small fw-semibold">Maahana Kiraya (Rs.)</label>
+                        <input type="number" id="rvbRent" class="form-control" placeholder="35000" oninput="calcRvB()">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small fw-semibold">Property Ki Qeemat (Rs.)</label>
+                        <input type="number" id="rvbPrice" class="form-control" placeholder="8000000" oninput="calcRvB()">
+                    </div>
+                </div>
+                <div id="rvbResult" class="mt-3 p-3 rounded-3" style="background:var(--light-bg);display:none;">
+                    <div class="d-flex justify-content-between">
+                        <span>10 Saal mein Kiraya:</span>
+                        <strong id="rvbRentTotal" style="color:#c62828;">-</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mt-1">
+                        <span>Property ki qeemat:</span>
+                        <strong id="rvbPriceShow" style="color:#2e7d32;">-</strong>
+                    </div>
+                    <div class="mt-2 p-2 rounded-2 text-center" id="rvbAdvice" style="background:#e8f5e9;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="card border-0 rounded-4 p-4 mt-4" style="background:var(--light-bg);">
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+            <div>
+                <h5 class="mb-1">Property ya investment ke baare mein mashwara chahiye?</h5>
+                <p class="text-muted mb-0 small">Free consultation — Akhtar Colony, Karachi</p>
+            </div>
+            <a href="https://wa.me/923111820660?text=Hello%2C%20property%20ke%20baare%20mein%20mashwara%20chahiye." target="_blank" class="btn btn-whatsapp rounded-pill px-4 fw-bold flex-shrink-0">
+                <i class="bi bi-whatsapp me-2"></i>Free Consultation
+            </a>
+        </div>
+    </div>
+
+</div>
+
+{% block extra_js %}
+<script>
+function formatRs(num) {
+    return 'Rs. ' + Math.round(num).toLocaleString('en-PK');
+}
+
+function calcRent() {
+    const m = parseFloat(document.getElementById('monthlyRent').value);
+    if (!m) { document.getElementById('rentResult').style.display='none'; return; }
+    const adv = parseInt(document.getElementById('advanceMonths').value);
+    const sec = parseInt(document.getElementById('securityMonths').value);
+    document.getElementById('yearlyRent').textContent = formatRs(m * 12);
+    document.getElementById('advanceAmt').textContent = formatRs(m * adv);
+    document.getElementById('securityAmt').textContent = formatRs(m * sec);
+    document.getElementById('firstDayTotal').textContent = formatRs(m + m*adv + m*sec);
+    document.getElementById('rentResult').style.display = 'block';
+}
+
+function calcStamp() {
+    const v = parseFloat(document.getElementById('propValue').value);
+    if (!v) { document.getElementById('stampResult').style.display='none'; return; }
+    const stamp = v * 0.03;
+    const cvt = v * 0.02;
+    const reg = v * 0.01;
+    document.getElementById('stampDuty').textContent = formatRs(stamp);
+    document.getElementById('cvt').textContent = formatRs(cvt);
+    document.getElementById('regFee').textContent = formatRs(reg);
+    document.getElementById('stampTotal').textContent = formatRs(stamp + cvt + reg);
+    document.getElementById('stampResult').style.display = 'block';
+}
+
+function calcEMI() {
+    const p = parseFloat(document.getElementById('loanAmt').value);
+    const r = parseFloat(document.getElementById('interestRate').value) / 12 / 100;
+    const n = parseInt(document.getElementById('loanYears').value) * 12;
+    if (!p || !r) { document.getElementById('emiResult').style.display='none'; return; }
+    const emi = p * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+    const total = emi * n;
+    document.getElementById('emiAmt').textContent = formatRs(emi);
+    document.getElementById('totalPayment').textContent = formatRs(total);
+    document.getElementById('totalInterest').textContent = formatRs(total - p);
+    document.getElementById('emiResult').style.display = 'block';
+}
+
+function calcRentIncrease() {
+    const r = parseFloat(document.getElementById('currentRent').value);
+    const p = parseFloat(document.getElementById('increasePercent').value);
+    if (!r) { document.getElementById('increaseResult').style.display='none'; return; }
+    const inc = r * p / 100;
+    document.getElementById('newRentAmt').textContent = formatRs(r + inc);
+    document.getElementById('increaseAmt').textContent = formatRs(inc);
+    document.getElementById('increaseResult').style.display = 'block';
+}
+
+function calcRvB() {
+    const rent = parseFloat(document.getElementById('rvbRent').value);
+    const price = parseFloat(document.getElementById('rvbPrice').value);
+    if (!rent || !price) { document.getElementById('rvbResult').style.display='none'; return; }
+    const rentTotal = rent * 12 * 10;
+    document.getElementById('rvbRentTotal').textContent = formatRs(rentTotal);
+    document.getElementById('rvbPriceShow').textContent = formatRs(price);
+    const advice = rentTotal > price
+        ? '✅ Khareedna zyada faida mand hai!'
+        : '🏠 Abhi kiraya lena theek hai';
+    document.getElementById('rvbAdvice').textContent = advice;
+    document.getElementById('rvbResult').style.display = 'block';
+}
+</script>
+{% endblock %}
+{% endblock %}
