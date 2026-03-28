@@ -35,9 +35,9 @@ TRANSLATIONS = {
         'nav_admin': 'Admin',
         'nav_logout': 'Logout',
         # Hero
-        'hero_tag': "KARACHI'S TRUSTED PROPERTY SERVICES",
-        'hero_title': 'Secure Property Hub',
-        'hero_sub': 'Rent, Buy, Sell or Verify Tenants — all in one place in Karachi.',
+        'hero_tag': "KARACHI'S TRUSTED PROPERTY & DOCUMENT SERVICES",
+        'hero_title': 'ApnaGhar',
+        'hero_sub': 'Secure Deal, Easy Steps — Below Deal and Documents at One Platform.',
         'choose_title': 'What Would You Like to Do?',
         'choose_sub': 'Select your option below',
         # 4 Cards
@@ -157,7 +157,7 @@ TRANSLATIONS = {
         'no_account': "Don't have an account?",
         'register_here': 'Register',
         'reg_title': 'Create Account',
-        'reg_sub': 'Join Secure Property Hub',
+        'reg_sub': 'Join ApnaGhar',
         'full_name': 'Full Name',
         'confirm_pass': 'Confirm Password',
         'reg_btn': 'Create Account',
@@ -230,9 +230,9 @@ TRANSLATIONS = {
         'nav_admin': 'ایڈمن',
         'nav_logout': 'لاگ آؤٹ',
         # Hero
-        'hero_tag': 'کراچی کی قابل اعتماد پراپرٹی سروسز',
-        'hero_title': 'سیکیور پراپرٹی ہب',
-        'hero_sub': 'کرایہ لیں، خریدیں، بیچیں یا کرایہ دار کی تصدیق کریں — سب کچھ ایک جگہ۔',
+        'hero_tag': 'کراچی کی قابل اعتماد پراپرٹی اور دستاویزات کی خدمات',
+        'hero_title': 'اپنا گھر',
+        'hero_sub': 'محفوظ ڈیل، آسان اقدام — ڈیل بھی، ڈاکومنٹس بھی — سب ایک جگہ۔',
         'choose_title': 'آپ کیا کرنا چاہتے ہیں؟',
         'choose_sub': 'نیچے اپنا آپشن چنیں',
         # 4 Cards
