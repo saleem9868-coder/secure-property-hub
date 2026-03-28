@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
-{% block title %}Property Laws - ApnaGhar{% endblock %}
+{% block title %}{% if lang=="ur" %}پراپرٹی قوانین{% else %}Property Laws{% endif %} - ApnaGhar{% endblock %}
 {% block content %}
 
 <div class="page-hdr hdr-verif">
     <div class="container">
+        {% if lang == "ur" %}
+        <h1>⚖️ پراپرٹی قوانین اور حقوق</h1>
+        <p>کراچی اور سندھ میں پراپرٹی کے قوانین — اپنے حقوق جانیں</p>
+        {% else %}
         <h1>⚖️ Property Laws & Rights</h1>
-        <p>Karachi aur Sindh mein property ke qawaneen — apne huqooq jaanein</p>
+        <p>Karachi & Sindh property laws — know your rights</p>
+        {% endif %}
     </div>
 </div>
 
@@ -13,17 +18,23 @@
 
     <!-- Tabs -->
     <ul class="nav nav-tabs border-0 mb-4 flex-wrap" id="lawTabs">
+        {% if lang == "ur" %}
+        <li class="nav-item"><a class="nav-link active fw-semibold" data-bs-toggle="tab" href="#urdu_laws">🏛️ سندھ کرایہ داری قانون</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#urdu_rent_lease">📄 کرایہ بمقابلہ لیز</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#urdu_mutation">🔄 میوٹیشن / انتقال</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#urdu_transfer">🏠 جائیداد کی منتقلی</a></li>
+        {% else %}
         <li class="nav-item"><a class="nav-link active fw-semibold" data-bs-toggle="tab" href="#sindh">🏛️ Sindh Tenancy Law</a></li>
         <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#rent_vs_lease">📄 Rent vs Lease</a></li>
         <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#mutation">🔄 Mutation / Intiqal</a></li>
         <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#transfer">🏠 Property Transfer</a></li>
-        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#urdu_laws">اردو قوانین</a></li>
+        {% endif %}
     </ul>
 
     <div class="tab-content">
 
         <!-- Sindh Tenancy Law -->
-        <div class="tab-pane fade show active" id="sindh">
+        <div class="tab-pane fade {% if lang != "ur" %}show active{% endif %}" id="sindh">
             <div class="row g-4">
                 <div class="col-lg-8">
                     <h3 class="sec-title mb-4">Sindh Rented Premises Ordinance 1979</h3>
@@ -455,7 +466,7 @@
         </div>
 
         <!-- Urdu Laws -->
-        <div class="tab-pane fade" id="urdu_laws">
+        <div class="tab-pane fade {% if lang == "ur" %}show active{% endif %}" id="urdu_laws">
             <div class="row g-4">
                 <div class="col-lg-8" style="font-family:'Noto Nastaliq Urdu',serif;direction:rtl;line-height:2.4;">
                     <h3 class="mb-4" style="color:var(--primary);">سندھ کرایہ داری کے قوانین</h3>
