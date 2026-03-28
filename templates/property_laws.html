@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
-{% block title %}Property Laws - Secure Property Hub{% endblock %}
+{% block title %}Property Laws - ApnaGhar{% endblock %}
 {% block content %}
 
 <div class="page-hdr hdr-verif">
     <div class="container">
         <h1>⚖️ Property Laws & Rights</h1>
-        <p>Karachi mein property ke qawaneen — apne huqooq jaanein</p>
+        <p>Karachi aur Sindh mein property ke qawaneen — apne huqooq jaanein</p>
     </div>
 </div>
 
@@ -13,257 +13,224 @@
 
     <!-- Tabs -->
     <ul class="nav nav-tabs border-0 mb-4 flex-wrap" id="lawTabs">
-        <li class="nav-item"><a class="nav-link active fw-semibold" data-bs-toggle="tab" href="#tenant">🏠 Tenant Rights</a></li>
-        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#owner">🔑 Owner Rights</a></li>
-        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#agreement">📄 Rent Agreement</a></li>
-        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#buyer">🏡 Buyer Guide</a></li>
-        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#docs">📋 Documents</a></li>
+        <li class="nav-item"><a class="nav-link active fw-semibold" data-bs-toggle="tab" href="#sindh">🏛️ Sindh Tenancy Law</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#rent_vs_lease">📄 Rent vs Lease</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#mutation">🔄 Mutation / Intiqal</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#transfer">🏠 Property Transfer</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#urdu_laws">اردو قوانین</a></li>
     </ul>
 
     <div class="tab-content">
 
-        <!-- Tenant Rights -->
-        <div class="tab-pane fade show active" id="tenant">
+        <!-- Sindh Tenancy Law -->
+        <div class="tab-pane fade show active" id="sindh">
             <div class="row g-4">
                 <div class="col-lg-8">
-                    <h3 class="sec-title mb-4">Kiraye Daar ke Huqooq</h3>
+                    <h3 class="sec-title mb-4">Sindh Rented Premises Ordinance 1979</h3>
 
                     <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
-                        <h5 class="fw-bold mb-3" style="color:var(--primary);">Basic Rights — Bunyadi Huqooq</h5>
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">📋 Rent Agreement — Zaroori Rules</h5>
                         {% for point in [
-                            'Aap ko rent receipt lene ka haq hai — har mahine',
-                            'Maalik bina notice ke ghar mein andar nahi aa sakta',
-                            'Advance/Security 2-3 mahine se zyada nahi ho sakti',
-                            'Ghar ki basic structural maintenance maalik ki zimmedari hai',
-                            'Kiraya 20% se zyada ek saal mein nahi barh sakta',
-                            'Lease period khatam hone se pehle nahi nikal sakte',
-                            'Security departure ke waqt wapas milni chahiye',
+                            'Rent agreement HAMESHA tehriri (written) honi chahiye — zubani nahi',
+                            'Dono parties ke dastakhat zaroori hain — maalik aur kiraye daar',
+                            'Mutaaliqa authorities ki tasdeek zaroor honi chahiye',
+                            'Agreement har saal tajdeed (renew) karni chahiye — warna court mein ghair muassar ho sakti hai',
+                            'Kiraye ki shartein — tajdeed par tabdeel ki ja sakti hain',
                         ] %}
-                        <li class="d-flex gap-2 mb-2 list-unstyled">
+                        <div class="d-flex gap-2 mb-2">
                             <i class="bi bi-check-circle-fill text-success flex-shrink-0 mt-1"></i>
                             <span>{{ point }}</span>
-                        </li>
+                        </div>
                         {% endfor %}
                     </div>
 
-                    <!-- Utility Bills — Important Section -->
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">💰 Kiraye ki Adayegi — Rules</h5>
+                        {% for point in [
+                            'Maalik sirf wohi kiraya wusool kar sakta hai jo agreement mein likha ho',
+                            'Kiraye ki adayegi ki koi makhsoos tarikh nahi — aam tor par mahine ki 10 tarikh tak',
+                            'Kiraya har saal 10% se zyada nahi barh sakta — Sindh law',
+                            'Maalik ko har mahine receipt dena zaroori hai',
+                        ] %}
+                        <div class="d-flex gap-2 mb-2">
+                            <i class="bi bi-currency-rupee text-warning flex-shrink-0 mt-1"></i>
+                            <span>{{ point }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
                     <div class="card border-0 rounded-4 p-4 mb-3" style="background:#fff3e0;">
-                        <h5 class="fw-bold mb-3" style="color:#e65100;">💡 Bijli, Gas, Paani Bills — Kaun Bharega?</h5>
+                        <h5 class="fw-bold mb-3" style="color:#e65100;">💡 Utilities — Bijli, Gas, Paani</h5>
                         <div class="alert border-0 rounded-3 mb-3" style="background:#fff8e1;">
-                            <strong>⚠️ Zaroori Baat:</strong> Bills ki zimmedari agreement mein likhi honi chahiye — jo bhi agreement mein tay ho woh apply hoga!
+                            <strong>Sindh Law ke mutabiq:</strong> Koi bhi maalik kiraye daar ki ijazat ke baghair utilities (bijli, gas, paani) band nahi kar sakta — chahe kiraya bhi nahi diya gaya ho!
                         </div>
-                        {% for item in [
-                            ('Aam tor par', 'Bijli, gas, paani ke monthly bills kiraye dar bharta hai — kyunki woh use karta hai', 'text-danger'),
-                            ('Maalik ki zimmedari', 'Connection charges, meter installation, society maintenance charges — yeh maalik bharta hai', 'text-primary'),
-                            ('Mutual Understanding', 'Agar agreement mein likha ho ke maalik bharega — tab maalik bharega. Jo bhi tay ho — agreement mein ZAROOR likhwayein', 'text-success'),
-                            ('Agar agreement mein kuch na likha ho', 'Tab aam rule apply hoga — kiraye dar monthly bills bhare ga', 'text-warning'),
-                        ] %}
-                        <div class="d-flex gap-2 mb-3">
-                            <i class="bi bi-lightning-fill {{ item[2] }} flex-shrink-0 mt-1"></i>
-                            <div><strong>{{ item[0] }}:</strong> {{ item[1] }}</div>
-                        </div>
-                        {% endfor %}
-                        <div class="p-3 rounded-3" style="background:#e8f5e9;">
-                            <strong>✅ Saleem Properties ka mashwara:</strong> Agreement mein clearly likhwayein — "Bijli, gas, paani ke monthly bills kiraye dar ki zimmedari hai" — aur connection charges maalik ki zimmedari hai. Isse baad mein koi jhagra nahi hoga!
-                        </div>
-                    </div>
-
-                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
-                        <h5 class="fw-bold mb-3" style="color:var(--primary);">Notice Period</h5>
-                        {% for point in [
-                            'Maalik ko ghar khali karne ke liye 30-90 din ka written notice dena hoga',
-                            'Emergency mein bhi — bina notice ke nahi nikal sakte',
-                            'Notice period agreement mein clearly likhna chahiye',
-                        ] %}
-                        <li class="d-flex gap-2 mb-2 list-unstyled">
-                            <i class="bi bi-check-circle-fill text-success flex-shrink-0 mt-1"></i>
-                            <span>{{ point }}</span>
-                        </li>
-                        {% endfor %}
-                    </div>
-
-                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
-                        <h5 class="fw-bold mb-3" style="color:var(--primary);">Agar Maalik Zulm Kare — Kya Karein</h5>
-                        {% for point in [
-                            'Rent Controller Court mein case karein — Karachi',
-                            'Police complaint karein agar zorzi se nikala jaye',
-                            'Tehsil ya Union Council se madad lein',
-                            'Rent agreement ko hamesha safe rakhen — original',
-                        ] %}
-                        <li class="d-flex gap-2 mb-2 list-unstyled">
-                            <i class="bi bi-shield-check text-primary flex-shrink-0 mt-1"></i>
-                            <span>{{ point }}</span>
-                        </li>
-                        {% endfor %}
-                    </div>
-
-                </div>
-                <div class="col-lg-4">
-                    <div class="card border-0 rounded-4 p-4" style="background:#e3f0ff;">
-                        <h6 class="fw-bold mb-3" style="color:#1565c0;">⚠️ Zaroori Yaad Rakhen</h6>
-                        <ul class="list-unstyled" style="font-size:.9rem;">
-                            <li class="mb-2">✅ Rent agreement zaroor banwayein</li>
-                            <li class="mb-2">✅ Receipt lein har mahine</li>
-                            <li class="mb-2">✅ Security ki receipt lein</li>
-                            <li class="mb-2">✅ CNIC copy maalik ko dein</li>
-                            <li class="mb-2">✅ Ghar ki condition photo lein</li>
-                        </ul>
-                        <hr>
-                        <p class="fw-bold mb-2">Madad Chahiye?</p>
-                        <a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp btn-sm w-100 rounded-pill">
-                            <i class="bi bi-whatsapp me-1"></i>WhatsApp Karein
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Owner Rights -->
-        <div class="tab-pane fade" id="owner">
-            <div class="row g-4">
-                <div class="col-lg-8">
-                    <h3 class="sec-title mb-4">Maalik Makan ke Huqooq</h3>
-
-                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
-                        <h5 class="fw-bold mb-3" style="color:var(--primary);">Bunyadi Huqooq</h5>
-                        {% for point in [
-                            'Maahana kiraya time par lene ka haq',
-                            'Ghar ki proper condition mein wapsi ka haq',
-                            'Agreement khatam karne ka haq — notice de ke',
-                            'Kiraye daar ke CNIC ki copy lene ka haq',
-                            'Security amount rakhne ka haq — damage hone par',
-                            'References check karne ka haq — pehle se',
-                            'Property inspect karne ka haq — notice de ke',
-                        ] %}
-                        <li class="d-flex gap-2 mb-2 list-unstyled">
-                            <i class="bi bi-shield-check text-primary flex-shrink-0 mt-1"></i>
-                            <span>{{ point }}</span>
-                        </li>
-                        {% endfor %}
-                    </div>
-
-                    <!-- Utility Bills for Owner -->
-                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#fff3e0;">
-                        <h5 class="fw-bold mb-3" style="color:#e65100;">💡 Bills ki Zimmedari — Maalik ke Liye</h5>
                         {% for item, detail in [
-                            ('Monthly bijli, gas, paani bills', 'Aam tor par KIRAYE DAAR bharta hai — kyunki woh use karta hai'),
-                            ('Meter/connection charges', 'MAALIK ki zimmedari — yeh aik dafa ka kharcha hai'),
-                            ('Society/maintenance charges', 'MAALIK bharta hai — kiraye daar nahi'),
-                            ('Property tax', 'MAALIK bharta hai — sarkari tax'),
-                            ('Major repairs — leakage, structure', 'MAALIK ki zimmedari — kiraye dar ka nahi'),
-                            ('Minor repairs — bulb, tap', 'KIRAYE DAAR ki zimmedari — daily use cheezein'),
+                            ('Monthly bijli, gas, paani bills', 'KIRAYE DAAR ki zimmedari — yeh woh use karta hai'),
+                            ('Connection/meter charges', 'MAALIK ki zimmedari — ek dafa ka kharcha'),
+                            ('Utilities band karna', 'ILLEGAL hai — maalik nahi kar sakta bina court order ke'),
+                            ('Mutual agreement', 'Jo bhi agreement mein likha ho — wahi apply hoga'),
                         ] %}
                         <div class="d-flex gap-2 mb-2">
                             <i class="bi bi-lightning-fill text-warning flex-shrink-0 mt-1"></i>
                             <div><strong>{{ item }}:</strong> <span class="text-muted">{{ detail }}</span></div>
                         </div>
                         {% endfor %}
-                        <div class="alert border-0 rounded-3 mt-2 mb-0" style="background:#e8f5e9;">
-                            <strong>✅ Best Practice:</strong> Agreement mein har cheez clearly likhein — baad mein koi jhagra nahi hoga!
-                        </div>
                     </div>
 
-                    <!-- Kiraya na dene ka rule - NEW SECTION -->
-                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#fce4ec;">
-                        <h5 class="fw-bold mb-3" style="color:#c62828;">🚨 Kiraya Nahi De Raha — Step by Step Kya Karein</h5>
-
-                        {% for step, title, detail, color in [
-                            ('1', 'Pehle Verbal Warning Dein', 'Directly milein — politely reminder dein. Aksar log bhool jaate hain ya mushkil mein hote hain.', '#1565c0'),
-                            ('2', 'Written Notice Bhejein', 'Ek hafte baad — written notice dein. WhatsApp message bhi valid hai — screenshot rakhein.', '#e65100'),
-                            ('3', 'Legal Notice Bhejein', '2 hafte baad bhi nahi diya — lawyer se legal notice bhijwayein. Rs. 2,000-5,000 mein ho jata hai.', '#6a1b9a'),
-                            ('4', 'Rent Controller Court', 'Karachi mein Rent Controller Court hai — case file karein. Saboot laayein — agreement, notices.', '#c62828'),
-                            ('5', 'Eviction Order', 'Court eviction order dega — tab police ki madad se ghar khali karwa sakte hain.', '#2e7d32'),
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">🔧 Marammat — Repair aur Maintenance</h5>
+                        {% for point in [
+                            'MAALIK kiraye ki jagah ki marammat aur maintenance ka zimmedar hai',
+                            'Agar maalik marammat nahi karta — kiraye daar khud karwa sakta hai',
+                            'Marammat ke kharche kiraye mein se kaat liye jayenge',
+                            'Kiraye daar ko kharche ka documentary saboot dena hoga',
+                            'Minor repairs (bulb, tap etc) — kiraye daar ki zimmedari',
                         ] %}
-                        <div class="d-flex gap-3 mb-3">
-                            <div style="width:36px;height:36px;border-radius:50%;background:{{ color }};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">{{ step }}</div>
-                            <div>
-                                <strong style="color:{{ color }};">{{ title }}</strong>
-                                <div class="text-muted small mt-1">{{ detail }}</div>
-                            </div>
+                        <div class="d-flex gap-2 mb-2">
+                            <i class="bi bi-tools text-primary flex-shrink-0 mt-1"></i>
+                            <span>{{ point }}</span>
                         </div>
                         {% endfor %}
+                    </div>
 
-                        <div class="alert border-0 rounded-3 mt-2 mb-0" style="background:#fff3cd;">
-                            <strong>⚠️ Zaroori:</strong> Kabhi bhi khud se zorzi se nahi nikaal sakte — yeh ILLEGAL hai! Court order lena ZAROOR hai. Bina order ke nikaalain to maalik par case ho sakta hai!
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#fce4ec;">
+                        <h5 class="fw-bold mb-3" style="color:#c62828;">🚨 Kiraya Ada Nahi — Step by Step</h5>
+                        {% for step, title, detail in [
+                            ('1', 'Verbal Reminder', 'Pehle seedha baat karein — politely reminder dein'),
+                            ('2', 'Written Notice', 'Ek hafte baad written notice dein — WhatsApp bhi valid hai, screenshot rakhein'),
+                            ('3', 'Legal Notice', '2 hafte baad — lawyer se legal notice bhijwayein'),
+                            ('4', 'Rent Controller Court', 'Karachi mein Rent Controller Court mein case file karein — agreement aur notices saboot ke tor par laayein'),
+                            ('5', 'Eviction Order', 'Court eviction order dega — tab police ki madad se ghar khali karwa sakte hain'),
+                        ] %}
+                        <div class="d-flex gap-3 mb-3">
+                            <div style="width:34px;height:34px;border-radius:50%;background:#c62828;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">{{ step }}</div>
+                            <div><strong>{{ title }}</strong><div class="text-muted small">{{ detail }}</div></div>
+                        </div>
+                        {% endfor %}
+                        <div class="alert border-0 rounded-3 mb-0" style="background:#fff3cd;">
+                            <strong>⚠️ ZAROORI:</strong> Kabhi bhi khud se zorzi se nahi nikal sakte — court order ZAROOR chahiye. Bina order ke nikaalain to maalik par case ho sakta hai!
                         </div>
                     </div>
 
                     <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
-                        <h5 class="fw-bold mb-3" style="color:var(--primary);">Apni Property Protect Karein</h5>
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">🚪 Kiraye Dar ko Kab Nikala Ja Sakta Hai?</h5>
                         {% for point in [
-                            'Rent agreement ZAROOR banwayein — notarized stamp paper par',
-                            'Kiraye dar ka CNIC verify karwayein — PEHLE se',
-                            'References zaroor check karein — 2 references lein',
-                            'Advance + Security lein — 2-3 mahine',
-                            'Ghar ki condition ka photo record rakhein — pehle din',
-                            'Monthly receipt zaroor dein — apna record bhi rakhein',
+                            'Maalik ne property kisi aur ko bech di ya transfer kar di',
+                            'Kiraye daar property ko nuqsan pahuncha raha hai',
+                            'Imarat ko badi marammat ki zaroorat hai ya dobara taameer karni hai',
+                            'Maalik ya uske wariseen khud rehna chahte hain',
+                            'Maalik bewaa, yateem nabaaligha, ya 60 saal se zyada umra ka buzurg ho',
+                            'Lekin — har soorat mein court ka order ZAROOR lena hoga',
                         ] %}
-                        <li class="d-flex gap-2 mb-2 list-unstyled">
-                            <i class="bi bi-shield-fill-check text-success flex-shrink-0 mt-1"></i>
+                        <div class="d-flex gap-2 mb-2">
+                            <i class="bi bi-arrow-right-circle text-primary flex-shrink-0 mt-1"></i>
                             <span>{{ point }}</span>
-                        </li>
+                        </div>
                         {% endfor %}
                     </div>
 
                 </div>
                 <div class="col-lg-4">
-                    <div class="card border-0 rounded-4 p-4" style="background:#e8f5e9;">
-                        <h6 class="fw-bold mb-3" style="color:#2e7d32;">🛡️ Hamari Services</h6>
-                        <ul class="list-unstyled" style="font-size:.9rem;">
-                            <li class="mb-2">✅ Tenant Verification (CNIC)</li>
-                            <li class="mb-2">✅ Rent Agreement Drafting</li>
-                            <li class="mb-2">✅ Legal Document Services</li>
-                            <li class="mb-2">✅ Property Management</li>
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#e3f0ff;">
+                        <h6 class="fw-bold mb-3" style="color:#1565c0;">⚠️ Maalik ke liye Zaroori</h6>
+                        <ul class="list-unstyled" style="font-size:.88rem;">
+                            <li class="mb-2">✅ Agreement ZAROOR banwayein</li>
+                            <li class="mb-2">✅ Har mahine receipt dein</li>
+                            <li class="mb-2">✅ CNIC copy lein kiraye dar ki</li>
+                            <li class="mb-2">✅ References check karein</li>
+                            <li class="mb-2">✅ Ghar ki condition photo lein</li>
+                            <li class="mb-2">❌ Utilities kabhi band na karein</li>
+                            <li class="mb-2">❌ Bina court order na nikalein</li>
                         </ul>
-                        <hr>
-                        <a href="{{ url_for('tenant_verification') }}" class="btn btn-primary btn-sm w-100 rounded-pill mb-2">
-                            Tenant Verify Karein
-                        </a>
-                        <a href="{{ url_for('document_services') }}" class="btn btn-outline-primary btn-sm w-100 rounded-pill">
-                            Documents Banwayein
+                    </div>
+                    <div class="card border-0 rounded-4 p-4" style="background:#e8f5e9;">
+                        <h6 class="fw-bold mb-2" style="color:#2e7d32;">🛡️ Hamari Services</h6>
+                        <ul class="list-unstyled" style="font-size:.88rem;">
+                            <li class="mb-2">✅ Rent Agreement Drafting</li>
+                            <li class="mb-2">✅ Tenant Verification (CNIC)</li>
+                            <li class="mb-2">✅ Legal Document Services</li>
+                        </ul>
+                        <a href="{{ url_for('document_services') }}" class="btn btn-primary btn-sm w-100 rounded-pill mb-2">Documents Banwayein</a>
+                        <a href="https://wa.me/923111820660?text=Hello%2C%20mujhe%20property%20laws%20ke%20baare%20mein%20guidance%20chahiye." target="_blank" class="btn btn-whatsapp btn-sm w-100 rounded-pill">
+                            <i class="bi bi-whatsapp me-1"></i>Free Mashwara
                         </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Rent Agreement -->
-        <div class="tab-pane fade" id="agreement">
-            <h3 class="sec-title mb-4">Rent Agreement — Kiraya Nama</h3>
+        <!-- Rent vs Lease -->
+        <div class="tab-pane fade" id="rent_vs_lease">
             <div class="row g-4">
                 <div class="col-lg-8">
-                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
-                        <h5 class="fw-bold mb-3" style="color:var(--primary);">Kiraya Name mein kya hona chahiye?</h5>
-                        {% for item in [
-                            'Maalik aur kiraye dar ka poora naam aur CNIC',
-                            'Property ka mukammal pata',
-                            'Maahana kiraya — words aur numbers mein',
-                            'Advance aur security ki raqam',
-                            'Kiraya dari ki muddat — start aur end date',
-                            'Notice period — kitne din ka notice',
-                            'Bijli, paani, gas kaun bharega',
-                            'Maintenance ki zimmedari',
-                            'Sub-letting allowed hai ya nahi',
-                            'Dono parties ke dastakhat aur CNIC copies',
-                            'Gawahon ke dastakhat',
-                            'Stamp paper par hona chahiye',
+                    <h3 class="sec-title mb-4">Rent Agreement vs Lease Agreement</h3>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#e3f0ff;">
+                        <h5 class="fw-bold mb-3" style="color:#1565c0;">🔑 Rent Agreement Kya Hai?</h5>
+                        <p>Rent agreement ek temporary contract hai maalik aur kiraye daar ke beech — aam tor par 11 mahine ya us se kam ke liye.</p>
+                        {% for label, detail in [
+                            ('Muddat', '11 mahine ya us se kam — strict legal requirements se bachne ke liye'),
+                            ('Tajdeed', 'Asaani se tajdeed ho sakti hai — dono parties apni marzi se terms badal sakte hain'),
+                            ('Flexibility', 'Zyada flexible — kiraye daar jaldi ja sakta hai short notice par'),
+                            ('Legal formality', 'Stamp paper par likha jaata hai — registration optional'),
+                            ('Rent control', 'Maalik kiraya zyada frequently change kar sakta hai'),
                         ] %}
                         <div class="d-flex gap-2 mb-2">
-                            <i class="bi bi-check2-circle text-success flex-shrink-0 mt-1"></i>
-                            <span>{{ item }}</span>
+                            <i class="bi bi-dot" style="font-size:1.5rem;color:#1565c0;flex-shrink:0;"></i>
+                            <div><strong>{{ label }}:</strong> {{ detail }}</div>
                         </div>
                         {% endfor %}
                     </div>
 
-                    <div class="card border-0 rounded-4 p-4" style="background:#fff3cd;">
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#e8f5e9;">
+                        <h5 class="fw-bold mb-3" style="color:#2e7d32;">🏡 Lease Agreement Kya Hai?</h5>
+                        <p>Lease agreement ek long-term contract hai — ek saal ya us se zyada ke liye. Zyada legal protection deta hai.</p>
+                        {% for label, detail in [
+                            ('Muddat', '1 saal, 3 saal, ya aur zyada — fixed period'),
+                            ('Stability', 'Maalik lease khatam hone se pehle kiraya nahi barha sakta ya nikal nahi sakta'),
+                            ('Legal strength', 'Officially registered hoti hai — court mein zyada strong'),
+                            ('Stamp duty', 'Stamp duty aur registration zaroor — qanooni zaroorat'),
+                            ('Best for', 'Long-term rehne wale families, businesses'),
+                        ] %}
+                        <div class="d-flex gap-2 mb-2">
+                            <i class="bi bi-dot" style="font-size:1.5rem;color:#2e7d32;flex-shrink:0;"></i>
+                            <div><strong>{{ label }}:</strong> {{ detail }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Comparison Table -->
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">📊 Farq — Ek Nazar Mein</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle">
+                                <thead style="background:var(--primary);color:#fff;">
+                                    <tr><th>Cheez</th><th>🔑 Rent</th><th>🏡 Lease</th></tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in [
+                                        ('Muddat', '11 mahine ya kam', '1 saal ya zyada'),
+                                        ('Flexibility', 'Zyada', 'Kam'),
+                                        ('Legal strength', 'Kam', 'Zyada'),
+                                        ('Registration', 'Optional', 'Zaroor'),
+                                        ('Kiraya change', 'Jaldi ho sakta', 'Fixed rehta hai'),
+                                        ('Best for', 'Short stay', 'Long stay'),
+                                    ] %}
+                                    <tr><td class="fw-semibold">{{ row[0] }}</td><td>{{ row[1] }}</td><td>{{ row[2] }}</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#fff3cd;">
                         <h5 class="fw-bold mb-3" style="color:#856404;">⚠️ Common Mistakes — Jo Log Karte Hain</h5>
                         {% for mistake in [
-                            'Zubani agreement — likhit nahi — GALAT!',
-                            'Stamp paper nahi — legally weak',
-                            'CNIC copy nahi li — GALAT!',
-                            'Security ki receipt nahi di — GALAT!',
-                            'Gawah nahi banaya — GALAT!',
-                            'Muddat nahi likhi — confusion hoti hai',
+                            'Agreement parhay baghair sign kar dena — baad mein pachtawa hota hai',
+                            '11 mahine se zyada ka agreement register nahi karwana — court mein ghair legal',
+                            'Stamp duty nahi dena — agreement weak ho jaati hai',
+                            'Sochna ke sab agreements ek jaisi hoti hain — GALAT',
+                            'CNIC copy nahi lena — pehchaan ka proof zaroori hai',
                         ] %}
                         <div class="d-flex gap-2 mb-2">
                             <i class="bi bi-x-circle text-danger flex-shrink-0 mt-1"></i>
@@ -271,15 +238,30 @@
                         </div>
                         {% endfor %}
                     </div>
+
+                    <div class="card border-0 rounded-4 p-4" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">📋 Pakistan mein Legal Requirements</h5>
+                        {% for point in [
+                            'Agreement stamp paper par honi chahiye — stamp duty amount duration par depend karti hai',
+                            '11 mahine se zyada ka contract — Sub-Registrar ke paas register karwana ZAROOR',
+                            'Sindh mein landlord ko police verification karwani chahiye',
+                            'Bina registration ke — court mein challenge ho sakti hai agreement',
+                        ] %}
+                        <div class="d-flex gap-2 mb-2">
+                            <i class="bi bi-check2-circle text-success flex-shrink-0 mt-1"></i>
+                            <span>{{ point }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="card border-0 rounded-4 p-4" style="background:var(--primary);color:#fff;">
                         <h6 class="fw-bold mb-3" style="color:var(--accent-light);">📄 Hamari Service</h6>
-                        <p style="font-size:.9rem;color:rgba(255,255,255,.85);">
-                            Hum professional rent agreement banate hain — stamp paper par — notarized — dono parties ki protection ke liye.
+                        <p style="font-size:.88rem;color:rgba(255,255,255,.85);">
+                            Hum professional rent aur lease agreements banate hain — stamp paper par — notarized — same day service.
                         </p>
-                        <ul style="font-size:.88rem;color:rgba(255,255,255,.8);" class="mb-3">
-                            <li>Qanooni tor par drust</li>
+                        <ul style="font-size:.85rem;color:rgba(255,255,255,.8);" class="mb-3">
+                            <li>Qanooni tor par durust</li>
                             <li>Urdu aur English mein</li>
                             <li>Same day service</li>
                             <li>Akhtar Colony residents ko discount</li>
@@ -292,55 +274,157 @@
             </div>
         </div>
 
-        <!-- Buyer Guide -->
-        <div class="tab-pane fade" id="buyer">
-            <h3 class="sec-title mb-4">Property Khareedne Ka Guide</h3>
+        <!-- Mutation -->
+        <div class="tab-pane fade" id="mutation">
             <div class="row g-4">
                 <div class="col-lg-8">
-                    {% for step, title, points in [
-                        ('1', 'Budget aur Zaroorat Tay Karein', [
-                            'Apna budget fix karein — cash ya loan?',
-                            'Area decide karein — school, hospital, transport',
-                            'Size decide karein — kitne kamre chahiye',
-                            'Ground floor ya upar — family ki zaroorat',
+                    <h3 class="sec-title mb-4">Mutation / Intiqal — Kya Hota Hai?</h3>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">📖 Mutation ki Taareef</h5>
+                        <p>Mutation (Intiqal اردو میں) ek qanooni amal hai jis mein government ki land records mein property ki milkiyat tabdeel ki jaati hai. Yeh tab zaroor hota hai jab property bechni, wiraasat, ya gift di jaaye.</p>
+                        <div class="alert border-0 rounded-3" style="background:#e8f5e9;">
+                            <strong>Simple alfaaz mein:</strong> Jab aap ghar kharidte hain — sarkari records mein naam aapka hona chahiye — yahi Mutation hai!
+                        </div>
+                    </div>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">📋 Mutation Kab Zaroor Hoti Hai?</h5>
+                        {% for case, detail in [
+                            ('Property ki Khareed-o-Farokht', 'Naya ghar ya zameen khareedne ke baad'),
+                            ('Wiraasat / Succession', 'Maalik ke inteqal ke baad warisan ko milkiyat transfer'),
+                            ('Gift Deed', 'Kisi ko property gift karne par'),
+                            ('Court Order', 'Adalat ke faisle ke mutabiq milkiyat ki tabdeeli'),
+                        ] %}
+                        <div class="d-flex gap-2 mb-3">
+                            <i class="bi bi-arrow-right-circle text-primary flex-shrink-0 mt-1"></i>
+                            <div><strong>{{ case }}:</strong> {{ detail }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">✅ Mutation Kyun Zaroori Hai?</h5>
+                        {% for reason, detail in [
+                            ('Qanooni milkiyat ka saboot', 'Aapka naam sarkari records mein hoga'),
+                            ('Property tax', 'Sahi maalik ko tax bill aayega'),
+                            ('Future transactions', 'Bank loan, mortgage, ya bechne ke liye zaroor'),
+                            ('Fraud se tahaffuz', 'Records updated rahein — jhutha daawa mushkil hoga'),
+                        ] %}
+                        <div class="d-flex gap-2 mb-2">
+                            <i class="bi bi-shield-check text-success flex-shrink-0 mt-1"></i>
+                            <div><strong>{{ reason }}:</strong> {{ detail }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#e8f5e9;">
+                        <h5 class="fw-bold mb-3" style="color:#2e7d32;">📝 Mutation ka Tareeqa — Karachi</h5>
+                        {% for step, title, detail in [
+                            ('1', 'ARC mein Jaayein', 'CNIC aur property ki tafseelaat ke saath apne mutaaliqa ARC jaayein'),
+                            ('2', 'NADRA Biometric', 'NADRA ki biometric tassdeq ke baad token milega'),
+                            ('3', 'Property Details', 'Mutation idraaج ke liye property ki tafseelaat fraheem karein'),
+                            ('4', 'Fee Jama', 'Bank mein ya online matoob fee jama karwayein'),
+                            ('5', 'ADLR ke Samne', 'Khareedar aur gawaahan ke saath ADLR ke samne peش hoye'),
+                        ] %}
+                        <div class="d-flex gap-3 mb-3">
+                            <div style="width:32px;height:32px;border-radius:50%;background:#2e7d32;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:.85rem;">{{ step }}</div>
+                            <div><strong>{{ title }}</strong><div class="text-muted small">{{ detail }}</div></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                <div class="col-lg-4">
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#fff3cd;">
+                        <h6 class="fw-bold mb-3" style="color:#856404;">⚠️ Yaad Rakhein</h6>
+                        <ul class="list-unstyled" style="font-size:.88rem;">
+                            <li class="mb-2">📌 Registration aur Mutation alag alag hain</li>
+                            <li class="mb-2">📌 Registration se qanooni title milta hai</li>
+                            <li class="mb-2">📌 Mutation se sarkari records update hote hain</li>
+                            <li class="mb-2">📌 Dono karna zaroori hai complete process ke liye</li>
+                        </ul>
+                    </div>
+                    <div class="card border-0 rounded-4 p-4" style="background:#e8f5e9;">
+                        <h6 class="fw-bold mb-2" style="color:#2e7d32;">Madad Chahiye?</h6>
+                        <p style="font-size:.88rem;">Mutation aur property transfer mein guidance ke liye hamse rabta karein.</p>
+                        <a href="https://wa.me/923111820660?text=Hello%2C%20mutation%20ke%20baare%20mein%20guidance%20chahiye." target="_blank" class="btn btn-whatsapp btn-sm w-100 rounded-pill">
+                            <i class="bi bi-whatsapp me-1"></i>Free Mashwara
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Property Transfer -->
+        <div class="tab-pane fade" id="transfer">
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <h3 class="sec-title mb-4">Karachi mein Property Transfer ka Tareeqa</h3>
+
+                    {% for step, title, details in [
+                        ('1', 'Token aur Sale Agreement (Bayana)', [
+                            'Khareedar aur bechnay wala terms par mutafiq hon',
+                            'Khareedar token raqam ada kare',
+                            'Tehriri "Bayana" ya sale agreement sign ho',
+                            'Yeh agreement deal ko secure karta hai',
                         ]),
-                        ('2', 'Property Dhundhen', [
-                            'Trustworthy agent se rabta karein',
-                            'Multiple properties dekhen — jaldi faisla mat karein',
-                            'Area mein daytime aur raat dono mein jayein',
-                            'Ghar ki condition thoroughly check karein',
+                        ('2', 'Documents aur Tassdeq', [
+                            'Bechnay wala: Original title deed, property tax receipts, CNIC',
+                            'Khareedar: CNIC',
+                            'Authority ka NOC: DHA, KDA, SBCA se — koi baqaya ya tanaaza nahi',
                         ]),
-                        ('3', 'Documents Verify Karein — BOHAAT ZAROORI', [
-                            'Title deed / Fard — maalik ka naam check karein',
-                            'CNIC verify karein maalik ka',
-                            'Property tax receipts dekhen',
-                            'KDA/DHA/SBCA approval check karein',
-                            'Koi qarz ya case toh nahi — check karein',
-                            'Naap check karein khud — measurement',
+                        ('3', 'Akhbaar mein Ishtihaar', [
+                            'Angrezi aur Urdu akhbaron mein notice shaya karein',
+                            'Aam tor par 7 din ka waqt diya jaata hai aitiraaz ke liye',
                         ]),
-                        ('4', 'Deal Pakki Karein', [
-                            'Token raqam dein — receipt zaroor lein',
-                            'Sale agreement banwayein — lawyer se',
-                            'Stamp duty ada karein government ko',
-                            'Registry karwayein Sub-Registrar office mein',
-                            'Bijli, paani, gas transfer karwayein',
+                        ('4', 'Taxes ki Adayegi', [
+                            'Stamp Duty: Property ki qeemat ka 3%',
+                            'Capital Value Tax (CVT): Property ki qeemat ka 2%',
+                            'District Council Fee / Transfer Fee: 1%',
+                            'Adayegi bank draft ke zariye — pehle Sub-Registrar ke paas jaane se',
+                        ]),
+                        ('5', 'Sub-Registrar Office mein Registration', [
+                            'Dono parties Sub-Registrar (SRO) ke samne pesh hon',
+                            'NADRA ke zariye biometric tassdeq',
+                            'Sale deed officially register ho',
+                        ]),
+                        ('6', 'Mutation / Intiqal', [
+                            'Naye maalik ko registered sale deed mile',
+                            'Local Revenue Office ke records update karwayein',
+                            'Yahi asli milkiyat ki sarkari pehchaan hai',
                         ]),
                     ] %}
                     <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
                         <div class="d-flex gap-3 align-items-start">
                             <div style="width:40px;height:40px;border-radius:50%;background:var(--primary-light);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;flex-shrink:0;">{{ step }}</div>
                             <div class="flex-grow-1">
-                                <h5 class="fw-bold mb-3" style="color:var(--primary);">{{ title }}</h5>
-                                {% for point in points %}
-                                <div class="d-flex gap-2 mb-2">
-                                    <i class="bi bi-arrow-right-circle text-primary flex-shrink-0 mt-1"></i>
-                                    <span>{{ point }}</span>
+                                <h5 class="fw-bold mb-2" style="color:var(--primary);">{{ title }}</h5>
+                                {% for detail in details %}
+                                <div class="d-flex gap-2 mb-1">
+                                    <i class="bi bi-arrow-right text-primary flex-shrink-0 mt-1" style="font-size:.8rem;"></i>
+                                    <span class="small">{{ detail }}</span>
                                 </div>
                                 {% endfor %}
                             </div>
                         </div>
                     </div>
                     {% endfor %}
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">🏛️ Karachi ke Ahem Idaray</h5>
+                        {% for org, detail in [
+                            ('DHA Karachi', 'Makhsoos documents ki zaroorat — bechnay wale ki maujoodagi, shirkat kardar ki razamandi, aur director ki manzoori'),
+                            ('Bahria Town Karachi', 'Intizaami tassdeq ke saath andarooni documents ka amal'),
+                            ('Sub-Registrar Office', 'Karachi ki jaidade ki sale deeds ki sarkari registration'),
+                        ] %}
+                        <div class="d-flex gap-2 mb-3">
+                            <i class="bi bi-building text-primary flex-shrink-0 mt-1"></i>
+                            <div><strong>{{ org }}:</strong> <span class="text-muted small">{{ detail }}</span></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
                 </div>
                 <div class="col-lg-4">
                     <div class="card border-0 rounded-4 p-4 mb-3" style="background:#fce4ec;">
@@ -349,77 +433,130 @@
                             <li class="mb-2">❌ Sirf zubani baat par trust mat karein</li>
                             <li class="mb-2">❌ Original documents check kiye baghair paise mat dein</li>
                             <li class="mb-2">❌ Jaldi mein faisla mat karein</li>
-                            <li class="mb-2">❌ Kisi aur ki property bech rahe hain — check karein</li>
+                            <li class="mb-2">❌ NOC check zaroor karein</li>
                             <li class="mb-2">❌ Dubious agents se bachein</li>
                         </ul>
                     </div>
                     <div class="card border-0 rounded-4 p-4" style="background:#e8f5e9;">
-                        <h6 class="fw-bold mb-2" style="color:#2e7d32;">✅ Hamari Help</h6>
-                        <p style="font-size:.88rem;">Documents verify karne mein aur safe deal karne mein help karte hain.</p>
-                        <a href="https://wa.me/923111820660?text=Hello%2C%20property%20khareedne%20mein%20guidance%20chahiye." target="_blank" class="btn btn-whatsapp btn-sm w-100 rounded-pill">
-                            <i class="bi bi-whatsapp me-1"></i>Free Consultation
+                        <h6 class="fw-bold mb-2" style="color:#2e7d32;">✅ Tax Rates (Approx.)</h6>
+                        <ul class="list-unstyled" style="font-size:.88rem;">
+                            <li class="mb-2">📌 Stamp Duty: <strong>3%</strong></li>
+                            <li class="mb-2">📌 CVT: <strong>2%</strong></li>
+                            <li class="mb-2">📌 Transfer Fee: <strong>1%</strong></li>
+                            <li class="mb-2 text-muted" style="font-size:.8rem;">* Filer status aur provincial laws ke mutabiq tabdeel ho sakti hain</li>
+                        </ul>
+                        <a href="{{ url_for('calculators') }}" class="btn btn-primary btn-sm w-100 rounded-pill mb-2">🧮 Calculator Use Karein</a>
+                        <a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp btn-sm w-100 rounded-pill">
+                            <i class="bi bi-whatsapp me-1"></i>Madad Lein
                         </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Documents Checklist -->
-        <div class="tab-pane fade" id="docs">
-            <h3 class="sec-title mb-4">Documents Checklist</h3>
+        <!-- Urdu Laws -->
+        <div class="tab-pane fade" id="urdu_laws">
             <div class="row g-4">
+                <div class="col-lg-8" style="font-family:'Noto Nastaliq Urdu',serif;direction:rtl;line-height:2.4;">
+                    <h3 class="mb-4" style="color:var(--primary);">سندھ کرایہ داری کے قوانین</h3>
 
-                <div class="col-md-6">
-                    <div class="card border-0 rounded-4 p-4 h-100" style="background:var(--light-bg);">
-                        <h5 class="fw-bold mb-3" style="color:#1565c0;">🔑 Kiraye ke liye — Tenant</h5>
-                        {% for doc in ['CNIC original aur copy','Passport size photos (2)','Previous reference letter','Job letter / business proof','Bank statement (optional)','Emergency contact number'] %}
-                        <div class="d-flex gap-2 mb-2 align-items-center">
-                            <div style="width:20px;height:20px;border:2px solid #1565c0;border-radius:4px;flex-shrink:0;"></div>
-                            <span style="font-size:.9rem;">{{ doc }}</span>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card border-0 rounded-4 p-4 h-100" style="background:var(--light-bg);">
-                        <h5 class="fw-bold mb-3" style="color:#e65100;">🏠 Kiraye ke liye — Maalik</h5>
-                        {% for doc in ['CNIC original aur copy','Property ownership proof','Utility bills (bijli/paani)','Blank stamp paper','Rent agreement draft','Witness (2 gawah)'] %}
-                        <div class="d-flex gap-2 mb-2 align-items-center">
-                            <div style="width:20px;height:20px;border:2px solid #e65100;border-radius:4px;flex-shrink:0;"></div>
-                            <span style="font-size:.9rem;">{{ doc }}</span>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card border-0 rounded-4 p-4 h-100" style="background:var(--light-bg);">
-                        <h5 class="fw-bold mb-3" style="color:#2e7d32;">🏡 Property Khareedne ke liye</h5>
-                        {% for doc in ['Seller ka CNIC','Title Deed / Fard','Property Tax receipts (3 saal)','NOC from relevant authority','Sale Agreement','Stamp duty receipt','Registry documents'] %}
-                        <div class="d-flex gap-2 mb-2 align-items-center">
-                            <div style="width:20px;height:20px;border:2px solid #2e7d32;border-radius:4px;flex-shrink:0;"></div>
-                            <span style="font-size:.9rem;">{{ doc }}</span>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card border-0 rounded-4 p-4 h-100" style="background:var(--light-bg);">
-                        <h5 class="fw-bold mb-3" style="color:#6a1b9a;">📋 Document Services — Hamari</h5>
-                        {% for svc in ['Rent Agreement — Rs. Contact karein','Sale Agreement — Rs. Contact karein','Affidavit — Rs. Contact karein','CNIC Verification — Rs. Contact karein','Urdu/English Typing — Rs. Contact karein','CV Making — Rs. Contact karein'] %}
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">کرایہ داری کا معاہدہ</h5>
+                        {% for point in [
+                            'مالک اور کرایہ دار کے درمیان کرایہ داری کا معاہدہ ہمیشہ تحریری ہونا چاہیے',
+                            'دونوں فریقین کے دستخط ہونا ضروری ہیں',
+                            'معاہدہ متعلقہ حکام سے تصدیق شدہ ہونا چاہیے',
+                            'کرایہ داری کا معاہدہ ہر سال تجدید کیا جانا چاہیے',
+                            'کرایہ داری کی شرائط بشمول ماہانہ کرایہ تجدید پر نظر ثانی کی جا سکتی ہیں',
+                        ] %}
                         <div class="d-flex gap-2 mb-2">
                             <i class="bi bi-check-circle-fill text-success flex-shrink-0 mt-1"></i>
-                            <span style="font-size:.9rem;">{{ svc }}</span>
+                            <span>{{ point }}</span>
                         </div>
                         {% endfor %}
-                        <a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp btn-sm w-100 rounded-pill mt-2">
-                            <i class="bi bi-whatsapp me-1"></i>Price Poochhein
+                    </div>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:#fff3e0;">
+                        <h5 class="fw-bold mb-3" style="color:#e65100;">بجلی، گیس، پانی — اہم قانون</h5>
+                        <div class="alert border-0 rounded-3 mb-3" style="background:#fff8e1;">
+                            <strong>سندھ قانون:</strong> کوئی بھی مالک کرایہ دار کی رضامندی کے بغیر بجلی، گیس، یا پانی بند نہیں کر سکتا — چاہے کرایہ بھی نہ دیا گیا ہو!
+                        </div>
+                        {% for item, detail in [
+                            ('ماہانہ بجلی، گیس، پانی کے بل', 'کرایہ دار کی ذمہ داری — وہ استعمال کرتا ہے'),
+                            ('کنکشن / میٹر چارجز', 'مالک کی ذمہ داری — ایک بار کا خرچہ'),
+                            ('سہولیات بند کرنا', 'غیر قانونی ہے — مالک نہیں کر سکتا'),
+                            ('باہمی سمجھ', 'جو معاہدے میں لکھا ہو — وہی لاگو ہوگا'),
+                        ] %}
+                        <div class="d-flex gap-2 mb-2">
+                            <i class="bi bi-lightning-fill text-warning flex-shrink-0 mt-1"></i>
+                            <div><strong>{{ item }}:</strong> <span class="text-muted">{{ detail }}</span></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">کرایہ میں اضافہ — سندھ قانون</h5>
+                        {% for point in [
+                            'مالک صرف وہی کرایہ وصول کر سکتا ہے جو معاہدے میں لکھا ہو',
+                            'سندھ میں کرایہ ہر سال 10 فیصد سے زیادہ نہیں بڑھ سکتا',
+                            'کرایہ کی ادائیگی کی کوئی مخصوص تاریخ نہیں — عام طور پر 10 تاریخ تک',
+                        ] %}
+                        <div class="d-flex gap-2 mb-2">
+                            <i class="bi bi-check-circle-fill text-success flex-shrink-0 mt-1"></i>
+                            <span>{{ point }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="card border-0 rounded-4 p-4 mb-3" style="background:var(--light-bg);">
+                        <h5 class="fw-bold mb-3" style="color:var(--primary);">مرمت اور دیکھ بھال</h5>
+                        {% for point in [
+                            'مالک کرایے کی جگہ کی مرمت اور دیکھ بھال کا ذمہ دار ہے',
+                            'اگر مالک مرمت نہ کرے — کرایہ دار خود کروا سکتا ہے',
+                            'مرمت کے اخراجات کرایے سے کٹ جائیں گے',
+                            'کرایہ دار کو خرچ کا ثبوت فراہم کرنا ہوگا',
+                        ] %}
+                        <div class="d-flex gap-2 mb-2">
+                            <i class="bi bi-tools text-primary flex-shrink-0 mt-1"></i>
+                            <span>{{ point }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="card border-0 rounded-4 p-4" style="background:#fce4ec;">
+                        <h5 class="fw-bold mb-3" style="color:#c62828;">کرایہ نہیں دے رہا — کیا کریں؟</h5>
+                        {% for step, title, detail in [
+                            ('1', 'زبانی یاد دہانی', 'پہلے براہ راست بات کریں — شائستگی سے'),
+                            ('2', 'تحریری نوٹس', 'ایک ہفتے بعد تحریری نوٹس دیں'),
+                            ('3', 'قانونی نوٹس', 'وکیل سے قانونی نوٹس بھجوائیں'),
+                            ('4', 'رینٹ کنٹرولر کورٹ', 'کراچی میں رینٹ کنٹرولر کورٹ میں کیس فائل کریں'),
+                            ('5', 'عدالتی حکم', 'عدالتی حکم کے بعد پولیس کی مدد سے گھر خالی کروائیں'),
+                        ] %}
+                        <div class="d-flex gap-3 mb-3">
+                            <div style="width:32px;height:32px;border-radius:50%;background:#c62828;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">{{ step }}</div>
+                            <div><strong>{{ title }}</strong><div class="text-muted small">{{ detail }}</div></div>
+                        </div>
+                        {% endfor %}
+                        <div class="alert border-0 rounded-3 mb-0" style="background:#fff3cd;">
+                            <strong>⚠️ ضروری:</strong> عدالتی حکم کے بغیر کبھی بھی زبردستی نہیں نکال سکتے — یہ غیر قانونی ہے!
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-4">
+                    <div class="card border-0 rounded-4 p-4" style="background:var(--primary);color:#fff;font-family:'Noto Nastaliq Urdu',serif;direction:rtl;line-height:2.2;">
+                        <h6 class="fw-bold mb-3" style="color:var(--accent-light);">ہماری خدمات</h6>
+                        <ul style="font-size:.88rem;color:rgba(255,255,255,.85);" class="mb-3">
+                            <li>کرایہ نامہ بنوائیں</li>
+                            <li>کرایہ دار کی تصدیق</li>
+                            <li>قانونی دستاویزات</li>
+                            <li>مفت مشاورت</li>
+                        </ul>
+                        <a href="https://wa.me/923111820660?text=Hello%2C%20property%20laws%20ke%20baare%20mein%20guidance%20chahiye." target="_blank" class="btn btn-whatsapp w-100 rounded-pill fw-bold">
+                            <i class="bi bi-whatsapp me-1"></i>واٹس ایپ کریں
                         </a>
                     </div>
                 </div>
-
             </div>
         </div>
 
