@@ -2,31 +2,55 @@
 {% block title %}{{ T.nav_home }} - ApnaGhar | اپنا گھر{% endblock %}
 {% block content %}
 
-<!-- Hero -->
-<section style="background:linear-gradient(135deg,#1a3c5e 0%,#0f2340 100%);color:#fff;padding:60px 0 40px;position:relative;overflow:hidden;">
+<!-- Hero — CLEAN: no logo repeat, big text only -->
+<section style="background:linear-gradient(135deg,#1a3c5e 0%,#0f2340 100%);color:#fff;padding:70px 0 50px;position:relative;overflow:hidden;">
     <div style="position:absolute;top:-50%;right:-5%;width:400px;height:400px;border-radius:50%;background:rgba(200,151,58,.08);"></div>
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-7 text-center text-lg-start">
-                <p style="color:var(--accent-light);font-weight:600;font-size:.85rem;letter-spacing:.5px;" class="mb-2">{{ T.hero_tag }}</p>
+            <div class="col-lg-7">
+                <!-- Tag line -->
+                <p style="color:var(--accent-light);font-weight:600;font-size:.85rem;letter-spacing:.5px;" class="mb-3">{{ T.hero_tag }}</p>
 
-                <!-- Logo style heading -->
-                <div class="mb-2 d-flex align-items-center gap-3">
-                    <img src="/static/logo.png" alt="ApnaGhar"
-                         style="height:80px;width:auto;filter:drop-shadow(0 4px 15px rgba(0,0,0,.3));">
-                    <div>
-                        <h1 class="display-5 fw-bold mb-0" style="color:#fff;font-family:'Noto Nastaliq Urdu',serif;line-height:1.3;">اپنا گھر</h1>
-                        <div style="color:var(--accent-light);font-size:1.1rem;font-weight:600;letter-spacing:1px;">ApnaGhar</div>
-                    </div>
+                <!-- Brand name — BIG, clean -->
+                <h1 class="mb-1" style="color:#fff;font-family:'Noto Nastaliq Urdu',serif;font-size:3rem;line-height:1.3;font-weight:700;">
+                    اپنا گھر
+                </h1>
+                <h2 class="mb-3" style="color:var(--accent-light);font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:600;">
+                    ApnaGhar
+                </h2>
+
+                <!-- Improved tagline -->
+                <p style="color:rgba(255,255,255,.88);font-size:1.05rem;margin:0 0 30px;line-height:1.7;max-width:520px;">
+                    {% if lang == 'ur' %}
+                    محفوظ ڈیل، آسان اقدام — ڈیل بھی، ڈاکومنٹس بھی — سب ایک جگہ۔
+                    {% else %}
+                    Secure Deals, Easy Steps —<br>
+                    <strong style="color:var(--accent-light);">Deals &amp; Documents, All in One Place.</strong>
+                    {% endif %}
+                </p>
+
+                <!-- Buttons -->
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{{ url_for('rent_lena') }}" class="btn btn-accent btn-lg rounded-pill px-4">
+                        🔑 {{ T.btn_browse }}
+                    </a>
+                    <a href="{{ url_for('rent_dena') }}" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                        🏠 {{ T.btn_post }}
+                    </a>
+                    <a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp btn-lg rounded-pill px-4">
+                        <i class="bi bi-whatsapp me-1"></i>WhatsApp
+                    </a>
                 </div>
-
-                <p style="color:rgba(255,255,255,.88);font-size:1rem;margin:0 0 30px;line-height:1.7;">{{ T.hero_sub }}</p>
             </div>
-            <div class="col-lg-5 d-none d-lg-block text-center">
+
+            <!-- Right side — Muhammad Saleem photo -->
+            <div class="col-lg-5 d-none d-lg-block text-center mt-4 mt-lg-0">
                 <img src="/static/MUHAMMAD_SALEEM.png"
-                     alt="Muhammad Saleem"
-                     style="width:100%;max-width:420px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.4);object-fit:cover;max-height:320px;">
-                <p class="mt-2 mb-0" style="color:rgba(255,255,255,.7);font-size:.85rem;">Muhammad Saleem — Founder, ApnaGhar | اپنا گھر</p>
+                     alt="Muhammad Saleem — Founder ApnaGhar"
+                     style="width:100%;max-width:400px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.4);object-fit:cover;max-height:300px;">
+                <p class="mt-2 mb-0" style="color:rgba(255,255,255,.7);font-size:.82rem;">
+                    Muhammad Saleem — Founder, ApnaGhar | اپنا گھر
+                </p>
             </div>
         </div>
     </div>
@@ -51,8 +75,6 @@
         <p class="text-muted mt-2">{{ T.choose_sub }}</p>
     </div>
     <div class="row g-4">
-
-        <!-- Kiraya Par Lena -->
         <div class="col-md-6 col-lg-3">
             <a href="{{ url_for('rent_lena') }}" class="action-card card-rl">
                 <span class="c-icon">🔑</span>
@@ -61,8 +83,6 @@
                 <span class="c-btn">{{ T.card_rent_lena_btn }}</span>
             </a>
         </div>
-
-        <!-- Kiraya Par Dena -->
         <div class="col-md-6 col-lg-3">
             <a href="{{ url_for('rent_dena') }}" class="action-card card-rd">
                 <span class="c-icon">🏠</span>
@@ -71,8 +91,6 @@
                 <span class="c-btn">{{ T.card_rent_dena_btn }}</span>
             </a>
         </div>
-
-        <!-- Khareedna -->
         <div class="col-md-6 col-lg-3">
             <a href="{{ url_for('purchase_lena') }}" class="action-card card-buy">
                 <span class="c-icon">🏡</span>
@@ -81,8 +99,6 @@
                 <span class="c-btn">{{ T.card_buy_btn }}</span>
             </a>
         </div>
-
-        <!-- Bechna -->
         <div class="col-md-6 col-lg-3">
             <a href="{{ url_for('sale_dena') }}" class="action-card card-sell">
                 <span class="c-icon">🏷️</span>
@@ -91,10 +107,9 @@
                 <span class="c-btn">{{ T.card_sell_btn }}</span>
             </a>
         </div>
-
     </div>
 
-    <!-- Requirement Quick Banners -->
+    <!-- Requirement Banners -->
     <div class="row g-3 mt-2">
         <div class="col-md-6">
             <div class="card border-0 rounded-4 p-3" style="background:#e3f0ff;">
@@ -104,8 +119,7 @@
                         <strong style="color:#1565c0;display:block;">{{ T.rent_req_title }}</strong>
                         <small class="text-muted">{{ T.rent_req_sub }}</small>
                     </div>
-                    <a href="{{ url_for('rent_chahiye') }}" class="btn btn-sm rounded-pill flex-shrink-0"
-                       style="background:#1565c0;color:#fff;">{{ T.rent_req_btn }}</a>
+                    <a href="{{ url_for('rent_chahiye') }}" class="btn btn-sm rounded-pill flex-shrink-0" style="background:#1565c0;color:#fff;">{{ T.rent_req_btn }}</a>
                 </div>
             </div>
         </div>
@@ -117,8 +131,7 @@
                         <strong style="color:#2e7d32;display:block;">{{ T.buy_req_title }}</strong>
                         <small class="text-muted">{{ T.buy_req_sub }}</small>
                     </div>
-                    <a href="{{ url_for('purchase_chahiye') }}" class="btn btn-sm rounded-pill flex-shrink-0"
-                       style="background:#2e7d32;color:#fff;">{{ T.buy_req_btn }}</a>
+                    <a href="{{ url_for('purchase_chahiye') }}" class="btn btn-sm rounded-pill flex-shrink-0" style="background:#2e7d32;color:#fff;">{{ T.buy_req_btn }}</a>
                 </div>
             </div>
         </div>
@@ -130,12 +143,8 @@
 <section class="py-4" style="background:var(--light-bg);">
     <div class="container">
         <div class="d-flex justify-content-between align-items-end mb-3">
-            <div>
-                <h2 class="sec-title mb-0" style="font-size:1.4rem;">{{ T.rent_props_title }}</h2>
-                <p class="text-muted small mt-1 mb-0">{{ T.rent_props_sub }}</p>
-            </div>
-            <a href="{{ url_for('rent_lena') }}" class="btn btn-sm rounded-pill"
-               style="background:#e3f0ff;color:#1565c0;font-weight:600;">{{ T.view_all }}</a>
+            <div><h2 class="sec-title mb-0" style="font-size:1.4rem;">{{ T.rent_props_title }}</h2><p class="text-muted small mt-1 mb-0">{{ T.rent_props_sub }}</p></div>
+            <a href="{{ url_for('rent_lena') }}" class="btn btn-sm rounded-pill" style="background:#e3f0ff;color:#1565c0;font-weight:600;">{{ T.view_all }}</a>
         </div>
         <div class="row g-3">
             {% for p in featured_rent %}
@@ -144,22 +153,11 @@
                     {% if p.filename %}<img src="/uploads/{{ p.filename }}" alt="{{ p.title }}">
                     {% else %}<div class="img-ph"><i class="bi bi-building" style="font-size:2.5rem;"></i></div>{% endif %}
                     <div class="p-3">
-                        <div class="d-flex gap-2 mb-2">
-                            <span class="badge-rent">{{ T.footer_rent }}</span>
-                            <span class="badge-type">{{ p.property_type }}</span>
-                        </div>
+                        <div class="d-flex gap-2 mb-2"><span class="badge-rent">{{ T.footer_rent }}</span><span class="badge-type">{{ p.property_type }}</span></div>
                         <h6 class="fw-bold mb-1">{{ p.title }}</h6>
                         <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>{{ p.location }}</p>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="prop-price">Rs. {{ p.price }}{{ T.per_month }}</span>
-                            {% if p.bedrooms and p.bedrooms != '0' %}
-                            <span class="text-muted small"><i class="bi bi-door-open me-1"></i>{{ p.bedrooms }}</span>
-                            {% endif %}
-                        </div>
-                        <a href="{{ url_for('rent_detail', pid=p.id) }}"
-                           class="btn w-100 rounded-pill btn-sm" style="background:#1565c0;color:#fff;">
-                            {{ T.view_details }}
-                        </a>
+                        <div class="mb-2"><span class="prop-price">Rs. {{ p.price }}{{ T.per_month }}</span></div>
+                        <a href="{{ url_for('rent_detail', pid=p.id) }}" class="btn w-100 rounded-pill btn-sm" style="background:#1565c0;color:#fff;">{{ T.view_details }}</a>
                     </div>
                 </div>
             </div>
@@ -174,12 +172,8 @@
 <section class="py-4">
     <div class="container">
         <div class="d-flex justify-content-between align-items-end mb-3">
-            <div>
-                <h2 class="sec-title mb-0" style="font-size:1.4rem;">{{ T.sale_props_title }}</h2>
-                <p class="text-muted small mt-1 mb-0">{{ T.sale_props_sub }}</p>
-            </div>
-            <a href="{{ url_for('purchase_lena') }}" class="btn btn-sm rounded-pill"
-               style="background:#e8f5e9;color:#2e7d32;font-weight:600;">{{ T.view_all }}</a>
+            <div><h2 class="sec-title mb-0" style="font-size:1.4rem;">{{ T.sale_props_title }}</h2><p class="text-muted small mt-1 mb-0">{{ T.sale_props_sub }}</p></div>
+            <a href="{{ url_for('purchase_lena') }}" class="btn btn-sm rounded-pill" style="background:#e8f5e9;color:#2e7d32;font-weight:600;">{{ T.view_all }}</a>
         </div>
         <div class="row g-3">
             {% for p in featured_sale %}
@@ -188,19 +182,11 @@
                     {% if p.filename %}<img src="/uploads/{{ p.filename }}" alt="{{ p.title }}">
                     {% else %}<div class="img-ph"><i class="bi bi-building" style="font-size:2.5rem;"></i></div>{% endif %}
                     <div class="p-3">
-                        <div class="d-flex gap-2 mb-2">
-                            <span class="badge-sale">Sale</span>
-                            <span class="badge-type">{{ p.property_type }}</span>
-                        </div>
+                        <div class="d-flex gap-2 mb-2"><span class="badge-sale">Sale</span><span class="badge-type">{{ p.property_type }}</span></div>
                         <h6 class="fw-bold mb-1">{{ p.title }}</h6>
                         <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>{{ p.location }}</p>
-                        <div class="mb-2">
-                            <span class="prop-price">Rs. {{ p.price }}</span>
-                        </div>
-                        <a href="{{ url_for('sale_detail', pid=p.id) }}"
-                           class="btn w-100 rounded-pill btn-sm" style="background:#2e7d32;color:#fff;">
-                            {{ T.view_details }}
-                        </a>
+                        <div class="mb-2"><span class="prop-price">Rs. {{ p.price }}</span></div>
+                        <a href="{{ url_for('sale_detail', pid=p.id) }}" class="btn w-100 rounded-pill btn-sm" style="background:#2e7d32;color:#fff;">{{ T.view_details }}</a>
                     </div>
                 </div>
             </div>
@@ -210,7 +196,7 @@
 </section>
 {% endif %}
 
-<!-- Other Services -->
+<!-- Services -->
 <section class="py-4" style="background:var(--light-bg);">
     <div class="container">
         <h2 class="sec-title mb-4" style="font-size:1.4rem;">{{ T.services_title }}</h2>
@@ -220,8 +206,7 @@
                     <i class="bi bi-person-check-fill" style="font-size:2.5rem;color:#1565c0;"></i>
                     <h6 class="fw-bold mt-2">{{ T.nav_verify }}</h6>
                     <p class="text-muted small">{{ T.verif_sub }}</p>
-                    <a href="{{ url_for('tenant_verification') }}" class="btn btn-sm btn-outline-primary rounded-pill">
-                        {{ T.verif_btn }}</a>
+                    <a href="{{ url_for('tenant_verification') }}" class="btn btn-sm btn-outline-primary rounded-pill">{{ T.verif_btn }}</a>
                 </div>
             </div>
             <div class="col-md-4">
@@ -229,8 +214,7 @@
                     <i class="bi bi-file-earmark-text-fill" style="font-size:2.5rem;color:var(--accent);"></i>
                     <h6 class="fw-bold mt-2">{{ T.nav_docs }}</h6>
                     <p class="text-muted small">{{ T.doc_sub }}</p>
-                    <a href="{{ url_for('document_services') }}" class="btn btn-sm btn-outline-primary rounded-pill">
-                        {{ T.view_all }}</a>
+                    <a href="{{ url_for('document_services') }}" class="btn btn-sm btn-outline-primary rounded-pill">{{ T.view_all }}</a>
                 </div>
             </div>
             <div class="col-md-4">
@@ -238,8 +222,7 @@
                     <i class="bi bi-whatsapp" style="font-size:2.5rem;color:#25d366;"></i>
                     <h6 class="fw-bold mt-2">WhatsApp Support</h6>
                     <p class="text-muted small">0311-1820660</p>
-                    <a href="https://wa.me/923111820660" target="_blank" class="btn btn-sm btn-whatsapp rounded-pill">
-                        Chat</a>
+                    <a href="https://wa.me/923111820660" target="_blank" class="btn btn-sm btn-whatsapp rounded-pill">Chat</a>
                 </div>
             </div>
         </div>
@@ -256,16 +239,13 @@
                     <div class="row g-2 mt-2">
                         {% for o in [T.offer_1, T.offer_2, T.offer_3] %}
                         <div class="col-sm-4">
-                            <div style="background:rgba(255,255,255,.2);border-radius:10px;padding:12px;text-align:center;font-size:.85rem;font-weight:600;">
-                                ✓ {{ o }}
-                            </div>
+                            <div style="background:rgba(255,255,255,.2);border-radius:10px;padding:12px;text-align:center;font-size:.85rem;font-weight:600;">✓ {{ o }}</div>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
                 <div class="col-lg-5 mt-3 mt-lg-0 text-center">
-                    <a href="https://wa.me/923111820660?text=Hello%2C%20I%20am%20an%20Akhtar%20Colony%20resident%20and%20want%20the%20special%20offer."
-                       target="_blank" class="btn btn-light rounded-pill px-4 fw-bold" style="color:var(--accent);">
+                    <a href="https://wa.me/923111820660?text=Hello%2C%20Akhtar%20Colony%20resident%20hoon%20aur%20special%20offer%20chahiye." target="_blank" class="btn btn-light rounded-pill px-4 fw-bold" style="color:var(--accent);">
                         <i class="bi bi-whatsapp me-2"></i>{{ T.offer_btn }}
                     </a>
                     <br>
