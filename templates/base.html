@@ -1,317 +1,284 @@
-<!DOCTYPE html>
-<html lang="{{ lang }}" dir="{{ T.dir }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ApnaGhar | اپنا گھر{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@600;700&family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% extends 'base.html' %}
+{% block title %}{{ T.nav_home }} - ApnaGhar | اپنا گھر{% endblock %}
+{% block content %}
 
-    <style>
-        :root {
-            --primary:#1a3c5e; --primary-light:#2557a7; --accent:#c8973a;
-            --accent-light:#f0c060; --light-bg:#f8f9fc; --card-border:#e8edf5;
-        }
-        body {
-            font-family:{% if lang=='ur' %}'Noto Nastaliq Urdu',serif{% else %}'DM Sans',sans-serif{% endif %};
-            color:#1a2535; background:#fff;
-            {% if lang=='ur' %}line-height:2.2;{% endif %}
-        }
-        h1,h2,h3,h4,h5,h6 {
-            font-family:{% if lang=='ur' %}'Noto Nastaliq Urdu',serif{% else %}'Playfair Display',serif{% endif %};
-        }
-        {% if T.dir=='rtl' %}
-        .ms-auto{margin-left:0!important;margin-right:auto!important;}
-        .wa-float{right:auto!important;left:24px!important;}
-        .alert{border-left:none;border-right:4px solid;}
-        .dropdown-menu{text-align:right;}
-        {% endif %}
-
-        /* ── Navbar ── */
-        .navbar{background:var(--primary)!important;padding:10px 0;box-shadow:0 2px 20px rgba(0,0,0,.15);}
-
-        /* CLEAN BRAND — single logo only */
-        .navbar-brand {
-            display:flex;align-items:center;gap:10px;text-decoration:none;
-        }
-        .navbar-brand .brand-logo {
-            height:46px;width:auto;object-fit:contain;
-        }
-        .navbar-brand .brand-text {
-            display:flex;flex-direction:column;line-height:1.1;
-        }
-        .navbar-brand .brand-urdu {
-            font-family:'Noto Nastaliq Urdu',serif;
-            font-size:1.15rem;font-weight:700;color:#fff;
-        }
-        .navbar-brand .brand-en {
-            font-size:.65rem;color:var(--accent-light);
-            letter-spacing:.5px;font-weight:600;
-        }
-
-        .nav-link{color:rgba(255,255,255,.88)!important;font-weight:500;padding:6px 10px!important;border-radius:6px;transition:all .2s;font-size:.88rem;white-space:nowrap;}
-        .nav-link:hover,.nav-link.active{color:#fff!important;background:rgba(255,255,255,.15);}
-        .navbar-toggler{border-color:rgba(255,255,255,.3);}
-        .navbar-toggler-icon{filter:invert(1);}
-
-        /* ── Dropdown ── */
-        .dropdown-menu{border:none;box-shadow:0 8px 30px rgba(0,0,0,.12);border-radius:12px;padding:6px;min-width:240px;}
-        .dropdown-item{border-radius:8px;padding:10px 14px;font-size:.88rem;white-space:nowrap;display:flex!important;align-items:center;gap:10px;color:#1a2535;line-height:1.5;}
-        .dropdown-item:hover{background:var(--light-bg);color:var(--primary-light);}
-        .dropdown-item .di{flex-shrink:0;width:24px;text-align:center;font-style:normal;}
-        .dropdown-item .dt{flex:1;white-space:nowrap;}
-
-        /* ── Language Button ── */
-        .lang-btn{background:rgba(255,255,255,.15)!important;color:#fff!important;border:1px solid rgba(255,255,255,.35)!important;border-radius:20px!important;padding:5px 14px!important;font-size:.82rem!important;font-weight:600!important;transition:all .2s;font-family:{% if lang=='ur' %}'DM Sans',sans-serif{% else %}'Noto Nastaliq Urdu',serif{% endif %}!important;white-space:nowrap;}
-        .lang-btn:hover{background:var(--accent)!important;border-color:var(--accent)!important;}
-
-        /* ── 4 Action Cards ── */
-        .action-card{border:none;border-radius:18px;cursor:pointer;transition:all .28s;text-decoration:none;display:block;padding:28px 20px;min-height:220px;text-align:center;}
-        .action-card:hover{transform:translateY(-7px);box-shadow:0 18px 45px rgba(0,0,0,.18);}
-        .action-card .c-icon{font-size:2.8rem;display:block;margin-bottom:12px;}
-        .action-card .c-title{font-size:{% if lang=='ur' %}1.15rem{% else %}1.05rem{% endif %};font-weight:700;color:#fff;margin-bottom:8px;line-height:{% if lang=='ur' %}2.2{% else %}1.4{% endif %};white-space:pre-line;}
-        .action-card .c-sub{color:rgba(255,255,255,.85);font-size:.82rem;margin-bottom:14px;line-height:1.6;}
-        .action-card .c-btn{background:rgba(255,255,255,.22);color:#fff;border-radius:20px;padding:5px 16px;font-size:.8rem;font-weight:600;display:inline-block;}
-        .card-rl{background:linear-gradient(135deg,#1565c0,#1976d2);}
-        .card-rd{background:linear-gradient(135deg,#e65100,#f57c00);}
-        .card-buy{background:linear-gradient(135deg,#2e7d32,#388e3c);}
-        .card-sell{background:linear-gradient(135deg,#6a1b9a,#7b1fa2);}
-
-        /* ── Property Cards ── */
-        .prop-card{border:1px solid var(--card-border);border-radius:14px;overflow:hidden;transition:all .25s;background:#fff;height:100%;}
-        .prop-card:hover{transform:translateY(-4px);box-shadow:0 12px 35px rgba(0,0,0,.1);}
-        .prop-card img{height:190px;object-fit:cover;width:100%;}
-        .prop-card .img-ph{height:190px;background:linear-gradient(135deg,#e8edf5,#d0d9ec);display:flex;align-items:center;justify-content:center;color:#6b7a99;}
-
-        /* ── Badges ── */
-        .badge-rent{background:#e3f0ff;color:#1565c0;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:600;white-space:nowrap;}
-        .badge-sale{background:#e8f5e9;color:#2e7d32;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:600;white-space:nowrap;}
-        .badge-type{background:var(--primary);color:#fff;padding:4px 10px;border-radius:20px;font-size:.72rem;white-space:nowrap;}
-
-        /* ── Buttons ── */
-        .btn-primary{background:var(--primary-light);border-color:var(--primary-light);font-weight:500;}
-        .btn-primary:hover{background:var(--primary);border-color:var(--primary);}
-        .btn-whatsapp{background:#25d366;border-color:#25d366;color:#fff;font-weight:600;}
-        .btn-whatsapp:hover{background:#1ebe5d;color:#fff;}
-        .btn-accent{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
-
-        /* ── Forms ── */
-        .form-control,.form-select{border-radius:9px;border-color:#d0d9ec;padding:10px 14px;}
-        .form-control:focus,.form-select:focus{border-color:var(--primary-light);box-shadow:0 0 0 3px rgba(37,87,167,.12);}
-        .form-label{font-weight:500;margin-bottom:4px;font-size:.9rem;}
-
-        /* ── Flash ── */
-        .alert{border:none;border-left:4px solid;border-radius:10px;}
-        .alert-success{border-left-color:#198754;background:#d1e7dd;}
-        .alert-danger{border-left-color:#dc3545;background:#f8d7da;}
-        .alert-warning{border-left-color:#ffc107;background:#fff3cd;}
-        .alert-info{border-left-color:#0dcaf0;background:#cff4fc;}
-
-        /* ── Float WA ── */
-        .wa-float{position:fixed;bottom:28px;right:24px;z-index:1000;width:58px;height:58px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.5);text-decoration:none;animation:pulse 2.5s infinite;}
-        .wa-float i{font-size:1.8rem;color:#fff;}
-        @keyframes pulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.5)}50%{box-shadow:0 4px 30px rgba(37,211,102,.8)}}
-
-        /* ── Page Headers ── */
-        .page-hdr{padding:40px 0 30px;color:#fff;}
-        .page-hdr h1{color:#fff;} .page-hdr p{color:rgba(255,255,255,.85);}
-        .hdr-rent{background:linear-gradient(135deg,#1565c0,#0d47a1);}
-        .hdr-sale{background:linear-gradient(135deg,#2e7d32,#1b5e20);}
-        .hdr-buy{background:linear-gradient(135deg,#6a1b9a,#4a148c);}
-        .hdr-give{background:linear-gradient(135deg,#e65100,#bf360c);}
-        .hdr-verif{background:linear-gradient(135deg,var(--primary),#0f2340);}
-
-        /* ── Misc ── */
-        .prop-price{font-size:1.2rem;font-weight:700;color:var(--accent);}
-        .stats-strip{background:var(--primary-light);color:#fff;padding:18px 0;}
-        .stat-num{font-size:1.8rem;font-weight:700;color:var(--accent-light);font-family:'Playfair Display',serif;}
-        .sec-title{font-family:{% if lang=='ur' %}'Noto Nastaliq Urdu',serif{% else %}'Playfair Display',serif{% endif %};color:var(--primary);display:inline-block;}
-        .sec-title::after{content:'';display:block;width:50px;height:3px;background:var(--accent);margin-top:6px;border-radius:2px;}
-        .offer-box{background:linear-gradient(135deg,var(--accent),#e8a840);border-radius:18px;padding:36px;color:#fff;}
-        .st-pending{background:#fff3cd;color:#856404;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;}
-        .st-approved{background:#d1e7dd;color:#0f5132;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;}
-        .st-rejected{background:#f8d7da;color:#842029;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;}
-
-        /* ── Footer ── */
-        footer{background:var(--primary);color:rgba(255,255,255,.8);padding:45px 0 20px;}
-        footer h6{color:#fff;}
-        footer a{color:rgba(255,255,255,.7);text-decoration:none;}
-        footer a:hover{color:var(--accent-light);}
-        footer ul{list-style:none;padding:0;margin:0;}
-        footer ul li{margin-bottom:8px;white-space:nowrap;}
-        footer ul li a{white-space:nowrap;display:inline-flex;align-items:center;gap:6px;font-size:.85rem;}
-        .soc-link{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);display:inline-flex;align-items:center;justify-content:center;transition:all .2s;}
-        .soc-link:hover{background:var(--accent);}
-    </style>
-    {% block extra_css %}{% endblock %}
-</head>
-<body>
-
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg">
+<!-- ══ HERO ══ -->
+<section style="background:linear-gradient(135deg,#1a3c5e 0%,#0f2340 100%);color:#fff;padding:70px 0 50px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-50%;right:-5%;width:400px;height:400px;border-radius:50%;background:rgba(200,151,58,.08);pointer-events:none;"></div>
     <div class="container">
+        <div class="row align-items-center">
 
-        <!-- SINGLE CLEAN LOGO -->
-        <a class="navbar-brand" href="{{ url_for('index') }}">
-            <img src="/static/logo.png" alt="ApnaGhar Logo" class="brand-logo">
-            <div class="brand-text">
-                <span class="brand-urdu">اپنا گھر</span>
-                <span class="brand-en">ApnaGhar</span>
+            <!-- LEFT: Text only — NO logo image here -->
+            <div class="col-lg-7">
+                <p style="color:var(--accent-light);font-weight:600;font-size:.85rem;letter-spacing:.5px;" class="mb-3">
+                    {{ T.hero_tag }}
+                </p>
+
+                <!-- Pure text — no image tag -->
+                <h1 style="color:#fff;font-size:3.2rem;font-weight:700;line-height:1.2;margin-bottom:4px;font-family:'Noto Nastaliq Urdu',serif;">
+                    اپنا گھر
+                </h1>
+                <h2 style="color:var(--accent-light);font-size:1.5rem;font-weight:600;letter-spacing:1px;margin-bottom:20px;font-family:'Playfair Display',serif;">
+                    ApnaGhar
+                </h2>
+
+                <!-- Improved Tagline -->
+                <p style="color:rgba(255,255,255,.88);font-size:1.05rem;line-height:1.8;margin-bottom:30px;max-width:520px;">
+                    {% if lang == 'ur' %}
+                        محفوظ ڈیل، آسان اقدام —<br>
+                        <strong style="color:var(--accent-light);">ڈیل بھی، ڈاکومنٹس بھی — سب ایک جگہ۔</strong>
+                    {% else %}
+                        Secure Deals, Easy Steps —<br>
+                        <strong style="color:var(--accent-light);">Deals &amp; Documents, All in One Place.</strong>
+                    {% endif %}
+                </p>
+
+                <!-- Buttons with text -->
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{{ url_for('rent_lena') }}" class="btn btn-accent btn-lg rounded-pill px-4">
+                        🔑 {% if lang=='ur' %}پراپرٹیز دیکھیں{% else %}Browse Properties{% endif %}
+                    </a>
+                    <a href="{{ url_for('rent_dena') }}" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                        🏠 {% if lang=='ur' %}پراپرٹی لسٹ کریں{% else %}List Property{% endif %}
+                    </a>
+                    <a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp btn-lg rounded-pill px-4">
+                        <i class="bi bi-whatsapp me-1"></i>WhatsApp
+                    </a>
+                </div>
             </div>
-        </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navMain">
-            <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+            <!-- RIGHT: Muhammad Saleem Photo -->
+            <div class="col-lg-5 d-none d-lg-flex flex-column align-items-center mt-4 mt-lg-0">
+                <img src="/static/MUHAMMAD_SALEEM.png"
+                     alt="Muhammad Saleem"
+                     style="width:100%;max-width:380px;max-height:290px;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.4);object-fit:cover;">
+                <p class="mt-2 mb-0" style="color:rgba(255,255,255,.7);font-size:.82rem;text-align:center;">
+                    Muhammad Saleem — Founder, ApnaGhar | اپنا گھر
+                </p>
+            </div>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('index') }}">
-                        <i class="bi bi-house me-1"></i>{{ T.nav_home }}
-                    </a>
-                </li>
-
-                <!-- Kiraya Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-key me-1"></i>{{ T.nav_rent }}
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ url_for('rent_lena') }}"><em class="di">🔑</em><span class="dt">{{ T.nav_rent_lena }}</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('rent_dena') }}"><em class="di">🏠</em><span class="dt">{{ T.nav_rent_dena }}</span></a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ url_for('rent_chahiye') }}"><em class="di">📋</em><span class="dt">{{ T.nav_rent_req }}</span></a></li>
-                    </ul>
-                </li>
-
-                <!-- Buy/Sell Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-building me-1"></i>{{ T.nav_buy_sell }}
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ url_for('purchase_lena') }}"><em class="di">🏡</em><span class="dt">{{ T.nav_buy }}</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('sale_dena') }}"><em class="di">🏷️</em><span class="dt">{{ T.nav_sell }}</span></a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ url_for('purchase_chahiye') }}"><em class="di">📋</em><span class="dt">{{ T.nav_buy_req }}</span></a></li>
-                    </ul>
-                </li>
-
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('tenant_verification') }}"><i class="bi bi-person-check me-1"></i>{{ T.nav_verify }}</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('document_services') }}"><i class="bi bi-file-earmark-text me-1"></i>{{ T.nav_docs }}</a></li>
-
-                <!-- Resources Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-info-circle me-1"></i>{% if lang=='ur' %}معلومات{% else %}Resources{% endif %}
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ url_for('property_laws') }}"><em class="di">⚖️</em><span class="dt">{% if lang=='ur' %}پراپرٹی قوانین{% else %}Property Laws{% endif %}</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('calculators') }}"><em class="di">🧮</em><span class="dt">{% if lang=='ur' %}کیلکولیٹر{% else %}Calculators{% endif %}</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('area_guide') }}"><em class="di">🗺️</em><span class="dt">{% if lang=='ur' %}کراچی ایریا گائیڈ{% else %}Karachi Area Guide{% endif %}</span></a></li>
-                    </ul>
-                </li>
-
-                {% if session.user_id %}
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}"><i class="bi bi-person-circle me-1"></i>{{ session.user_name.split()[0] }}</a></li>
-                {% if session.is_admin %}<li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('admin_panel') }}"><i class="bi bi-shield me-1"></i>{{ T.nav_admin }}</a></li>{% endif %}
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">{{ T.nav_logout }}</a></li>
-                {% else %}
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">{{ T.nav_login }}</a></li>
-                <li class="nav-item"><a class="nav-link ms-1" href="{{ url_for('register') }}" style="background:var(--accent);border-radius:8px;color:#fff!important;padding:6px 14px!important;font-weight:600;">{{ T.nav_register }}</a></li>
-                {% endif %}
-
-                <!-- Language Toggle -->
-                <li class="nav-item ms-1">
-                    <a href="{{ url_for('set_lang', lang=T.switch_code) }}" class="nav-link lang-btn">
-                        🌐 {{ T.switch_lang }}
-                    </a>
-                </li>
-            </ul>
         </div>
     </div>
-</nav>
+</section>
 
-<!-- Flash Messages -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-<div class="container mt-3">
-    {% for cat, msg in messages %}
-    <div class="alert alert-{{ cat }} alert-dismissible fade show">
-        {{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-{% endwith %}
-
-{% block content %}{% endblock %}
-
-<!-- FOOTER -->
-<footer class="mt-5">
+<!-- ══ STATS STRIP ══ -->
+<div class="stats-strip">
     <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <!-- Footer Logo — clean single logo -->
-                <div class="d-flex align-items-center gap-2 mb-3">
-                    <img src="/static/logo.png" alt="ApnaGhar" style="height:42px;width:auto;">
-                    <div>
-                        <div style="color:#fff;font-weight:700;font-family:'Noto Nastaliq Urdu',serif;font-size:1rem;line-height:1.2;">اپنا گھر</div>
-                        <div style="color:var(--accent-light);font-size:.7rem;letter-spacing:.5px;">ApnaGhar</div>
+        <div class="row g-2 text-center">
+            <div class="col-3">
+                <div class="stat-num">{{ stats.rent }}+</div>
+                <div style="font-size:.8rem;">{{ T.rent_props_title }}</div>
+            </div>
+            <div class="col-3">
+                <div class="stat-num">{{ stats.sale }}+</div>
+                <div style="font-size:.8rem;">{{ T.sale_props_title }}</div>
+            </div>
+            <div class="col-3">
+                <div class="stat-num">{{ stats.verified }}+</div>
+                <div style="font-size:.8rem;">{{ T.nav_verify }}</div>
+            </div>
+            <div class="col-3">
+                <div class="stat-num">{{ stats.clients }}+</div>
+                <div style="font-size:.8rem;">{{ T.nav_home }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ 4 ACTION CARDS ══ -->
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h2 class="sec-title mx-auto">{{ T.choose_title }}</h2>
+        <p class="text-muted mt-2">{{ T.choose_sub }}</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+            <a href="{{ url_for('rent_lena') }}" class="action-card card-rl">
+                <span class="c-icon">🔑</span>
+                <div class="c-title">{{ T.card_rent_lena_title }}</div>
+                <div class="c-sub">{{ T.card_rent_lena_sub }}</div>
+                <span class="c-btn">{{ T.card_rent_lena_btn }}</span>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <a href="{{ url_for('rent_dena') }}" class="action-card card-rd">
+                <span class="c-icon">🏠</span>
+                <div class="c-title">{{ T.card_rent_dena_title }}</div>
+                <div class="c-sub">{{ T.card_rent_dena_sub }}</div>
+                <span class="c-btn">{{ T.card_rent_dena_btn }}</span>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <a href="{{ url_for('purchase_lena') }}" class="action-card card-buy">
+                <span class="c-icon">🏡</span>
+                <div class="c-title">{{ T.card_buy_title }}</div>
+                <div class="c-sub">{{ T.card_buy_sub }}</div>
+                <span class="c-btn">{{ T.card_buy_btn }}</span>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <a href="{{ url_for('sale_dena') }}" class="action-card card-sell">
+                <span class="c-icon">🏷️</span>
+                <div class="c-title">{{ T.card_sell_title }}</div>
+                <div class="c-sub">{{ T.card_sell_sub }}</div>
+                <span class="c-btn">{{ T.card_sell_btn }}</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Requirement Banners -->
+    <div class="row g-3 mt-2">
+        <div class="col-md-6">
+            <div class="card border-0 rounded-4 p-3" style="background:#e3f0ff;">
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <i class="bi bi-clipboard-check-fill" style="font-size:2rem;color:#1565c0;flex-shrink:0;"></i>
+                    <div class="flex-grow-1">
+                        <strong style="color:#1565c0;display:block;">{{ T.rent_req_title }}</strong>
+                        <small class="text-muted">{{ T.rent_req_sub }}</small>
+                    </div>
+                    <a href="{{ url_for('rent_chahiye') }}" class="btn btn-sm rounded-pill flex-shrink-0" style="background:#1565c0;color:#fff;">{{ T.rent_req_btn }}</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 rounded-4 p-3" style="background:#e8f5e9;">
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <i class="bi bi-clipboard-check-fill" style="font-size:2rem;color:#2e7d32;flex-shrink:0;"></i>
+                    <div class="flex-grow-1">
+                        <strong style="color:#2e7d32;display:block;">{{ T.buy_req_title }}</strong>
+                        <small class="text-muted">{{ T.buy_req_sub }}</small>
+                    </div>
+                    <a href="{{ url_for('purchase_chahiye') }}" class="btn btn-sm rounded-pill flex-shrink-0" style="background:#2e7d32;color:#fff;">{{ T.buy_req_btn }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ FEATURED RENT ══ -->
+{% if featured_rent %}
+<section class="py-4" style="background:var(--light-bg);">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-3">
+            <div>
+                <h2 class="sec-title mb-0" style="font-size:1.4rem;">{{ T.rent_props_title }}</h2>
+                <p class="text-muted small mt-1 mb-0">{{ T.rent_props_sub }}</p>
+            </div>
+            <a href="{{ url_for('rent_lena') }}" class="btn btn-sm rounded-pill" style="background:#e3f0ff;color:#1565c0;font-weight:600;">{{ T.view_all }}</a>
+        </div>
+        <div class="row g-3">
+            {% for p in featured_rent %}
+            <div class="col-md-4">
+                <div class="prop-card">
+                    {% if p.filename %}<img src="/uploads/{{ p.filename }}" alt="{{ p.title }}">
+                    {% else %}<div class="img-ph"><i class="bi bi-building" style="font-size:2.5rem;"></i></div>{% endif %}
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2"><span class="badge-rent">{{ T.footer_rent }}</span><span class="badge-type">{{ p.property_type }}</span></div>
+                        <h6 class="fw-bold mb-1">{{ p.title }}</h6>
+                        <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>{{ p.location }}</p>
+                        <div class="mb-2"><span class="prop-price">Rs. {{ p.price }}{{ T.per_month }}</span></div>
+                        <a href="{{ url_for('rent_detail', pid=p.id) }}" class="btn w-100 rounded-pill btn-sm" style="background:#1565c0;color:#fff;">{{ T.view_details }}</a>
                     </div>
                 </div>
-                <p style="font-size:.88rem;">{{ T.footer_desc }}</p>
-                <p style="font-size:.88rem;"><i class="bi bi-geo-alt-fill me-1" style="color:var(--accent-light)"></i>Akhtar Colony, Karachi</p>
-                <div class="mt-2">
-                    <a href="https://wa.me/923111820660" target="_blank" class="soc-link me-2"><i class="bi bi-whatsapp"></i></a>
-                    <a href="mailto:saleem9868@gmail.com" class="soc-link me-2"><i class="bi bi-envelope-fill"></i></a>
-                    <a href="tel:03111820660" class="soc-link"><i class="bi bi-telephone-fill"></i></a>
-                </div>
             </div>
-            <div class="col-lg-2 col-6">
-                <h6 class="mb-2" style="font-size:.9rem;">{{ T.footer_rent }}</h6>
-                <ul>
-                    <li><a href="{{ url_for('rent_lena') }}">🔑 {{ T.nav_rent_lena }}</a></li>
-                    <li><a href="{{ url_for('rent_dena') }}">🏠 {{ T.nav_rent_dena }}</a></li>
-                    <li><a href="{{ url_for('rent_chahiye') }}">📋 {{ T.nav_rent_req }}</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-2 col-6">
-                <h6 class="mb-2" style="font-size:.9rem;">{{ T.footer_buy }}</h6>
-                <ul>
-                    <li><a href="{{ url_for('purchase_lena') }}">🏡 {{ T.nav_buy }}</a></li>
-                    <li><a href="{{ url_for('sale_dena') }}">🏷️ {{ T.nav_sell }}</a></li>
-                    <li><a href="{{ url_for('purchase_chahiye') }}">📋 {{ T.nav_buy_req }}</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-4">
-                <h6 class="mb-2" style="font-size:.9rem;">{{ T.footer_contact }}</h6>
-                <ul>
-                    <li><a href="tel:03111820660"><i class="bi bi-telephone-fill" style="color:var(--accent-light)"></i> 0311-1820660</a></li>
-                    <li><a href="https://wa.me/923111820660" target="_blank"><i class="bi bi-whatsapp" style="color:#25d366"></i> WhatsApp</a></li>
-                    <li><a href="mailto:saleem9868@gmail.com"><i class="bi bi-envelope-fill" style="color:var(--accent-light)"></i> saleem9868@gmail.com</a></li>
-                    <li><span><i class="bi bi-clock-fill" style="color:var(--accent-light)"></i> {{ T.footer_hours }}</span></li>
-                </ul>
-                <a href="{{ url_for('set_lang', lang=T.switch_code) }}" class="btn btn-sm btn-outline-light rounded-pill mt-2">
-                    🌐 {{ T.switch_lang }}
-                </a>
-            </div>
-        </div>
-        <hr style="border-color:rgba(255,255,255,.15);" class="mt-3 mb-3">
-        <div class="d-flex flex-column flex-md-row justify-content-between" style="font-size:.8rem;">
-            <p class="mb-0">© 2024 ApnaGhar | اپنا گھر. {{ T.footer_rights }}</p>
-            <p class="mb-0">Akhtar Colony, Karachi, Pakistan</p>
+            {% endfor %}
         </div>
     </div>
-</footer>
+</section>
+{% endif %}
 
-<a href="https://wa.me/923111820660?text=Hello%2C%20ApnaGhar%20se%20rabta%20karna%20chahta%20hoon." target="_blank" class="wa-float">
-    <i class="bi bi-whatsapp"></i>
-</a>
+<!-- ══ FEATURED SALE ══ -->
+{% if featured_sale %}
+<section class="py-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-3">
+            <div>
+                <h2 class="sec-title mb-0" style="font-size:1.4rem;">{{ T.sale_props_title }}</h2>
+                <p class="text-muted small mt-1 mb-0">{{ T.sale_props_sub }}</p>
+            </div>
+            <a href="{{ url_for('purchase_lena') }}" class="btn btn-sm rounded-pill" style="background:#e8f5e9;color:#2e7d32;font-weight:600;">{{ T.view_all }}</a>
+        </div>
+        <div class="row g-3">
+            {% for p in featured_sale %}
+            <div class="col-md-4">
+                <div class="prop-card">
+                    {% if p.filename %}<img src="/uploads/{{ p.filename }}" alt="{{ p.title }}">
+                    {% else %}<div class="img-ph"><i class="bi bi-building" style="font-size:2.5rem;"></i></div>{% endif %}
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2"><span class="badge-sale">Sale</span><span class="badge-type">{{ p.property_type }}</span></div>
+                        <h6 class="fw-bold mb-1">{{ p.title }}</h6>
+                        <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>{{ p.location }}</p>
+                        <div class="mb-2"><span class="prop-price">Rs. {{ p.price }}</span></div>
+                        <a href="{{ url_for('sale_detail', pid=p.id) }}" class="btn w-100 rounded-pill btn-sm" style="background:#2e7d32;color:#fff;">{{ T.view_details }}</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-{% block extra_js %}{% endblock %}
-</body>
-</html>
+<!-- ══ SERVICES ══ -->
+<section class="py-4" style="background:var(--light-bg);">
+    <div class="container">
+        <h2 class="sec-title mb-4" style="font-size:1.4rem;">{{ T.services_title }}</h2>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card border-0 rounded-4 p-4 text-center h-100">
+                    <i class="bi bi-person-check-fill" style="font-size:2.5rem;color:#1565c0;"></i>
+                    <h6 class="fw-bold mt-2">{{ T.nav_verify }}</h6>
+                    <p class="text-muted small">{{ T.verif_sub }}</p>
+                    <a href="{{ url_for('tenant_verification') }}" class="btn btn-sm btn-outline-primary rounded-pill">{{ T.verif_btn }}</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 rounded-4 p-4 text-center h-100">
+                    <i class="bi bi-file-earmark-text-fill" style="font-size:2.5rem;color:var(--accent);"></i>
+                    <h6 class="fw-bold mt-2">{{ T.nav_docs }}</h6>
+                    <p class="text-muted small">{{ T.doc_sub }}</p>
+                    <a href="{{ url_for('document_services') }}" class="btn btn-sm btn-outline-primary rounded-pill">{% if lang=='ur' %}دیکھیں{% else %}View All{% endif %}</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 rounded-4 p-4 text-center h-100">
+                    <i class="bi bi-whatsapp" style="font-size:2.5rem;color:#25d366;"></i>
+                    <h6 class="fw-bold mt-2">WhatsApp Support</h6>
+                    <p class="text-muted small">0311-1820660</p>
+                    <a href="https://wa.me/923111820660" target="_blank" class="btn btn-sm btn-whatsapp rounded-pill">{% if lang=='ur' %}چیٹ کریں{% else %}Chat Now{% endif %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ OFFER BOX ══ -->
+<section class="py-4">
+    <div class="container">
+        <div class="offer-box">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h3 style="color:#fff;">⭐ {{ T.offer_title }}</h3>
+                    <div class="row g-2 mt-2">
+                        {% for o in [T.offer_1, T.offer_2, T.offer_3] %}
+                        <div class="col-sm-4">
+                            <div style="background:rgba(255,255,255,.2);border-radius:10px;padding:12px;text-align:center;font-size:.85rem;font-weight:600;">✓ {{ o }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-lg-5 mt-3 mt-lg-0 text-center">
+                    <a href="https://wa.me/923111820660?text=Hello%2C%20ApnaGhar%20se%20rabta%20karna%20chahta%20hoon." target="_blank" class="btn btn-light rounded-pill px-4 fw-bold" style="color:var(--accent);">
+                        <i class="bi bi-whatsapp me-2"></i>{{ T.offer_btn }}
+                    </a>
+                    <br>
+                    <a href="tel:03111820660" class="btn btn-outline-light rounded-pill px-4 mt-2">
+                        <i class="bi bi-telephone me-2"></i>0311-1820660
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
