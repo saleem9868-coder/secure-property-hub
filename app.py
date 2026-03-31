@@ -1022,6 +1022,10 @@ def calculators():
 def area_guide():
     return render_template('area_guide.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 # ─── STARTUP — runs for both gunicorn and direct python ──────────────────────
 
 os.makedirs('uploads', exist_ok=True)
