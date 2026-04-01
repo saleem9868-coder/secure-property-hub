@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% block title %}Contact - ApnaGhar | اپنا گھر{% endblock %}
+{% block content %}
+
+<div class="page-hdr hdr-verif">
+    <div class="container">
+        <h1>📞 {% if lang=='ur' %}رابطہ کریں{% else %}Contact Us{% endif %}</h1>
+        <p>{% if lang=='ur' %}ہم سے بات کریں — ہم مدد کے لیے تیار ہیں{% else %}Get in touch — we are always ready to help{% endif %}</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-4">
+
+        <!-- Contact Info -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <h5 class="fw-bold mb-4" style="color:var(--primary);">
+                    📍 {% if lang=='ur' %}ہماری معلومات{% else %}Our Details{% endif %}
+                </h5>
+
+                {% for icon, color, title, detail, link in [
+                    ('geo-alt-fill', 'var(--accent)', 'Address' if lang!='ur' else 'پتہ', 'Akhtar Colony, Karachi', ''),
+                    ('telephone-fill', '#1565c0', 'Phone' if lang!='ur' else 'فون', '0311-1820660', 'tel:03111820660'),
+                    ('whatsapp', '#25d366', 'WhatsApp', '0311-1820660', 'https://wa.me/923111820660'),
+                    ('envelope-fill', 'var(--accent)', 'Email', 'saleem9868@gmail.com', 'mailto:saleem9868@gmail.com'),
+                    ('clock-fill', '#6a1b9a', 'Hours' if lang!='ur' else 'اوقات', 'Mon-Sat 9AM-8PM', ''),
+                ] %}
+                <div class="d-flex gap-3 mb-3">
+                    <i class="bi bi-{{ icon }}" style="font-size:1.4rem;color:{{ color }};flex-shrink:0;"></i>
+                    <div>
+                        <div class="fw-semibold small" style="color:var(--primary);">{{ title }}</div>
+                        {% if link %}
+                        <a href="{{ link }}" style="color:#445;text-decoration:none;font-size:.9rem;">{{ detail }}</a>
+                        {% else %}
+                        <div style="color:#445;font-size:.9rem;">{{ detail }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+
+                <hr>
+                <div class="d-flex flex-column gap-2 mt-2">
+                    <a href="https://wa.me/923111820660?text=Hello%2C%20ApnaGhar%20se%20rabta%20karna%20chahta%20hoon." target="_blank"
+                       class="btn btn-whatsapp rounded-pill fw-bold">
+                        <i class="bi bi-whatsapp me-2"></i>WhatsApp
+                    </a>
+                    <a href="tel:03111820660" class="btn btn-primary rounded-pill">
+                        <i class="bi bi-telephone me-2"></i>0311-1820660
+                    </a>
+                </div>
+            </div>
+
+            <!-- Services Quick List -->
+            <div class="card border-0 rounded-4 p-4" style="background:var(--light-bg);">
+                <h6 class="fw-bold mb-3" style="color:var(--primary);">
+                    {% if lang=='ur' %}ہماری خدمات{% else %}Our Services{% endif %}
+                </h6>
+                {% for svc in ['Rent Agreement', 'Sale Agreement', 'Affidavit', 'CV Making', 'Urdu/English Typing', 'Passport Photos', 'Photocopies', 'Property Listing'] %}
+                <div class="d-flex gap-2 mb-1">
+                    <i class="bi bi-check-circle-fill text-success flex-shrink-0"></i>
+                    <small>{{ svc }}</small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Contact Form + Map -->
+        <div class="col-lg-8">
+
+            <!-- Contact Form -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <h5 class="fw-bold mb-4" style="color:var(--primary);">
+                    ✉️ {% if lang=='ur' %}پیغام بھیجیں{% else %}Send a Message{% endif %}
+                </h5>
+                <form action="https://wa.me/923111820660" method="GET" target="_blank"
+                      onsubmit="sendWhatsApp(event)">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                {% if lang=='ur' %}آپ کا نام{% else %}Your Name{% endif %} *
+                            </label>
+                            <input type="text" id="contactName" class="form-control rounded-3" required
+                                   placeholder="{% if lang=='ur' %}مثلاً احمد علی{% else %}e.g. Ahmed Ali{% endif %}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                {% if lang=='ur' %}فون نمبر{% else %}Phone Number{% endif %} *
+                            </label>
+                            <input type="tel" id="contactPhone" class="form-control rounded-3" required
+                                   placeholder="03xxxxxxxxx">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">
+                                {% if lang=='ur' %}سروس{% else %}Service Needed{% endif %} *
+                            </label>
+                            <select id="contactService" class="form-select rounded-3" required>
+                                <option value="">--- {% if lang=='ur' %}چنیں{% else %}Select{% endif %} ---</option>
+                                <option>Rent Agreement</option>
+                                <option>Sale Agreement</option>
+                                <option>Affidavit</option>
+                                <option>CV Making</option>
+                                <option>Urdu/English Typing</option>
+                                <option>Property Listing</option>
+                                <option>Tenant Verification</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">
+                                {% if lang=='ur' %}پیغام{% else %}Message{% endif %}
+                            </label>
+                            <textarea id="contactMsg" class="form-control rounded-3" rows="3"
+                                      placeholder="{% if lang=='ur' %}اپنی ضرورت بتائیں...{% else %}Describe your requirement...{% endif %}"></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-whatsapp rounded-pill px-5 py-2 fw-bold w-100">
+                                <i class="bi bi-whatsapp me-2"></i>
+                                {% if lang=='ur' %}واٹس ایپ پر بھیجیں{% else %}Send via WhatsApp{% endif %}
+                            </button>
+                            <p class="text-muted small text-center mt-2">
+                                {% if lang=='ur' %}آپ کا پیغام واٹس ایپ پر بھیجا جائے گا{% else %}Your message will be sent via WhatsApp{% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Google Map — Akhtar Colony Karachi -->
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="p-3 border-bottom">
+                    <h6 class="fw-bold mb-0" style="color:var(--primary);">
+                        🗺️ {% if lang=='ur' %}ہماری جگہ — اختر کالونی کراچی{% else %}Our Location — Akhtar Colony Karachi{% endif %}
+                    </h6>
+                </div>
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3618.9!2d67.0374!3d24.9274!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33e7b71234567%3A0xabcdef1234567890!2sAkhtar+Colony%2C+Karachi!5e0!3m2!1sen!2spk!4v1234567890"
+                    width="100%"
+                    height="350"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+function sendWhatsApp(e) {
+    e.preventDefault();
+    const name = document.getElementById('contactName').value;
+    const phone = document.getElementById('contactPhone').value;
+    const service = document.getElementById('contactService').value;
+    const msg = document.getElementById('contactMsg').value;
+
+    if (!name || !phone || !service) {
+        alert('Please fill all required fields!');
+        return;
+    }
+
+    const text = `Hello ApnaGhar!%0A%0AName: ${name}%0APhone: ${phone}%0AService: ${service}%0AMessage: ${msg || 'N/A'}`;
+    window.open(`https://wa.me/923111820660?text=${text}`, '_blank');
+}
+</script>
+{% endblock %}
+{% endblock %}
