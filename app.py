@@ -1022,6 +1022,14 @@ def calculators():
 def area_guide():
     return render_template('area_guide.html')
 
+@app.route('/blog')
+def blog():
+    return render_template('blog.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
 @app.route('/about')
 def about():
     return render_template('about.html')
