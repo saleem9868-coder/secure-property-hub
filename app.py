@@ -416,6 +416,35 @@ def T():
 def inject_globals():
     return dict(now=datetime.now(), T=T(), lang=get_lang())
 
+# ─── TRAFFIC LOGGER ──────────────────────────────────────────────────────────
+
+SKIP_PREFIXES = ('/uploads/', '/static/', '/favicon')
+
+@app.before_request
+def log_traffic():
+    path = request.path
+    # Skip static files and uploads
+    if any(path.startswith(p) for p in SKIP_PREFIXES):
+        return
+    try:
+        conn = get_db()
+        conn.execute(
+            "INSERT INTO page_views (path, method, ip, user_agent, referrer, user_id) VALUES (?,?,?,?,?,?)",
+            (
+                path,
+                request.method,
+                request.headers.get('X-Forwarded-For', request.remote_addr or ''),
+                request.user_agent.string[:200] if request.user_agent.string else '',
+                request.referrer or '',
+                session.get('user_id')
+            )
+        )
+        conn.commit()
+        conn.close()
+    except Exception:
+        pass  # Never break the site due to logging errors
+
+
 @app.route('/set-lang/<lang>')
 def set_lang(lang):
     if lang in ['en', 'ur']:
@@ -546,12 +575,23 @@ def init_db():
         property_id INTEGER,
         property_cat TEXT)''')
 
+    # Traffic / Page Views
+    c.execute('''CREATE TABLE IF NOT EXISTS page_views (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        path TEXT NOT NULL,
+        method TEXT DEFAULT 'GET',
+        ip TEXT,
+        user_agent TEXT,
+        referrer TEXT,
+        user_id INTEGER,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+
     # Admin user
     c.execute("SELECT COUNT(*) FROM users WHERE is_admin=1")
     if c.fetchone()[0] == 0:
-        pw = generate_password_hash('admin123')
+        pw = generate_password_hash('apnaghar6873')
         c.execute("INSERT INTO users (name,email,password,is_admin) VALUES (?,?,?,1)",
-                  ('Admin','admin@securepropertyhub.com', pw))
+                  ('Admin','apnagharkarachi.pk@gmail.com', pw))
 
     conn.commit()
     conn.close()
@@ -903,9 +943,27 @@ def admin_panel():
     verifs    = conn.execute("SELECT tv.*, u.name as uname FROM tenant_verification tv LEFT JOIN users u ON tv.user_id=u.id ORDER BY tv.created_at DESC").fetchall()
     stats = {'users': len(users), 'rent': len(rent_props), 'sale': len(sale_props),
              'rent_reqs': len(rent_reqs), 'buy_reqs': len(buy_reqs), 'verifs': len(verifs)}
+
+    # ── Traffic Stats ──
+    traffic_total   = conn.execute("SELECT COUNT(*) FROM page_views").fetchone()[0]
+    traffic_today   = conn.execute("SELECT COUNT(*) FROM page_views WHERE DATE(created_at)=DATE('now','localtime')").fetchone()[0]
+    traffic_week    = conn.execute("SELECT COUNT(*) FROM page_views WHERE created_at >= datetime('now','-7 days')").fetchone()[0]
+    top_pages       = conn.execute("SELECT path, COUNT(*) as cnt FROM page_views GROUP BY path ORDER BY cnt DESC LIMIT 10").fetchall()
+    recent_views    = conn.execute("SELECT path, ip, user_agent, created_at FROM page_views ORDER BY created_at DESC LIMIT 30").fetchall()
+    daily_chart     = conn.execute("""
+        SELECT DATE(created_at,'localtime') as day, COUNT(*) as cnt
+        FROM page_views
+        WHERE created_at >= datetime('now','-14 days')
+        GROUP BY day ORDER BY day ASC
+    """).fetchall()
+    unique_ips_today = conn.execute("SELECT COUNT(DISTINCT ip) FROM page_views WHERE DATE(created_at)=DATE('now','localtime')").fetchone()[0]
+
     conn.close()
     return render_template('admin_panel.html', users=users, rent_props=rent_props, sale_props=sale_props,
-        rent_reqs=rent_reqs, buy_reqs=buy_reqs, verifs=verifs, stats=stats)
+        rent_reqs=rent_reqs, buy_reqs=buy_reqs, verifs=verifs, stats=stats,
+        traffic_total=traffic_total, traffic_today=traffic_today, traffic_week=traffic_week,
+        top_pages=top_pages, recent_views=recent_views, daily_chart=daily_chart,
+        unique_ips_today=unique_ips_today)
 
 @app.route('/admin/delete/<table>/<int:rid>')
 @admin_required
@@ -1046,8 +1104,8 @@ if __name__ == '__main__':
     print("  ✅  Secure Property Hub V2 - Chal gaya!")
     print("  🌐  Website: http://localhost:5000")
     print("  🔐  Admin:   http://localhost:5000/admin")
-    print("      Email:   admin@securepropertyhub.com")
-    print("      Password: admin123")
+    print("      Email:   apnagharkarachi.pk@gmail.com")
+    print("      Password: apnaghar6873")
     print("="*55 + "\n")
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=False, host='0.0.0.0', port=port)
