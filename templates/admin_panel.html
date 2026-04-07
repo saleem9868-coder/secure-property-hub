@@ -15,6 +15,8 @@
         <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#e65100;">{{ stats.rent_reqs }}</div><div class="text-muted small">Rent Reqs</div></div></div>
         <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#6a1b9a;">{{ stats.buy_reqs }}</div><div class="text-muted small">Buy Reqs</div></div></div>
         <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#c62828;">{{ stats.verifs }}</div><div class="text-muted small">Verifs</div></div></div>
+        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#e3f0ff;"><div style="font-size:1.6rem;font-weight:700;color:#1565c0;">{{ traffic_today }}</div><div class="text-muted small">👁 Today</div></div></div>
+        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#f3e5f5;"><div style="font-size:1.6rem;font-weight:700;color:#6a1b9a;">{{ unique_ips_today }}</div><div class="text-muted small">👤 Unique Today</div></div></div>
     </div>
 
     <ul class="nav nav-tabs border-0 mb-4 flex-wrap">
@@ -24,6 +26,7 @@
         <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aRentReqs">📋 Rent Reqs</a></li>
         <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aBuyReqs">📋 Buy Reqs</a></li>
         <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aVerifs">✅ Verifications</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aTraffic">📊 Traffic</a></li>
     </ul>
 
     <div class="tab-content">
@@ -141,6 +144,116 @@
             {% else %}<div class="text-center py-4"><p class="text-muted">Abhi tak koi verification request nahi.</p></div>{% endfor %}
             </div>
         </div>
-    </div>
-</div>
+
+        <!-- ── Traffic Monitor ── -->
+        <div class="tab-pane fade" id="aTraffic">
+            <!-- Summary Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#e3f0ff;">
+                        <div style="font-size:1.8rem;font-weight:700;color:#1565c0;">{{ traffic_today }}</div>
+                        <div class="text-muted small">Views Today</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#f3e5f5;">
+                        <div style="font-size:1.8rem;font-weight:700;color:#6a1b9a;">{{ unique_ips_today }}</div>
+                        <div class="text-muted small">Unique Visitors Today</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#e8f5e9;">
+                        <div style="font-size:1.8rem;font-weight:700;color:#2e7d32;">{{ traffic_week }}</div>
+                        <div class="text-muted small">Views (Last 7 Days)</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#fff3e0;">
+                        <div style="font-size:1.8rem;font-weight:700;color:#e65100;">{{ traffic_total }}</div>
+                        <div class="text-muted small">All-Time Views</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <!-- Daily Chart (last 14 days) -->
+                <div class="col-lg-7">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <h6 class="fw-bold mb-3" style="color:var(--primary);">📈 Daily Traffic (Last 14 Days)</h6>
+                        {% if daily_chart %}
+                        <div style="display:flex;align-items:flex-end;gap:6px;height:120px;">
+                            {% set max_cnt = daily_chart|map(attribute='cnt')|max %}
+                            {% for row in daily_chart %}
+                            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+                                <div style="width:100%;background:var(--primary-light);border-radius:4px 4px 0 0;
+                                            height:{{ ((row.cnt / max_cnt) * 100)|int }}px;min-height:4px;cursor:pointer;"
+                                     data-bs-toggle="tooltip" data-bs-placement="top"
+                                     title="{{ row.cnt }} views on {{ row.day }}"></div>
+                                <small style="font-size:.55rem;color:#888;writing-mode:vertical-rl;transform:rotate(180deg);">{{ row.day[5:] }}</small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted small">No data yet — traffic will appear here once visitors start browsing.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Top Pages -->
+                <div class="col-lg-5">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <h6 class="fw-bold mb-3" style="color:var(--primary);">🔥 Top Pages</h6>
+                        {% if top_pages %}
+                        {% set max_top = top_pages[0].cnt %}
+                        {% for p in top_pages %}
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between mb-1">
+                                <small class="fw-semibold text-truncate" style="max-width:75%;color:#1a2535;">{{ p.path }}</small>
+                                <small class="fw-bold" style="color:var(--primary-light);">{{ p.cnt }}</small>
+                            </div>
+                            <div style="height:6px;background:#e8edf5;border-radius:3px;">
+                                <div style="height:6px;background:var(--primary-light);border-radius:3px;width:{{ ((p.cnt / max_top)*100)|int }}%;"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <p class="text-muted small">No page data yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Visits Table -->
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h6 class="fw-bold mb-3" style="color:var(--primary);">🕐 Recent Visits (Last 30)</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-0" style="font-size:.82rem;">
+                        <thead style="background:#f8f9fc;">
+                            <tr>
+                                <th>Time</th>
+                                <th>Page</th>
+                                <th>IP</th>
+                                <th>Browser / Device</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for v in recent_views %}
+                            <tr>
+                                <td class="text-muted" style="white-space:nowrap;">{{ v.created_at[:16] }}</td>
+                                <td><span class="badge rounded-pill" style="background:#e3f0ff;color:#1565c0;">{{ v.path }}</span></td>
+                                <td class="text-muted">{{ v.ip[:15] if v.ip else '—' }}</td>
+                                <td class="text-muted text-truncate" style="max-width:220px;">{{ v.user_agent[:60] if v.user_agent else '—' }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% if not recent_views %}
+                            <tr><td colspan="4" class="text-center text-muted py-3">No visits logged yet.</td></tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end tab-content -->
+</div><!-- end container -->
 {% endblock %}
