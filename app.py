@@ -1,9 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-import sqlite3, os
+import sqlite3, os, threading
 from datetime import datetime
 from functools import wraps
+try:
+    import urllib.request, json as _json
+    def _get_geo(ip):
+        if not ip or ip in ('127.0.0.1', '::1', ''):
+            return 'Local', 'Local'
+        try:
+            url = f'http://ip-api.com/json/{ip}?fields=city,country,status'
+            with urllib.request.urlopen(url, timeout=3) as r:
+                data = _json.loads(r.read())
+            if data.get('status') == 'success':
+                return data.get('city',''), data.get('country','')
+        except Exception:
+            pass
+        return '', ''
+except Exception:
+    def _get_geo(ip): return '', ''
 
 app = Flask(__name__)
 app.secret_key = 'sph-v2-secret-2024'
@@ -423,24 +439,41 @@ SKIP_PREFIXES = ('/uploads/', '/static/', '/favicon')
 @app.before_request
 def log_traffic():
     path = request.path
-    # Skip static files and uploads
     if any(path.startswith(p) for p in SKIP_PREFIXES):
         return
     try:
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr or '')
+        if ',' in ip:
+            ip = ip.split(',')[0].strip()
         conn = get_db()
-        conn.execute(
+        cur = conn.cursor()
+        cur.execute(
             "INSERT INTO page_views (path, method, ip, user_agent, referrer, user_id) VALUES (?,?,?,?,?,?)",
             (
                 path,
                 request.method,
-                request.headers.get('X-Forwarded-For', request.remote_addr or ''),
+                ip,
                 request.user_agent.string[:200] if request.user_agent.string else '',
                 request.referrer or '',
                 session.get('user_id')
             )
         )
+        row_id = cur.lastrowid
         conn.commit()
         conn.close()
+
+        # Fetch city/country in background thread so page loads fast
+        def update_geo(rid, visitor_ip):
+            try:
+                city, country = _get_geo(visitor_ip)
+                if city or country:
+                    c2 = get_db()
+                    c2.execute("UPDATE page_views SET city=?, country=? WHERE id=?", (city, country, rid))
+                    c2.commit()
+                    c2.close()
+            except Exception:
+                pass
+        threading.Thread(target=update_geo, args=(row_id, ip), daemon=True).start()
     except Exception:
         pass  # Never break the site due to logging errors
 
@@ -500,7 +533,7 @@ def init_db():
         floor TEXT, furnished TEXT,
         tenant_preference TEXT,
         description TEXT,
-        is_approved INTEGER DEFAULT 1,
+        is_approved INTEGER DEFAULT 0,
         is_featured INTEGER DEFAULT 0,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
 
@@ -515,7 +548,7 @@ def init_db():
         total_area TEXT,
         possession TEXT,
         description TEXT,
-        is_approved INTEGER DEFAULT 1,
+        is_approved INTEGER DEFAULT 0,
         is_featured INTEGER DEFAULT 0,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
 
@@ -584,7 +617,19 @@ def init_db():
         user_agent TEXT,
         referrer TEXT,
         user_id INTEGER,
+        city TEXT DEFAULT '',
+        country TEXT DEFAULT '',
         created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+
+    # Add city/country columns if upgrading from older DB
+    try:
+        c.execute("ALTER TABLE page_views ADD COLUMN city TEXT DEFAULT ''")
+    except Exception:
+        pass
+    try:
+        c.execute("ALTER TABLE page_views ADD COLUMN country TEXT DEFAULT ''")
+    except Exception:
+        pass
 
     # Admin user
     c.execute("SELECT COUNT(*) FROM users WHERE is_admin=1")
@@ -656,9 +701,10 @@ def rent_dena():
     if request.method == 'POST':
         conn = get_db()
         cur = conn.cursor()
+        auto_approve = 1 if session.get('is_admin') else 0
         cur.execute('''INSERT INTO rent_properties (user_id,owner_name,owner_phone,title,location,area,
-            property_type,price,bedrooms,bathrooms,floor,furnished,tenant_preference,description)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
+            property_type,price,bedrooms,bathrooms,floor,furnished,tenant_preference,description,is_approved)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
             session['user_id'],
             request.form['owner_name'], request.form['owner_phone'],
             request.form['title'], request.form['location'], request.form['area'],
@@ -666,7 +712,7 @@ def rent_dena():
             request.form['bedrooms'], request.form.get('bathrooms','1'),
             request.form.get('floor',''), request.form.get('furnished','Unfurnished'),
             request.form.get('tenant_preference','Family'),
-            request.form['description']))
+            request.form['description'], auto_approve))
         pid = cur.lastrowid
         for f in request.files.getlist('images'):
             if f and allowed_file(f.filename):
@@ -732,16 +778,17 @@ def sale_dena():
     if request.method == 'POST':
         conn = get_db()
         cur = conn.cursor()
+        auto_approve = 1 if session.get('is_admin') else 0
         cur.execute('''INSERT INTO sale_properties (user_id,owner_name,owner_phone,title,location,area,
-            property_type,price,bedrooms,bathrooms,total_area,possession,description)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
+            property_type,price,bedrooms,bathrooms,total_area,possession,description,is_approved)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
             session['user_id'],
             request.form['owner_name'], request.form['owner_phone'],
             request.form['title'], request.form['location'], request.form['area'],
             request.form['property_type'], request.form['price'],
             request.form['bedrooms'], request.form.get('bathrooms','1'),
             request.form.get('total_area',''), request.form.get('possession','Immediate'),
-            request.form['description']))
+            request.form['description'], auto_approve))
         pid = cur.lastrowid
         for f in request.files.getlist('images'):
             if f and allowed_file(f.filename):
@@ -949,7 +996,7 @@ def admin_panel():
     traffic_today   = conn.execute("SELECT COUNT(*) FROM page_views WHERE DATE(created_at)=DATE('now','localtime')").fetchone()[0]
     traffic_week    = conn.execute("SELECT COUNT(*) FROM page_views WHERE created_at >= datetime('now','-7 days')").fetchone()[0]
     top_pages       = conn.execute("SELECT path, COUNT(*) as cnt FROM page_views GROUP BY path ORDER BY cnt DESC LIMIT 10").fetchall()
-    recent_views    = conn.execute("SELECT path, ip, user_agent, created_at FROM page_views ORDER BY created_at DESC LIMIT 30").fetchall()
+    recent_views    = conn.execute("SELECT path, ip, city, country, user_agent, created_at FROM page_views ORDER BY created_at DESC LIMIT 30").fetchall()
     daily_chart     = conn.execute("""
         SELECT DATE(created_at,'localtime') as day, COUNT(*) as cnt
         FROM page_views
