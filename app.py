@@ -432,6 +432,59 @@ def T():
 def inject_globals():
     return dict(now=datetime.now(), T=T(), lang=get_lang())
 
+# ─── SECURITY BLOCKER ────────────────────────────────────────────────────────
+
+# Paths that hackers/bots commonly probe — block immediately
+BLOCKED_PATHS = (
+    '/wp-admin', '/wp-login', '/wp-content', '/wp-includes',
+    '/wordpress', '/wp-config', '/xmlrpc.php', '/wp-cron',
+    '/.git', '/.env', '/.htaccess', '/.htpasswd',
+    '/shell', '/cmd', '/eval', '/exec',
+    '/phpmyadmin', '/pma', '/myadmin', '/mysql',
+    '/admin/config', '/config.php', '/setup.php',
+    '/install.php', '/setup-config.php',
+    '/etc/passwd', '/proc/self',
+    '/boaform', '/cgi-bin', '/vendor',
+)
+
+# IPs banned for repeated hack attempts (in-memory, resets on redeploy)
+_banned_ips = {}
+_BAN_THRESHOLD = 5   # ban after 5 hack attempts
+_ban_lock = __import__('threading').Lock()
+
+def _record_bad_ip(ip):
+    with _ban_lock:
+        _banned_ips[ip] = _banned_ips.get(ip, 0) + 1
+
+def _is_banned(ip):
+    return _banned_ips.get(ip, 0) >= _BAN_THRESHOLD
+
+@app.before_request
+def block_hackers():
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr or '')
+    if ',' in ip:
+        ip = ip.split(',')[0].strip()
+
+    # Block already-banned IPs
+    if _is_banned(ip):
+        from flask import abort
+        abort(403)
+
+    path = request.path.lower()
+
+    # Block hack probe paths
+    if any(path.startswith(p) or path == p.rstrip('/') for p in BLOCKED_PATHS):
+        _record_bad_ip(ip)
+        from flask import abort
+        abort(404)
+
+    # Block suspicious file extensions
+    bad_exts = ('.php', '.asp', '.aspx', '.jsp', '.cgi', '.sh', '.bat', '.exe')
+    if any(path.endswith(e) for e in bad_exts):
+        _record_bad_ip(ip)
+        from flask import abort
+        abort(404)
+
 # ─── TRAFFIC LOGGER ──────────────────────────────────────────────────────────
 
 SKIP_PREFIXES = ('/uploads/', '/static/', '/favicon')
