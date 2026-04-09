@@ -40,30 +40,52 @@
 
         <!-- Rent Properties -->
         <div class="tab-pane fade" id="aRent">
-            <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:#e3f0ff;"><tr><th>#</th><th>Title</th><th>Location</th><th>Price</th><th>Featured</th><th>Approved</th><th>Action</th></tr></thead><tbody>
+            <div class="alert alert-info small mb-3">💡 <strong>Approve karne ke liye:</strong> ✗ (red) badge pe click karein — green ✓ ho jayega aur property website pe live ho jayegi.</div>
+            <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:#e3f0ff;"><tr><th>#</th><th>Title</th><th>Owner</th><th>Phone</th><th>Location</th><th>Price</th><th>Featured</th><th>Approved</th><th>Action</th></tr></thead><tbody>
             {% for p in rent_props %}<tr>
                 <td>{{ p.id }}</td>
-                <td><a href="{{ url_for('rent_detail', pid=p.id) }}" target="_blank" style="font-size:.85rem;">{{ p.title[:30] }}</a></td>
+                <td><a href="{{ url_for('rent_detail', pid=p.id) }}" target="_blank" style="font-size:.85rem;">{{ p.title[:25] }}</a></td>
+                <td class="small">{{ p.owner_name }}</td>
+                <td class="small">{{ p.owner_phone }}</td>
                 <td class="small text-muted">{{ p.location }}</td>
                 <td class="small">Rs. {{ p.price }}</td>
                 <td><a href="{{ url_for('admin_toggle', table='rent_properties', field='is_featured', pid=p.id) }}" class="badge text-decoration-none {% if p.is_featured %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{% if p.is_featured %}⭐ Yes{% else %}No{% endif %}</a></td>
-                <td><a href="{{ url_for('admin_toggle', table='rent_properties', field='is_approved', pid=p.id) }}" class="badge text-decoration-none {% if p.is_approved %}bg-success{% else %}bg-danger{% endif %}">{% if p.is_approved %}✓{% else %}✗{% endif %}</a></td>
+                <td>
+                    <a href="{{ url_for('admin_toggle', table='rent_properties', field='is_approved', pid=p.id) }}"
+                       class="badge text-decoration-none fs-6 {% if p.is_approved %}bg-success{% else %}bg-danger{% endif %}"
+                       title="{% if p.is_approved %}Click to Unapprove{% else %}Click to APPROVE{% endif %}">
+                       {% if p.is_approved %}✓ Live{% else %}✗ Pending{% endif %}
+                    </a>
+                </td>
                 <td><a href="{{ url_for('admin_delete', table='rent_properties', rid=p.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></td>
-            </tr>{% endfor %}</tbody></table></div>
+            </tr>{% endfor %}
+            {% if not rent_props %}<tr><td colspan="9" class="text-center text-muted py-3">Koi rent listing nahi.</td></tr>{% endif %}
+            </tbody></table></div>
         </div>
 
         <!-- Sale Properties -->
         <div class="tab-pane fade" id="aSale">
-            <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:#e8f5e9;"><tr><th>#</th><th>Title</th><th>Location</th><th>Price</th><th>Featured</th><th>Approved</th><th>Action</th></tr></thead><tbody>
+            <div class="alert alert-info small mb-3">💡 <strong>Approve karne ke liye:</strong> ✗ (red) badge pe click karein — green ✓ ho jayega aur property website pe live ho jayegi.</div>
+            <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:#e8f5e9;"><tr><th>#</th><th>Title</th><th>Owner</th><th>Phone</th><th>Location</th><th>Price</th><th>Featured</th><th>Approved</th><th>Action</th></tr></thead><tbody>
             {% for p in sale_props %}<tr>
                 <td>{{ p.id }}</td>
-                <td><a href="{{ url_for('sale_detail', pid=p.id) }}" target="_blank" style="font-size:.85rem;">{{ p.title[:30] }}</a></td>
+                <td><a href="{{ url_for('sale_detail', pid=p.id) }}" target="_blank" style="font-size:.85rem;">{{ p.title[:25] }}</a></td>
+                <td class="small">{{ p.owner_name }}</td>
+                <td class="small">{{ p.owner_phone }}</td>
                 <td class="small text-muted">{{ p.location }}</td>
                 <td class="small">Rs. {{ p.price }}</td>
                 <td><a href="{{ url_for('admin_toggle', table='sale_properties', field='is_featured', pid=p.id) }}" class="badge text-decoration-none {% if p.is_featured %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{% if p.is_featured %}⭐ Yes{% else %}No{% endif %}</a></td>
-                <td><a href="{{ url_for('admin_toggle', table='sale_properties', field='is_approved', pid=p.id) }}" class="badge text-decoration-none {% if p.is_approved %}bg-success{% else %}bg-danger{% endif %}">{% if p.is_approved %}✓{% else %}✗{% endif %}</a></td>
+                <td>
+                    <a href="{{ url_for('admin_toggle', table='sale_properties', field='is_approved', pid=p.id) }}"
+                       class="badge text-decoration-none fs-6 {% if p.is_approved %}bg-success{% else %}bg-danger{% endif %}"
+                       title="{% if p.is_approved %}Click to Unapprove{% else %}Click to APPROVE{% endif %}">
+                       {% if p.is_approved %}✓ Live{% else %}✗ Pending{% endif %}
+                    </a>
+                </td>
                 <td><a href="{{ url_for('admin_delete', table='sale_properties', rid=p.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></td>
-            </tr>{% endfor %}</tbody></table></div>
+            </tr>{% endfor %}
+            {% if not sale_props %}<tr><td colspan="9" class="text-center text-muted py-3">Koi sale listing nahi.</td></tr>{% endif %}
+            </tbody></table></div>
         </div>
 
         <!-- Rent Requirements -->
@@ -74,7 +96,9 @@
                 <td class="small">Rs. {{ r.max_budget }}</td><td class="small">{{ r.tenant_type }}</td>
                 <td class="text-muted small">{{ r.created_at[:10] }}</td>
                 <td><a href="{{ url_for('admin_delete', table='rent_requirements', rid=r.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></td>
-            </tr>{% endfor %}</tbody></table></div>
+            </tr>{% endfor %}
+            {% if not rent_reqs %}<tr><td colspan="8" class="text-center text-muted py-3">Koi rent requirement nahi.</td></tr>{% endif %}
+            </tbody></table></div>
         </div>
 
         <!-- Buy Requirements -->
@@ -85,7 +109,9 @@
                 <td class="small">Rs. {{ r.max_budget }}</td><td class="small">{{ r.payment_method }}</td>
                 <td class="text-muted small">{{ r.created_at[:10] }}</td>
                 <td><a href="{{ url_for('admin_delete', table='purchase_requirements', rid=r.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></td>
-            </tr>{% endfor %}</tbody></table></div>
+            </tr>{% endfor %}
+            {% if not buy_reqs %}<tr><td colspan="8" class="text-center text-muted py-3">Koi buy requirement nahi.</td></tr>{% endif %}
+            </tbody></table></div>
         </div>
 
         <!-- Verifications -->
@@ -145,9 +171,8 @@
             </div>
         </div>
 
-        <!-- ── Traffic Monitor ── -->
+        <!-- Traffic Monitor -->
         <div class="tab-pane fade" id="aTraffic">
-            <!-- Summary Cards -->
             <div class="row g-3 mb-4">
                 <div class="col-6 col-md-3">
                     <div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#e3f0ff;">
@@ -176,7 +201,6 @@
             </div>
 
             <div class="row g-4 mb-4">
-                <!-- Daily Chart (last 14 days) -->
                 <div class="col-lg-7">
                     <div class="card border-0 shadow-sm rounded-4 p-4">
                         <h6 class="fw-bold mb-3" style="color:var(--primary);">📈 Daily Traffic (Last 14 Days)</h6>
@@ -194,12 +218,10 @@
                             {% endfor %}
                         </div>
                         {% else %}
-                        <p class="text-muted small">No data yet — traffic will appear here once visitors start browsing.</p>
+                        <p class="text-muted small">No data yet.</p>
                         {% endif %}
                     </div>
                 </div>
-
-                <!-- Top Pages -->
                 <div class="col-lg-5">
                     <div class="card border-0 shadow-sm rounded-4 p-4">
                         <h6 class="fw-bold mb-3" style="color:var(--primary);">🔥 Top Pages</h6>
@@ -223,7 +245,7 @@
                 </div>
             </div>
 
-            <!-- Recent Visits Table -->
+            <!-- Recent Visits Table — NOW WITH CITY & COUNTRY -->
             <div class="card border-0 shadow-sm rounded-4 p-4">
                 <h6 class="fw-bold mb-3" style="color:var(--primary);">🕐 Recent Visits (Last 30)</h6>
                 <div class="table-responsive">
@@ -233,6 +255,8 @@
                                 <th>Time</th>
                                 <th>Page</th>
                                 <th>IP</th>
+                                <th>📍 City</th>
+                                <th>🌍 Country</th>
                                 <th>Browser / Device</th>
                             </tr>
                         </thead>
@@ -241,12 +265,26 @@
                             <tr>
                                 <td class="text-muted" style="white-space:nowrap;">{{ v.created_at[:16] }}</td>
                                 <td><span class="badge rounded-pill" style="background:#e3f0ff;color:#1565c0;">{{ v.path }}</span></td>
-                                <td class="text-muted">{{ v.ip[:15] if v.ip else '—' }}</td>
-                                <td class="text-muted text-truncate" style="max-width:220px;">{{ v.user_agent[:60] if v.user_agent else '—' }}</td>
+                                <td class="text-muted small">{{ v.ip[:15] if v.ip else '—' }}</td>
+                                <td>
+                                    {% if v.city %}
+                                    <span class="badge rounded-pill" style="background:#e8f5e9;color:#2e7d32;">📍 {{ v.city }}</span>
+                                    {% else %}
+                                    <span class="text-muted small">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if v.country %}
+                                    <span class="text-muted small">{{ v.country }}</span>
+                                    {% else %}
+                                    <span class="text-muted small">—</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-muted text-truncate" style="max-width:180px;">{{ v.user_agent[:55] if v.user_agent else '—' }}</td>
                             </tr>
                             {% endfor %}
                             {% if not recent_views %}
-                            <tr><td colspan="4" class="text-center text-muted py-3">No visits logged yet.</td></tr>
+                            <tr><td colspan="6" class="text-center text-muted py-3">No visits logged yet.</td></tr>
                             {% endif %}
                         </tbody>
                     </table>
