@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-import sqlite3, os, threading
+import sqlite3, os, threading, re
 from datetime import datetime
 from functools import wraps
 try:
@@ -27,6 +27,12 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'pdf'}
 DB_PATH = 'database.db'
+
+# ─── UPLOAD SUBFOLDERS ────────────────────────────────────────────────────────
+UPLOAD_BLOG       = os.path.join('static', 'uploads', 'blog')
+UPLOAD_PAGES      = os.path.join('static', 'uploads', 'pages')
+UPLOAD_PROPERTIES = os.path.join('static', 'uploads', 'properties')
+UPLOAD_MEDIA      = os.path.join('static', 'uploads', 'media')
 
 # ─── TRANSLATIONS ─────────────────────────────────────────────────────────────
 TRANSLATIONS = {
@@ -228,7 +234,6 @@ TRANSLATIONS = {
     'ur': {
         'dir': 'rtl', 'lang': 'ur',
         'switch_lang': 'English', 'switch_code': 'en',
-        # Navbar
         'nav_home': 'ہوم',
         'nav_rent': 'کرایہ',
         'nav_rent_lena': 'کرایہ پر لینا (کرایہ دار)',
@@ -245,13 +250,11 @@ TRANSLATIONS = {
         'nav_dashboard': 'ڈیش بورڈ',
         'nav_admin': 'ایڈمن',
         'nav_logout': 'لاگ آؤٹ',
-        # Hero
         'hero_tag': 'کراچی کی قابل اعتماد پراپرٹی اور دستاویزات کی خدمات',
         'hero_title': 'اپنا گھر',
         'hero_sub': 'محفوظ ڈیل، آسان اقدام — ڈیل بھی، ڈاکومنٹس بھی — سب ایک جگہ۔',
         'choose_title': 'آپ کیا کرنا چاہتے ہیں؟',
         'choose_sub': 'نیچے اپنا آپشن چنیں',
-        # 4 Cards
         'card_rent_lena_title': 'کرایہ پر\nلینا چاہتا ہوں',
         'card_rent_lena_sub': 'کرایہ پر گھر، فلیٹ یا دکان چاہیے',
         'card_rent_lena_btn': 'پراپرٹیز دیکھیں ←',
@@ -264,14 +267,12 @@ TRANSLATIONS = {
         'card_sell_title': 'پراپرٹی\nبیچنا چاہتا ہوں',
         'card_sell_sub': 'اپنا گھر، فلیٹ یا پلاٹ بیچیں',
         'card_sell_btn': 'سیل لسٹنگ کریں ←',
-        # Requirement banners
         'rent_req_title': 'کرایہ کی ضرورت بتائیں',
         'rent_req_sub': 'اپنا بجٹ اور علاقہ بتائیں — ہم بہترین آپشن لائیں گے!',
         'rent_req_btn': 'فارم بھریں',
         'buy_req_title': 'خریداری کی ضرورت بتائیں',
         'buy_req_sub': 'اپنا بجٹ اور پسندیدہ علاقہ بتائیں',
         'buy_req_btn': 'فارم بھریں',
-        # Sections
         'rent_props_title': '🔑 کرایہ کی پراپرٹیز',
         'rent_props_sub': 'فوری دستیاب',
         'sale_props_title': '🏡 سیل پراپرٹیز',
@@ -281,20 +282,17 @@ TRANSLATIONS = {
         'per_month': '/ماہ',
         'view_details': 'تفصیل دیکھیں',
         'featured': 'نمایاں',
-        # Offer
         'offer_title': 'اختر کالونی کے باشندوں کے لیے خصوصی آفر',
         'offer_1': 'مفت پراپرٹی مشاورت',
         'offer_2': 'کرایہ نامے پر رعایت',
         'offer_3': 'مالکان کے لیے مفت لسٹنگ',
         'offer_btn': 'واٹس ایپ پر کلیم کریں',
-        # Footer
         'footer_desc': 'کراچی میں قابل اعتماد پراپرٹی اور دستاویزات کی خدمات۔',
         'footer_rent': 'کرایہ',
         'footer_buy': 'خریدیں / بیچیں',
         'footer_contact': 'رابطہ کریں',
         'footer_hours': 'پیر تا ہفتہ: صبح ۹ سے شام ۸',
         'footer_rights': 'جملہ حقوق محفوظ ہیں۔',
-        # Pages
         'rent_lena_title': 'کرایہ پر لینا',
         'rent_lena_sub': 'پراپرٹیز دستیاب ہیں',
         'rent_req_banner': 'پسند کی پراپرٹی نہیں ملی؟ اپنی ضرورت بتائیں — ہم ڈھونڈیں گے!',
@@ -307,7 +305,6 @@ TRANSLATIONS = {
         'filter_clear': 'صاف کریں',
         'no_props': 'کوئی پراپرٹی نہیں ملی',
         'submit_req': 'ضرورت جمع کریں',
-        # Detail
         'month': '/ماہ',
         'beds': 'کمرے',
         'baths': 'باتھ روم',
@@ -322,7 +319,6 @@ TRANSLATIONS = {
         'prop_desc': 'پراپرٹی کی تفصیل',
         'interested': 'اس پراپرٹی میں دلچسپی ہے؟',
         'contact_sub': 'سائٹ وزٹ کے لیے رابطہ کریں۔',
-        # Forms
         'owner_name': 'مالک کا نام',
         'owner_phone': 'فون / واٹس ایپ',
         'prop_title': 'پراپرٹی کا عنوان',
@@ -342,7 +338,6 @@ TRANSLATIONS = {
         'back': 'واپس',
         'free_listing': 'مفت لسٹنگ!',
         'free_listing_sub': 'اپنی پراپرٹی لسٹ کریں اور ہم صحیح کرایہ دار / خریدار ڈھونڈیں گے۔',
-        # Requirement forms
         'your_name': 'آپ کا نام',
         'your_phone': 'فون / واٹس ایپ',
         'pref_area': 'پسندیدہ علاقہ',
@@ -359,7 +354,6 @@ TRANSLATIONS = {
         'wa_direct': 'یا سیدھا واٹس ایپ کریں',
         'payment_method': 'ادائیگی کا طریقہ',
         'purpose': 'مقصد',
-        # Auth
         'login_title': 'خوش آمدید',
         'login_sub': 'اپنے اکاؤنٹ میں لاگ ان کریں',
         'email': 'ای میل ایڈریس',
@@ -373,7 +367,6 @@ TRANSLATIONS = {
         'confirm_pass': 'پاس ورڈ کی تصدیق',
         'reg_btn': 'اکاؤنٹ بنائیں',
         'have_account': 'پہلے سے اکاؤنٹ ہے؟',
-        # Dashboard
         'dash_title': 'میرا ڈیش بورڈ',
         'my_rent': 'میری کرایہ لسٹنگز',
         'my_sale': 'میری سیل لسٹنگز',
@@ -394,7 +387,6 @@ TRANSLATIONS = {
         'buy_reqs': 'خریداری کی ضروریات',
         'saved_rent': 'محفوظ کرایہ پراپرٹیز',
         'saved_sale': 'محفوظ سیل پراپرٹیز',
-        # Verification
         'verif_title': 'کرایہ دار تصدیق',
         'verif_sub': 'شناختی کارڈ پر مبنی پس منظر کی جانچ',
         'tenant_name': 'کرایہ دار کا نام',
@@ -412,12 +404,10 @@ TRANSLATIONS = {
         'v3': 'دھوکہ دہی کا خطرہ کم کریں',
         'v4': 'مالکان کے لیے سکون',
         'v5': 'قانونی تحفظ',
-        # Documents
         'doc_title': 'دستاویز خدمات',
         'doc_sub': 'پیشہ ورانہ قانونی دستاویزات کی خدمات',
         'doc_more': 'کوئی اور خدمت چاہیے؟',
         'get_quote': 'قیمت معلوم کریں',
-        # Admin
         'admin_title': 'ایڈمن پینل',
     }
 }
@@ -430,11 +420,19 @@ def T():
 
 @app.context_processor
 def inject_globals():
-    return dict(now=datetime.now(), T=T(), lang=get_lang())
+    # Inject dynamic menu items for the Resources dropdown
+    try:
+        conn = get_db()
+        menu_items = conn.execute(
+            "SELECT * FROM menu_items WHERE is_active=1 ORDER BY display_order ASC"
+        ).fetchall()
+        conn.close()
+    except Exception:
+        menu_items = []
+    return dict(now=datetime.now(), T=T(), lang=get_lang(), menu_items=menu_items)
 
 # ─── SECURITY BLOCKER ────────────────────────────────────────────────────────
 
-# Paths that hackers/bots commonly probe — block immediately
 BLOCKED_PATHS = (
     '/wp-admin', '/wp-login', '/wp-content', '/wp-includes',
     '/wordpress', '/wp-config', '/xmlrpc.php', '/wp-cron',
@@ -447,9 +445,8 @@ BLOCKED_PATHS = (
     '/boaform', '/cgi-bin', '/vendor',
 )
 
-# IPs banned for repeated hack attempts (in-memory, resets on redeploy)
 _banned_ips = {}
-_BAN_THRESHOLD = 5   # ban after 5 hack attempts
+_BAN_THRESHOLD = 5
 _ban_lock = __import__('threading').Lock()
 
 def _record_bad_ip(ip):
@@ -464,21 +461,14 @@ def block_hackers():
     ip = request.headers.get('X-Forwarded-For', request.remote_addr or '')
     if ',' in ip:
         ip = ip.split(',')[0].strip()
-
-    # Block already-banned IPs
     if _is_banned(ip):
         from flask import abort
         abort(403)
-
     path = request.path.lower()
-
-    # Block hack probe paths
     if any(path.startswith(p) or path == p.rstrip('/') for p in BLOCKED_PATHS):
         _record_bad_ip(ip)
         from flask import abort
         abort(404)
-
-    # Block suspicious file extensions
     bad_exts = ('.php', '.asp', '.aspx', '.jsp', '.cgi', '.sh', '.bat', '.exe')
     if any(path.endswith(e) for e in bad_exts):
         _record_bad_ip(ip)
@@ -502,20 +492,13 @@ def log_traffic():
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO page_views (path, method, ip, user_agent, referrer, user_id) VALUES (?,?,?,?,?,?)",
-            (
-                path,
-                request.method,
-                ip,
-                request.user_agent.string[:200] if request.user_agent.string else '',
-                request.referrer or '',
-                session.get('user_id')
-            )
+            (path, request.method, ip,
+             request.user_agent.string[:200] if request.user_agent.string else '',
+             request.referrer or '', session.get('user_id'))
         )
         row_id = cur.lastrowid
         conn.commit()
         conn.close()
-
-        # Fetch city/country in background thread so page loads fast
         def update_geo(rid, visitor_ip):
             try:
                 city, country = _get_geo(visitor_ip)
@@ -528,8 +511,7 @@ def log_traffic():
                 pass
         threading.Thread(target=update_geo, args=(row_id, ip), daemon=True).start()
     except Exception:
-        pass  # Never break the site due to logging errors
-
+        pass
 
 @app.route('/set-lang/<lang>')
 def set_lang(lang):
@@ -562,12 +544,22 @@ def admin_required(f):
         return f(*a, **kw)
     return dec
 
+# ─── SLUG HELPER ─────────────────────────────────────────────────────────────
+
+def slugify(text):
+    text = text.lower().strip()
+    text = re.sub(r'[^\w\s-]', '', text)
+    text = re.sub(r'[\s_-]+', '-', text)
+    text = re.sub(r'^-+|-+$', '', text)
+    return text
+
 # ─── DB INIT ──────────────────────────────────────────────────────────────────
 
 def init_db():
     conn = get_db()
     c = conn.cursor()
 
+    # ── Existing tables (unchanged) ──────────────────────────────────────────
     c.execute('''CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL, email TEXT UNIQUE NOT NULL,
@@ -575,114 +567,144 @@ def init_db():
         phone TEXT DEFAULT '',
         created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
 
-    # Properties for RENT (listed by owners who want to give on rent)
     c.execute('''CREATE TABLE IF NOT EXISTS rent_properties (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        owner_name TEXT, owner_phone TEXT,
+        user_id INTEGER, owner_name TEXT, owner_phone TEXT,
         title TEXT, location TEXT, area TEXT,
         property_type TEXT, price TEXT,
         bedrooms TEXT, bathrooms TEXT,
         floor TEXT, furnished TEXT,
-        tenant_preference TEXT,
-        description TEXT,
+        tenant_preference TEXT, description TEXT,
         is_approved INTEGER DEFAULT 0,
         is_featured INTEGER DEFAULT 0,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
 
-    # Properties for SALE (listed by owners who want to sell)
     c.execute('''CREATE TABLE IF NOT EXISTS sale_properties (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        owner_name TEXT, owner_phone TEXT,
+        user_id INTEGER, owner_name TEXT, owner_phone TEXT,
         title TEXT, location TEXT, area TEXT,
         property_type TEXT, price TEXT,
         bedrooms TEXT, bathrooms TEXT,
-        total_area TEXT,
-        possession TEXT,
-        description TEXT,
+        total_area TEXT, possession TEXT, description TEXT,
         is_approved INTEGER DEFAULT 0,
         is_featured INTEGER DEFAULT 0,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
 
-    # Images for both types
     c.execute('''CREATE TABLE IF NOT EXISTS property_images (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        property_id INTEGER,
-        property_cat TEXT,
-        filename TEXT)''')
+        property_id INTEGER, property_cat TEXT, filename TEXT)''')
 
-    # Rent Requirements (people who WANT to rent)
     c.execute('''CREATE TABLE IF NOT EXISTS rent_requirements (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        name TEXT, phone TEXT,
-        preferred_area TEXT,
-        property_type TEXT,
-        max_budget TEXT,
-        bedrooms TEXT,
-        tenant_type TEXT,
-        move_in_date TEXT,
-        special_needs TEXT,
-        status TEXT DEFAULT 'New',
+        user_id INTEGER, name TEXT, phone TEXT,
+        preferred_area TEXT, property_type TEXT,
+        max_budget TEXT, bedrooms TEXT,
+        tenant_type TEXT, move_in_date TEXT,
+        special_needs TEXT, status TEXT DEFAULT 'New',
         created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
 
-    # Purchase Requirements (people who WANT to buy)
     c.execute('''CREATE TABLE IF NOT EXISTS purchase_requirements (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        name TEXT, phone TEXT,
-        preferred_area TEXT,
-        property_type TEXT,
-        max_budget TEXT,
-        bedrooms TEXT,
-        payment_method TEXT,
-        purpose TEXT,
-        special_needs TEXT,
-        status TEXT DEFAULT 'New',
+        user_id INTEGER, name TEXT, phone TEXT,
+        preferred_area TEXT, property_type TEXT,
+        max_budget TEXT, bedrooms TEXT,
+        payment_method TEXT, purpose TEXT,
+        special_needs TEXT, status TEXT DEFAULT 'New',
         created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
 
-    # Tenant Verification
     c.execute('''CREATE TABLE IF NOT EXISTS tenant_verification (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        tenant_name TEXT, cnic TEXT,
-        mobile TEXT, address TEXT,
-        occupation TEXT, cnic_file TEXT,
-        photo_file TEXT,
+        user_id INTEGER, tenant_name TEXT, cnic TEXT,
+        mobile TEXT, address TEXT, occupation TEXT,
+        cnic_file TEXT, photo_file TEXT,
         status TEXT DEFAULT 'Pending',
         notes TEXT DEFAULT '',
         created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
 
-    # Saved properties
     c.execute('''CREATE TABLE IF NOT EXISTS saved_properties (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        property_id INTEGER,
-        property_cat TEXT)''')
+        user_id INTEGER, property_id INTEGER, property_cat TEXT)''')
 
-    # Traffic / Page Views
     c.execute('''CREATE TABLE IF NOT EXISTS page_views (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        path TEXT NOT NULL,
-        method TEXT DEFAULT 'GET',
-        ip TEXT,
-        user_agent TEXT,
-        referrer TEXT,
+        path TEXT NOT NULL, method TEXT DEFAULT 'GET',
+        ip TEXT, user_agent TEXT, referrer TEXT,
         user_id INTEGER,
-        city TEXT DEFAULT '',
-        country TEXT DEFAULT '',
+        city TEXT DEFAULT '', country TEXT DEFAULT '',
         created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
 
-    # Add city/country columns if upgrading from older DB
-    try:
-        c.execute("ALTER TABLE page_views ADD COLUMN city TEXT DEFAULT ''")
-    except Exception:
-        pass
-    try:
-        c.execute("ALTER TABLE page_views ADD COLUMN country TEXT DEFAULT ''")
-    except Exception:
-        pass
+    # Safe column additions for existing DBs
+    for col in ["city TEXT DEFAULT ''", "country TEXT DEFAULT ''"]:
+        try: c.execute(f"ALTER TABLE page_views ADD COLUMN {col}")
+        except: pass
+
+    # ── NEW CMS Tables ───────────────────────────────────────────────────────
+
+    # Pages CMS
+    c.execute('''CREATE TABLE IF NOT EXISTS cms_pages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        slug TEXT UNIQUE NOT NULL,
+        content TEXT DEFAULT '',
+        meta_title TEXT DEFAULT '',
+        meta_description TEXT DEFAULT '',
+        is_published INTEGER DEFAULT 1,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+
+    # Blog Posts
+    c.execute('''CREATE TABLE IF NOT EXISTS blog_posts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        slug TEXT UNIQUE NOT NULL,
+        content TEXT DEFAULT '',
+        excerpt TEXT DEFAULT '',
+        image TEXT DEFAULT '',
+        category TEXT DEFAULT 'General',
+        meta_title TEXT DEFAULT '',
+        meta_description TEXT DEFAULT '',
+        is_published INTEGER DEFAULT 1,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+
+    # Menu Items
+    c.execute('''CREATE TABLE IF NOT EXISTS menu_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        url TEXT NOT NULL,
+        icon TEXT DEFAULT '',
+        category TEXT DEFAULT 'resources',
+        display_order INTEGER DEFAULT 0,
+        is_active INTEGER DEFAULT 1,
+        open_new_tab INTEGER DEFAULT 0,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+
+    # Media Library
+    c.execute('''CREATE TABLE IF NOT EXISTS media_library (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        filename TEXT NOT NULL,
+        original_name TEXT DEFAULT '',
+        file_type TEXT DEFAULT '',
+        file_size INTEGER DEFAULT 0,
+        folder TEXT DEFAULT 'media',
+        alt_text TEXT DEFAULT '',
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+
+    # Seed default menu items if empty
+    count = c.execute("SELECT COUNT(*) FROM menu_items").fetchone()[0]
+    if count == 0:
+        default_items = [
+            ('Property Laws', '/property-laws', '⚖️', 'resources', 1, 1, 0),
+            ('Calculators', '/calculators', '🧮', 'resources', 2, 1, 0),
+            ('Karachi Area Guide', '/area-guide', '🗺️', 'resources', 3, 1, 0),
+            ('About Us', '/about', '👤', 'resources', 4, 1, 0),
+            ('Blog', '/blog', '📰', 'resources', 5, 1, 0),
+            ('Contact Us', '/contact', '📞', 'resources', 6, 1, 0),
+        ]
+        c.executemany(
+            "INSERT INTO menu_items (title, url, icon, category, display_order, is_active, open_new_tab) VALUES (?,?,?,?,?,?,?)",
+            default_items
+        )
 
     # Admin user
     c.execute("SELECT COUNT(*) FROM users WHERE is_admin=1")
@@ -700,13 +722,28 @@ def init_db():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+def save_uploaded_file(file_obj, subfolder, prefix=''):
+    """Save a file to a subfolder under static/uploads/ and return filename."""
+    if not file_obj or not allowed_file(file_obj.filename):
+        return None
+    os.makedirs(subfolder, exist_ok=True)
+    safe = secure_filename(file_obj.filename)
+    ts = datetime.now().strftime('%Y%m%d%H%M%S')
+    fname = f"{prefix}{ts}_{safe}" if prefix else f"{ts}_{safe}"
+    file_obj.save(os.path.join(subfolder, fname))
+    return fname
+
 # ─── HOME ─────────────────────────────────────────────────────────────────────
 
 @app.route('/')
 def index():
     conn = get_db()
-    featured_rent = conn.execute("SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.is_approved=1 AND r.is_featured=1 GROUP BY r.id LIMIT 3").fetchall()
-    featured_sale = conn.execute("SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.is_approved=1 AND s.is_featured=1 GROUP BY s.id LIMIT 3").fetchall()
+    featured_rent = conn.execute(
+        "SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.is_approved=1 AND r.is_featured=1 GROUP BY r.id LIMIT 3"
+    ).fetchall()
+    featured_sale = conn.execute(
+        "SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.is_approved=1 AND s.is_featured=1 GROUP BY s.id LIMIT 3"
+    ).fetchall()
     stats = {
         'rent': conn.execute("SELECT COUNT(*) FROM rent_properties WHERE is_approved=1").fetchone()[0],
         'sale': conn.execute("SELECT COUNT(*) FROM sale_properties WHERE is_approved=1").fetchone()[0],
@@ -720,7 +757,6 @@ def index():
 
 @app.route('/kiraya-par-lena')
 def rent_lena():
-    """People who WANT to rent - show available properties"""
     conn = get_db()
     ptype = request.args.get('type','')
     loc   = request.args.get('location','')
@@ -738,7 +774,9 @@ def rent_lena():
 @app.route('/kiraya-par-lena/<int:pid>')
 def rent_detail(pid):
     conn = get_db()
-    prop = conn.execute("SELECT r.*, u.name as poster FROM rent_properties r LEFT JOIN users u ON r.user_id=u.id WHERE r.id=? AND r.is_approved=1", (pid,)).fetchone()
+    prop = conn.execute(
+        "SELECT r.*, u.name as poster FROM rent_properties r LEFT JOIN users u ON r.user_id=u.id WHERE r.id=? AND r.is_approved=1", (pid,)
+    ).fetchone()
     if not prop: return redirect(url_for('rent_lena'))
     images = conn.execute("SELECT filename FROM property_images WHERE property_id=? AND property_cat='rent'", (pid,)).fetchall()
     is_saved = False
@@ -750,7 +788,6 @@ def rent_detail(pid):
 @app.route('/kiraya-par-dena', methods=['GET','POST'])
 @login_required
 def rent_dena():
-    """Property owners who WANT to list for rent"""
     if request.method == 'POST':
         conn = get_db()
         cur = conn.cursor()
@@ -779,7 +816,6 @@ def rent_dena():
 
 @app.route('/kiraya-chahiye', methods=['GET','POST'])
 def rent_chahiye():
-    """Requirement form for people who WANT to rent"""
     if request.method == 'POST':
         conn = get_db()
         conn.execute('''INSERT INTO rent_requirements (user_id,name,phone,preferred_area,property_type,
@@ -799,7 +835,6 @@ def rent_chahiye():
 
 @app.route('/khareedna-chahta-hoon')
 def purchase_lena():
-    """People who WANT to buy - show sale properties"""
     conn = get_db()
     ptype = request.args.get('type','')
     loc   = request.args.get('location','')
@@ -815,7 +850,9 @@ def purchase_lena():
 @app.route('/khareedna-chahta-hoon/<int:pid>')
 def sale_detail(pid):
     conn = get_db()
-    prop = conn.execute("SELECT s.*, u.name as poster FROM sale_properties s LEFT JOIN users u ON s.user_id=u.id WHERE s.id=? AND s.is_approved=1", (pid,)).fetchone()
+    prop = conn.execute(
+        "SELECT s.*, u.name as poster FROM sale_properties s LEFT JOIN users u ON s.user_id=u.id WHERE s.id=? AND s.is_approved=1", (pid,)
+    ).fetchone()
     if not prop: return redirect(url_for('purchase_lena'))
     images = conn.execute("SELECT filename FROM property_images WHERE property_id=? AND property_cat='sale'", (pid,)).fetchall()
     is_saved = False
@@ -827,7 +864,6 @@ def sale_detail(pid):
 @app.route('/bechna-chahta-hoon', methods=['GET','POST'])
 @login_required
 def sale_dena():
-    """Property owners who WANT to sell"""
     if request.method == 'POST':
         conn = get_db()
         cur = conn.cursor()
@@ -855,7 +891,6 @@ def sale_dena():
 
 @app.route('/khareedna-chahiye', methods=['GET','POST'])
 def purchase_chahiye():
-    """Requirement form for people who WANT to buy"""
     if request.method == 'POST':
         conn = get_db()
         conn.execute('''INSERT INTO purchase_requirements (user_id,name,phone,preferred_area,property_type,
@@ -871,7 +906,7 @@ def purchase_chahiye():
         return redirect(url_for('index'))
     return render_template('purchase_chahiye.html')
 
-# ─── SAVE PROPERTY ────────────────────────────────────────────────────────────
+# ─── SAVE / DELETE PROPERTY ───────────────────────────────────────────────────
 
 @app.route('/save/<cat>/<int:pid>')
 @login_required
@@ -885,11 +920,7 @@ def save_property(cat, pid):
         conn.execute("INSERT INTO saved_properties (user_id,property_id,property_cat) VALUES (?,?,?)", (session['user_id'], pid, cat))
         flash('Property save ho gayi!', 'success')
     conn.commit(); conn.close()
-    if cat == 'rent':
-        return redirect(url_for('rent_detail', pid=pid))
-    return redirect(url_for('sale_detail', pid=pid))
-
-# ─── DELETE PROPERTY ──────────────────────────────────────────────────────────
+    return redirect(url_for('rent_detail', pid=pid) if cat == 'rent' else url_for('sale_detail', pid=pid))
 
 @app.route('/delete/<cat>/<int:pid>')
 @login_required
@@ -942,9 +973,9 @@ def document_services():
 @app.route('/register', methods=['GET','POST'])
 def register():
     if request.method == 'POST':
-        name = request.form['name'].strip()
+        name  = request.form['name'].strip()
         email = request.form['email'].strip().lower()
-        pw = request.form['password']
+        pw    = request.form['password']
         if pw != request.form['confirm_password']:
             flash('Password match nahi kiya.', 'danger')
             return redirect(url_for('register'))
@@ -963,9 +994,9 @@ def register():
 def login():
     if request.method == 'POST':
         email = request.form['email'].strip().lower()
-        pw = request.form['password']
-        conn = get_db()
-        user = conn.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
+        pw    = request.form['password']
+        conn  = get_db()
+        user  = conn.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
         conn.close()
         if user and user['password'] and check_password_hash(user['password'], pw):
             session.update({'user_id': user['id'], 'user_name': user['name'],
@@ -987,8 +1018,8 @@ def logout():
 def dashboard():
     conn = get_db()
     uid = session['user_id']
-    my_rent = conn.execute("SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.user_id=? GROUP BY r.id ORDER BY r.created_at DESC", (uid,)).fetchall()
-    my_sale = conn.execute("SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.user_id=? GROUP BY s.id ORDER BY s.created_at DESC", (uid,)).fetchall()
+    my_rent      = conn.execute("SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.user_id=? GROUP BY r.id ORDER BY r.created_at DESC", (uid,)).fetchall()
+    my_sale      = conn.execute("SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.user_id=? GROUP BY s.id ORDER BY s.created_at DESC", (uid,)).fetchall()
     my_rent_reqs = conn.execute("SELECT * FROM rent_requirements WHERE user_id=? ORDER BY created_at DESC", (uid,)).fetchall()
     my_buy_reqs  = conn.execute("SELECT * FROM purchase_requirements WHERE user_id=? ORDER BY created_at DESC", (uid,)).fetchall()
     my_verifs    = conn.execute("SELECT * FROM tenant_verification WHERE user_id=? ORDER BY created_at DESC", (uid,)).fetchall()
@@ -1020,9 +1051,9 @@ def admin_login_page():
 @app.route('/admin/login', methods=['POST'])
 def admin_login():
     email = request.form['email'].strip().lower()
-    pw = request.form['password']
-    conn = get_db()
-    user = conn.execute("SELECT * FROM users WHERE email=? AND is_admin=1", (email,)).fetchone()
+    pw    = request.form['password']
+    conn  = get_db()
+    user  = conn.execute("SELECT * FROM users WHERE email=? AND is_admin=1", (email,)).fetchone()
     conn.close()
     if user and check_password_hash(user['password'], pw):
         session.update({'user_id': user['id'], 'user_name': user['name'],
@@ -1035,40 +1066,43 @@ def admin_login():
 @admin_required
 def admin_panel():
     conn = get_db()
-    users     = conn.execute("SELECT * FROM users WHERE is_admin=0 ORDER BY created_at DESC").fetchall()
-    rent_props= conn.execute("SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' GROUP BY r.id ORDER BY r.created_at DESC").fetchall()
-    sale_props= conn.execute("SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' GROUP BY s.id ORDER BY s.created_at DESC").fetchall()
-    rent_reqs = conn.execute("SELECT rr.*, u.name as uname FROM rent_requirements rr LEFT JOIN users u ON rr.user_id=u.id ORDER BY rr.created_at DESC").fetchall()
-    buy_reqs  = conn.execute("SELECT pr.*, u.name as uname FROM purchase_requirements pr LEFT JOIN users u ON pr.user_id=u.id ORDER BY pr.created_at DESC").fetchall()
-    verifs    = conn.execute("SELECT tv.*, u.name as uname FROM tenant_verification tv LEFT JOIN users u ON tv.user_id=u.id ORDER BY tv.created_at DESC").fetchall()
+    users      = conn.execute("SELECT * FROM users WHERE is_admin=0 ORDER BY created_at DESC").fetchall()
+    rent_props = conn.execute("SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' GROUP BY r.id ORDER BY r.created_at DESC").fetchall()
+    sale_props = conn.execute("SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' GROUP BY s.id ORDER BY s.created_at DESC").fetchall()
+    rent_reqs  = conn.execute("SELECT rr.*, u.name as uname FROM rent_requirements rr LEFT JOIN users u ON rr.user_id=u.id ORDER BY rr.created_at DESC").fetchall()
+    buy_reqs   = conn.execute("SELECT pr.*, u.name as uname FROM purchase_requirements pr LEFT JOIN users u ON pr.user_id=u.id ORDER BY pr.created_at DESC").fetchall()
+    verifs     = conn.execute("SELECT tv.*, u.name as uname FROM tenant_verification tv LEFT JOIN users u ON tv.user_id=u.id ORDER BY tv.created_at DESC").fetchall()
+    # CMS data
+    pages      = conn.execute("SELECT * FROM cms_pages ORDER BY created_at DESC").fetchall()
+    blog_posts = conn.execute("SELECT * FROM blog_posts ORDER BY created_at DESC").fetchall()
+    menu_items = conn.execute("SELECT * FROM menu_items ORDER BY display_order ASC").fetchall()
+    media      = conn.execute("SELECT * FROM media_library ORDER BY created_at DESC LIMIT 50").fetchall()
     stats = {'users': len(users), 'rent': len(rent_props), 'sale': len(sale_props),
-             'rent_reqs': len(rent_reqs), 'buy_reqs': len(buy_reqs), 'verifs': len(verifs)}
-
-    # ── Traffic Stats ──
-    traffic_total   = conn.execute("SELECT COUNT(*) FROM page_views").fetchone()[0]
-    traffic_today   = conn.execute("SELECT COUNT(*) FROM page_views WHERE DATE(created_at)=DATE('now','localtime')").fetchone()[0]
-    traffic_week    = conn.execute("SELECT COUNT(*) FROM page_views WHERE created_at >= datetime('now','-7 days')").fetchone()[0]
-    top_pages       = conn.execute("SELECT path, COUNT(*) as cnt FROM page_views GROUP BY path ORDER BY cnt DESC LIMIT 10").fetchall()
-    recent_views    = conn.execute("SELECT path, ip, city, country, user_agent, created_at FROM page_views ORDER BY created_at DESC LIMIT 30").fetchall()
-    daily_chart     = conn.execute("""
-        SELECT DATE(created_at,'localtime') as day, COUNT(*) as cnt
-        FROM page_views
-        WHERE created_at >= datetime('now','-14 days')
-        GROUP BY day ORDER BY day ASC
-    """).fetchall()
+             'rent_reqs': len(rent_reqs), 'buy_reqs': len(buy_reqs), 'verifs': len(verifs),
+             'pages': len(pages), 'blogs': len(blog_posts)}
+    # Traffic
+    traffic_total    = conn.execute("SELECT COUNT(*) FROM page_views").fetchone()[0]
+    traffic_today    = conn.execute("SELECT COUNT(*) FROM page_views WHERE DATE(created_at)=DATE('now','localtime')").fetchone()[0]
+    traffic_week     = conn.execute("SELECT COUNT(*) FROM page_views WHERE created_at >= datetime('now','-7 days')").fetchone()[0]
+    top_pages        = conn.execute("SELECT path, COUNT(*) as cnt FROM page_views GROUP BY path ORDER BY cnt DESC LIMIT 10").fetchall()
+    recent_views     = conn.execute("SELECT path, ip, city, country, user_agent, created_at FROM page_views ORDER BY created_at DESC LIMIT 30").fetchall()
+    daily_chart      = conn.execute("SELECT DATE(created_at,'localtime') as day, COUNT(*) as cnt FROM page_views WHERE created_at >= datetime('now','-14 days') GROUP BY day ORDER BY day ASC").fetchall()
     unique_ips_today = conn.execute("SELECT COUNT(DISTINCT ip) FROM page_views WHERE DATE(created_at)=DATE('now','localtime')").fetchone()[0]
-
     conn.close()
-    return render_template('admin_panel.html', users=users, rent_props=rent_props, sale_props=sale_props,
-        rent_reqs=rent_reqs, buy_reqs=buy_reqs, verifs=verifs, stats=stats,
-        traffic_total=traffic_total, traffic_today=traffic_today, traffic_week=traffic_week,
-        top_pages=top_pages, recent_views=recent_views, daily_chart=daily_chart,
-        unique_ips_today=unique_ips_today)
+    return render_template('admin_panel.html',
+        users=users, rent_props=rent_props, sale_props=sale_props,
+        rent_reqs=rent_reqs, buy_reqs=buy_reqs, verifs=verifs,
+        pages=pages, blog_posts=blog_posts, menu_items=menu_items, media=media,
+        stats=stats, traffic_total=traffic_total, traffic_today=traffic_today,
+        traffic_week=traffic_week, top_pages=top_pages, recent_views=recent_views,
+        daily_chart=daily_chart, unique_ips_today=unique_ips_today)
 
 @app.route('/admin/delete/<table>/<int:rid>')
 @admin_required
 def admin_delete(table, rid):
-    allowed = ['users','rent_properties','sale_properties','rent_requirements','purchase_requirements','tenant_verification']
+    allowed = ['users','rent_properties','sale_properties','rent_requirements',
+               'purchase_requirements','tenant_verification','cms_pages',
+               'blog_posts','menu_items','media_library']
     if table not in allowed:
         flash('Invalid.', 'danger')
         return redirect(url_for('admin_panel'))
@@ -1091,8 +1125,8 @@ def update_verification(vid):
 @app.route('/admin/toggle/<table>/<field>/<int:pid>')
 @admin_required
 def admin_toggle(table, field, pid):
-    allowed_tables = ['rent_properties', 'sale_properties']
-    allowed_fields = ['is_approved', 'is_featured']
+    allowed_tables = ['rent_properties', 'sale_properties', 'cms_pages', 'blog_posts', 'menu_items']
+    allowed_fields = ['is_approved', 'is_featured', 'is_published', 'is_active']
     if table not in allowed_tables or field not in allowed_fields:
         return redirect(url_for('admin_panel'))
     conn = get_db()
@@ -1101,7 +1135,220 @@ def admin_toggle(table, field, pid):
         conn.execute(f"UPDATE {table} SET {field}=? WHERE id=?", (0 if row[field] else 1, pid))
         conn.commit()
     conn.close()
-    return redirect(url_for('admin_panel'))
+    return redirect(request.referrer or url_for('admin_panel'))
+
+# ─── ADMIN: PAGES CMS ────────────────────────────────────────────────────────
+
+@app.route('/admin/pages/new', methods=['GET','POST'])
+@admin_required
+def admin_page_new():
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        slug  = slugify(request.form.get('slug','') or title)
+        conn  = get_db()
+        # Ensure unique slug
+        base_slug = slug
+        counter = 1
+        while conn.execute("SELECT id FROM cms_pages WHERE slug=?", (slug,)).fetchone():
+            slug = f"{base_slug}-{counter}"; counter += 1
+        conn.execute(
+            "INSERT INTO cms_pages (title, slug, content, meta_title, meta_description, is_published) VALUES (?,?,?,?,?,?)",
+            (title, slug,
+             request.form.get('content',''),
+             request.form.get('meta_title', title),
+             request.form.get('meta_description',''),
+             1 if request.form.get('is_published') else 0)
+        )
+        conn.commit(); conn.close()
+        flash(f'Page "{title}" create ho gayi! URL: /page/{slug}', 'success')
+        return redirect(url_for('admin_panel') + '#aPages')
+    return render_template('admin_page_form.html', page=None, action='New')
+
+@app.route('/admin/pages/edit/<int:pid>', methods=['GET','POST'])
+@admin_required
+def admin_page_edit(pid):
+    conn = get_db()
+    page = conn.execute("SELECT * FROM cms_pages WHERE id=?", (pid,)).fetchone()
+    if not page:
+        conn.close(); flash('Page nahi mili.', 'danger')
+        return redirect(url_for('admin_panel'))
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        slug  = slugify(request.form.get('slug','') or title)
+        # Ensure unique slug (excluding self)
+        base_slug = slug; counter = 1
+        while conn.execute("SELECT id FROM cms_pages WHERE slug=? AND id!=?", (slug, pid)).fetchone():
+            slug = f"{base_slug}-{counter}"; counter += 1
+        conn.execute(
+            "UPDATE cms_pages SET title=?, slug=?, content=?, meta_title=?, meta_description=?, is_published=?, updated_at=? WHERE id=?",
+            (title, slug,
+             request.form.get('content',''),
+             request.form.get('meta_title', title),
+             request.form.get('meta_description',''),
+             1 if request.form.get('is_published') else 0,
+             datetime.now().strftime('%Y-%m-%d %H:%M:%S'), pid)
+        )
+        conn.commit(); conn.close()
+        flash('Page update ho gayi!', 'success')
+        return redirect(url_for('admin_panel') + '#aPages')
+    conn.close()
+    return render_template('admin_page_form.html', page=page, action='Edit')
+
+# ─── ADMIN: BLOG CMS ─────────────────────────────────────────────────────────
+
+@app.route('/admin/blog/new', methods=['GET','POST'])
+@admin_required
+def admin_blog_new():
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        slug  = slugify(request.form.get('slug','') or title)
+        conn  = get_db()
+        base_slug = slug; counter = 1
+        while conn.execute("SELECT id FROM blog_posts WHERE slug=?", (slug,)).fetchone():
+            slug = f"{base_slug}-{counter}"; counter += 1
+        # Handle image upload
+        image = ''
+        f = request.files.get('image')
+        if f and allowed_file(f.filename):
+            fname = save_uploaded_file(f, UPLOAD_BLOG, 'blog_')
+            if fname: image = fname
+        conn.execute(
+            "INSERT INTO blog_posts (title, slug, content, excerpt, image, category, meta_title, meta_description, is_published) VALUES (?,?,?,?,?,?,?,?,?)",
+            (title, slug,
+             request.form.get('content',''),
+             request.form.get('excerpt',''),
+             image,
+             request.form.get('category','General'),
+             request.form.get('meta_title', title),
+             request.form.get('meta_description',''),
+             1 if request.form.get('is_published') else 0)
+        )
+        conn.commit(); conn.close()
+        flash(f'Blog post "{title}" publish ho gayi!', 'success')
+        return redirect(url_for('admin_panel') + '#aBlog')
+    return render_template('admin_blog_form.html', post=None, action='New')
+
+@app.route('/admin/blog/edit/<int:bid>', methods=['GET','POST'])
+@admin_required
+def admin_blog_edit(bid):
+    conn = get_db()
+    post = conn.execute("SELECT * FROM blog_posts WHERE id=?", (bid,)).fetchone()
+    if not post:
+        conn.close(); flash('Post nahi mili.', 'danger')
+        return redirect(url_for('admin_panel'))
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        slug  = slugify(request.form.get('slug','') or title)
+        base_slug = slug; counter = 1
+        while conn.execute("SELECT id FROM blog_posts WHERE slug=? AND id!=?", (slug, bid)).fetchone():
+            slug = f"{base_slug}-{counter}"; counter += 1
+        image = post['image']
+        f = request.files.get('image')
+        if f and allowed_file(f.filename):
+            fname = save_uploaded_file(f, UPLOAD_BLOG, 'blog_')
+            if fname: image = fname
+        conn.execute(
+            "UPDATE blog_posts SET title=?, slug=?, content=?, excerpt=?, image=?, category=?, meta_title=?, meta_description=?, is_published=?, updated_at=? WHERE id=?",
+            (title, slug,
+             request.form.get('content',''),
+             request.form.get('excerpt',''),
+             image,
+             request.form.get('category','General'),
+             request.form.get('meta_title', title),
+             request.form.get('meta_description',''),
+             1 if request.form.get('is_published') else 0,
+             datetime.now().strftime('%Y-%m-%d %H:%M:%S'), bid)
+        )
+        conn.commit(); conn.close()
+        flash('Blog post update ho gayi!', 'success')
+        return redirect(url_for('admin_panel') + '#aBlog')
+    conn.close()
+    return render_template('admin_blog_form.html', post=post, action='Edit')
+
+# ─── ADMIN: MENU MANAGER ─────────────────────────────────────────────────────
+
+@app.route('/admin/menu/new', methods=['POST'])
+@admin_required
+def admin_menu_new():
+    conn = get_db()
+    conn.execute(
+        "INSERT INTO menu_items (title, url, icon, category, display_order, is_active, open_new_tab) VALUES (?,?,?,?,?,?,?)",
+        (request.form['title'].strip(),
+         request.form['url'].strip(),
+         request.form.get('icon',''),
+         request.form.get('category','resources'),
+         int(request.form.get('display_order', 99)),
+         1 if request.form.get('is_active') else 0,
+         1 if request.form.get('open_new_tab') else 0)
+    )
+    conn.commit(); conn.close()
+    flash('Menu item add ho gaya!', 'success')
+    return redirect(url_for('admin_panel') + '#aMenu')
+
+@app.route('/admin/menu/edit/<int:mid>', methods=['POST'])
+@admin_required
+def admin_menu_edit(mid):
+    conn = get_db()
+    conn.execute(
+        "UPDATE menu_items SET title=?, url=?, icon=?, category=?, display_order=?, is_active=?, open_new_tab=? WHERE id=?",
+        (request.form['title'].strip(),
+         request.form['url'].strip(),
+         request.form.get('icon',''),
+         request.form.get('category','resources'),
+         int(request.form.get('display_order', 99)),
+         1 if request.form.get('is_active') else 0,
+         1 if request.form.get('open_new_tab') else 0,
+         mid)
+    )
+    conn.commit(); conn.close()
+    flash('Menu item update ho gaya!', 'success')
+    return redirect(url_for('admin_panel') + '#aMenu')
+
+# ─── ADMIN: MEDIA MANAGER ────────────────────────────────────────────────────
+
+@app.route('/admin/media/upload', methods=['POST'])
+@admin_required
+def admin_media_upload():
+    folder = request.form.get('folder', 'media')
+    subfolder_map = {
+        'blog': UPLOAD_BLOG, 'pages': UPLOAD_PAGES,
+        'properties': UPLOAD_PROPERTIES, 'media': UPLOAD_MEDIA
+    }
+    subfolder = subfolder_map.get(folder, UPLOAD_MEDIA)
+    uploaded = 0
+    for f in request.files.getlist('files'):
+        if f and allowed_file(f.filename):
+            fname = save_uploaded_file(f, subfolder)
+            if fname:
+                size = os.path.getsize(os.path.join(subfolder, fname))
+                ext  = fname.rsplit('.', 1)[-1].lower()
+                conn = get_db()
+                conn.execute(
+                    "INSERT INTO media_library (filename, original_name, file_type, file_size, folder, alt_text) VALUES (?,?,?,?,?,?)",
+                    (fname, f.filename, ext, size, folder, '')
+                )
+                conn.commit(); conn.close()
+                uploaded += 1
+    flash(f'{uploaded} file(s) upload ho gayi!', 'success')
+    return redirect(url_for('admin_panel') + '#aMedia')
+
+@app.route('/admin/media/delete/<int:mid>')
+@admin_required
+def admin_media_delete(mid):
+    conn = get_db()
+    m = conn.execute("SELECT * FROM media_library WHERE id=?", (mid,)).fetchone()
+    if m:
+        folder_map = {'blog': UPLOAD_BLOG, 'pages': UPLOAD_PAGES, 'properties': UPLOAD_PROPERTIES, 'media': UPLOAD_MEDIA}
+        path = os.path.join(folder_map.get(m['folder'], UPLOAD_MEDIA), m['filename'])
+        try: os.remove(path)
+        except: pass
+        conn.execute("DELETE FROM media_library WHERE id=?", (mid,))
+        conn.commit()
+    conn.close()
+    flash('File delete ho gayi.', 'success')
+    return redirect(url_for('admin_panel') + '#aMedia')
+
+# ─── ADMIN: PDF GENERATOR ─────────────────────────────────────────────────────
 
 @app.route('/admin/pdf/<int:vid>')
 @admin_required
@@ -1166,7 +1413,7 @@ def generate_pdf(vid):
         flash('reportlab install karein: pip install reportlab', 'danger')
         return redirect(url_for('admin_panel'))
 
-# ─── EXTRA PAGES ──────────────────────────────────────────────────────────────
+# ─── STATIC PAGES (existing routes — kept for backward compatibility) ──────────
 
 @app.route('/property-laws')
 def property_laws():
@@ -1180,28 +1427,69 @@ def calculators():
 def area_guide():
     return render_template('area_guide.html')
 
-@app.route('/blog')
-def blog():
-    return render_template('blog.html')
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
 
-@app.route('/about')
-def about():
-    return render_template('about.html')
+# ─── DYNAMIC BLOG ROUTES ─────────────────────────────────────────────────────
 
-# ─── STARTUP — runs for both gunicorn and direct python ──────────────────────
+@app.route('/blog')
+def blog():
+    conn = get_db()
+    category = request.args.get('category', '')
+    q = "SELECT * FROM blog_posts WHERE is_published=1"
+    params = []
+    if category:
+        q += " AND category=?"; params.append(category)
+    q += " ORDER BY created_at DESC"
+    posts = conn.execute(q, params).fetchall()
+    categories = conn.execute("SELECT DISTINCT category FROM blog_posts WHERE is_published=1").fetchall()
+    conn.close()
+    # If no CMS posts exist yet, fall back to static template
+    if not posts:
+        return render_template('blog.html', posts=[], categories=[], category=category)
+    return render_template('blog_list.html', posts=posts, categories=categories, category=category)
+
+@app.route('/blog/<slug>')
+def blog_detail(slug):
+    conn = get_db()
+    post = conn.execute("SELECT * FROM blog_posts WHERE slug=? AND is_published=1", (slug,)).fetchone()
+    conn.close()
+    if not post:
+        flash('Blog post nahi mili.', 'warning')
+        return redirect(url_for('blog'))
+    return render_template('blog_detail.html', post=post)
+
+# ─── DYNAMIC CMS PAGE ROUTE ──────────────────────────────────────────────────
+
+@app.route('/page/<slug>')
+def cms_page(slug):
+    conn = get_db()
+    page = conn.execute("SELECT * FROM cms_pages WHERE slug=? AND is_published=1", (slug,)).fetchone()
+    conn.close()
+    if not page:
+        flash('Page nahi mili.', 'warning')
+        return redirect(url_for('index'))
+    return render_template('cms_page.html', page=page)
+
+# ─── STARTUP ──────────────────────────────────────────────────────────────────
 
 os.makedirs('uploads', exist_ok=True)
+os.makedirs(UPLOAD_BLOG, exist_ok=True)
+os.makedirs(UPLOAD_PAGES, exist_ok=True)
+os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
+os.makedirs(UPLOAD_MEDIA, exist_ok=True)
 init_db()
 
 # ─── RUN ──────────────────────────────────────────────────────────────────────
 
 if __name__ == '__main__':
     print("\n" + "="*55)
-    print("  ✅  Secure Property Hub V2 - Chal gaya!")
+    print("  ✅  ApnaGhar CMS — Chal gaya!")
     print("  🌐  Website: http://localhost:5000")
     print("  🔐  Admin:   http://localhost:5000/admin")
     print("      Email:   apnagharkarachi.pk@gmail.com")
