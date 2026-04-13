@@ -706,13 +706,13 @@ def init_db():
         ),
         (
             'Privacy Policy', 'privacy-policy',
-            '<div class="row justify-content-center"><div class="col-lg-9"><p class="text-muted small">Last updated: April 2026</p><h3 style="color:var(--primary);">Information We Collect</h3><p>When you use ApnaGhar, we may collect your name, phone number, email address, and property details that you voluntarily provide through our forms.</p><h3 style="color:var(--primary);">How We Use Your Information</h3><p>Your information is used only to connect you with property listings and our services. We do not sell your personal information to third parties.</p><h3 style="color:var(--primary);">Contact</h3><p>For any privacy concerns, contact us at <a href="mailto:saleem9868@gmail.com">saleem9868@gmail.com</a> or call 0311-1820660.</p></div></div>',
+            '<div class="row justify-content-center"><div class="col-lg-9"><p class="text-muted small">Last updated: April 2026</p><h3 style="color:var(--primary);">Information We Collect</h3><p>When you use ApnaGhar, we may collect your name, phone number, email address, and property details that you voluntarily provide through our forms.</p><h3 style="color:var(--primary);">How We Use Your Information</h3><p>Your information is used only to connect you with property listings and our services. We do not sell your personal information to third parties.</p><h3 style="color:var(--primary);">Contact</h3><p>For any privacy concerns, contact us at apnagharkarachi.pk [at] gmail.com or call 0311-1820660.</p></div></div>',
             'Privacy Policy - ApnaGhar',
             'Privacy policy for ApnaGhar property services Karachi.'
         ),
         (
             'Terms & Conditions', 'terms-conditions',
-            '<div class="row justify-content-center"><div class="col-lg-9"><p class="text-muted small">Last updated: April 2026</p><h3 style="color:var(--primary);">Use of Services</h3><p>By using ApnaGhar, you agree to provide accurate information and use our platform for lawful purposes only.</p><h3 style="color:var(--primary);">Property Listings</h3><p>ApnaGhar acts as an intermediary between property owners and tenants/buyers. We do not guarantee the accuracy of listings provided by third parties.</p><h3 style="color:var(--primary);">Document Services</h3><p>All documents prepared by ApnaGhar are based on information provided by the client. We are not responsible for errors due to incorrect information.</p><h3 style="color:var(--primary);">Contact</h3><p>Questions? Contact us at <a href="mailto:saleem9868@gmail.com">saleem9868@gmail.com</a></p></div></div>',
+            '<div class="row justify-content-center"><div class="col-lg-9"><p class="text-muted small">Last updated: April 2026</p><h3 style="color:var(--primary);">Use of Services</h3><p>By using ApnaGhar, you agree to provide accurate information and use our platform for lawful purposes only.</p><h3 style="color:var(--primary);">Property Listings</h3><p>ApnaGhar acts as an intermediary between property owners and tenants/buyers. We do not guarantee the accuracy of listings provided by third parties.</p><h3 style="color:var(--primary);">Document Services</h3><p>All documents prepared by ApnaGhar are based on information provided by the client. We are not responsible for errors due to incorrect information.</p><h3 style="color:var(--primary);">Contact</h3><p>Questions? Contact us at apnagharkarachi.pk [at] gmail.com</p></div></div>',
             'Terms & Conditions - ApnaGhar',
             'Terms and conditions for using ApnaGhar property and document services in Karachi.'
         ),
@@ -1412,7 +1412,7 @@ def generate_pdf(vid):
         lbl_s   = ParagraphStyle('L', parent=styles['Normal'], fontSize=9, textColor=colors.HexColor('#6b7a99'), fontName='Helvetica-Bold')
         val_s   = ParagraphStyle('V', parent=styles['Normal'], fontSize=11, textColor=colors.HexColor('#1a2535'))
         story.append(Paragraph("SECURE PROPERTY HUB", title_s))
-        story.append(Paragraph("Akhtar Colony, Karachi | 03111820660 | saleem9868@gmail.com", sub_s))
+        story.append(Paragraph("Akhtar Colony, Karachi | 03111820660 | apnagharkarachi.pk@gmail.com", sub_s))
         story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor('#c8973a')))
         story.append(Spacer(1, 0.4*cm))
         story.append(Paragraph("TENANT VERIFICATION REPORT", ParagraphStyle('R', parent=styles['Heading2'], fontSize=14, textColor=colors.HexColor('#2557a7'))))
