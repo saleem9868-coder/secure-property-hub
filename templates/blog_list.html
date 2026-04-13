@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Blog — ApnaGhar | اپنا گھر{% endblock %}
+{% block content %}
+<div class="page-hdr hdr-verif">
+    <div class="container">
+        <h1>📰 {% if lang=='ur' %}بلاگ — پراپرٹی نیوز{% else %}Blog — Property News & Tips{% endif %}</h1>
+        <p>{% if lang=='ur' %}کراچی پراپرٹی مارکیٹ کی تازہ خبریں اور مشورے{% else %}Latest Karachi property news, tips and guides{% endif %}</p>
+    </div>
+</div>
+<div class="container py-5">
+    <!-- Category Filter -->
+    {% if categories %}
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a href="{{ url_for('blog') }}" class="btn btn-sm rounded-pill {% if not category %}btn-primary{% else %}btn-outline-secondary{% endif %}">All</a>
+        {% for cat in categories %}
+        <a href="{{ url_for('blog', category=cat.category) }}"
+           class="btn btn-sm rounded-pill {% if category==cat.category %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+            {{ cat.category }}
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
+        {% for post in posts %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+                {% if post.image %}
+                <img src="/static/uploads/blog/{{ post.image }}" style="height:180px;object-fit:cover;width:100%;" alt="{{ post.title }}">
+                {% else %}
+                <div style="height:160px;background:linear-gradient(135deg,var(--primary),#0f2340);display:flex;align-items:center;justify-content:center;">
+                    <span style="font-size:3.5rem;">📰</span>
+                </div>
+                {% endif %}
+                <div class="p-4 d-flex flex-column flex-grow-1">
+                    <span class="badge rounded-pill mb-2" style="background:#e3f0ff;color:var(--primary);font-size:.75rem;align-self:start;">{{ post.category }}</span>
+                    <h5 class="fw-bold mb-2" style="color:var(--primary);">{{ post.title }}</h5>
+                    <p class="text-muted small mb-3 flex-grow-1">{{ post.excerpt or (post.content | striptags)[:120] }}...</p>
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>{{ post.created_at[:10] }}</small>
+                        <a href="{{ url_for('blog_detail', slug=post.slug) }}" class="btn btn-sm btn-outline-primary rounded-pill">
+                            {% if lang=='ur' %}مزید پڑھیں{% else %}Read More{% endif %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-newspaper" style="font-size:4rem;color:#ccc;"></i>
+            <h5 class="mt-3 text-muted">No blog posts yet.</h5>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- CTA -->
+    <div class="card border-0 rounded-4 p-5 mt-5" style="background:var(--primary);text-align:center;">
+        <h3 style="color:#fff;">📱 {% if lang=='ur' %}تازہ خبریں پائیں{% else %}Get Property Updates{% endif %}</h3>
+        <p style="color:rgba(255,255,255,.8);" class="mb-4">
+            {% if lang=='ur' %}کراچی پراپرٹی مارکیٹ کی تازہ خبریں واٹس ایپ پر پائیں{% else %}Get latest Karachi property news directly on WhatsApp{% endif %}
+        </p>
+        <a href="https://wa.me/923111820660?text=Hello%2C%20mujhe%20property%20updates%20chahiye." target="_blank" class="btn btn-whatsapp btn-lg rounded-pill px-5 fw-bold">
+            <i class="bi bi-whatsapp me-2"></i>{% if lang=='ur' %}واٹس ایپ پر جوائن کریں{% else %}Join on WhatsApp{% endif %}
+        </a>
+    </div>
+</div>
+{% endblock %}

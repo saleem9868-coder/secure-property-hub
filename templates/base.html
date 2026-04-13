@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ApnaGhar | اپنا گھر{% endblock %}</title>
+    {% block seo_meta %}
+    <meta name="description" content="ApnaGhar — Karachi's trusted property rental, sale, and document services. Based in Akhtar Colony, Karachi.">
+    {% endblock %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@600;700&family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -198,19 +201,32 @@
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('tenant_verification') }}"><i class="bi bi-person-check me-1"></i>{{ T.nav_verify }}</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('document_services') }}"><i class="bi bi-file-earmark-text me-1"></i>{{ T.nav_docs }}</a></li>
 
-                <!-- Resources Dropdown -->
+                <!-- Resources Dropdown — Dynamic from DB -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                         <i class="bi bi-info-circle me-1"></i>{% if lang=='ur' %}معلومات{% else %}Resources{% endif %}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ url_for('property_laws') }}"><em class="di">⚖️</em><span class="dt">{% if lang=='ur' %}پراپرٹی قوانین{% else %}Property Laws{% endif %}</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('calculators') }}"><em class="di">🧮</em><span class="dt">{% if lang=='ur' %}کیلکولیٹر{% else %}Calculators{% endif %}</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('area_guide') }}"><em class="di">🗺️</em><span class="dt">{% if lang=='ur' %}کراچی ایریا گائیڈ{% else %}Karachi Area Guide{% endif %}</span></a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ url_for('about') }}"><em class="di">👤</em><span class="dt">{% if lang=='ur' %}ہمارے بارے میں{% else %}About Us{% endif %}</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('blog') }}"><em class="di">📰</em><span class="dt">{% if lang=='ur' %}بلاگ{% else %}Blog{% endif %}</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('contact') }}"><em class="di">📞</em><span class="dt">{% if lang=='ur' %}رابطہ کریں{% else %}Contact Us{% endif %}</span></a></li>
+                        {% if menu_items %}
+                            {% for item in menu_items %}
+                            <li>
+                                <a class="dropdown-item" href="{{ item.url }}"
+                                   {% if item.open_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                                    <em class="di">{{ item.icon }}</em>
+                                    <span class="dt">{{ item.title }}</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        {% else %}
+                            {# Fallback to static links if DB is empty #}
+                            <li><a class="dropdown-item" href="{{ url_for('property_laws') }}"><em class="di">⚖️</em><span class="dt">{% if lang=='ur' %}پراپرٹی قوانین{% else %}Property Laws{% endif %}</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('calculators') }}"><em class="di">🧮</em><span class="dt">{% if lang=='ur' %}کیلکولیٹر{% else %}Calculators{% endif %}</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('area_guide') }}"><em class="di">🗺️</em><span class="dt">{% if lang=='ur' %}کراچی ایریا گائیڈ{% else %}Karachi Area Guide{% endif %}</span></a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('about') }}"><em class="di">👤</em><span class="dt">{% if lang=='ur' %}ہمارے بارے میں{% else %}About Us{% endif %}</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blog') }}"><em class="di">📰</em><span class="dt">{% if lang=='ur' %}بلاگ{% else %}Blog{% endif %}</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('contact') }}"><em class="di">📞</em><span class="dt">{% if lang=='ur' %}رابطہ کریں{% else %}Contact Us{% endif %}</span></a></li>
+                        {% endif %}
                     </ul>
                 </li>
 
@@ -266,7 +282,7 @@
                 <p style="font-size:.88rem;"><i class="bi bi-geo-alt-fill me-1" style="color:var(--accent-light)"></i>Akhtar Colony, Karachi</p>
                 <div class="mt-2">
                     <a href="https://wa.me/923111820660" target="_blank" class="soc-link me-2"><i class="bi bi-whatsapp"></i></a>
-                    <a href="mailto:apnagharkarachi.pk@gmail.com" class="soc-link me-2"><i class="bi bi-envelope-fill"></i></a>
+                    <a href="/cdn-cgi/l/email-protection#9dfcedf3fcfaf5fceff6fceffcfef5f4b3edf6ddfaf0fcf4f1b3fef2f0" class="soc-link me-2"><i class="bi bi-envelope-fill"></i></a>
                     <a href="tel:03111820660" class="soc-link"><i class="bi bi-telephone-fill"></i></a>
                 </div>
             </div>
@@ -291,7 +307,7 @@
                 <ul>
                     <li><a href="tel:03111820660"><i class="bi bi-telephone-fill" style="color:var(--accent-light)"></i> 0311-1820660</a></li>
                     <li><a href="https://wa.me/923111820660" target="_blank"><i class="bi bi-whatsapp" style="color:#25d366"></i> WhatsApp</a></li>
-                    <li><a href="mailto:apnagharkarachi.pk@gmail.com"><i class="bi bi-envelope-fill" style="color:var(--accent-light)"></i> apnagharkarachi.pk@gmail.com</a></li>
+                    <li><a href="/cdn-cgi/l/email-protection#4524352b24222d24372e243724262d2c6b352e052228242c296b262a28"><i class="bi bi-envelope-fill" style="color:var(--accent-light)"></i> <span class="__cf_email__" data-cfemail="39584957585e51584b52584b585a5150174952795e54585055175a5654">[email&#160;protected]</span></a></li>
                     <li><span><i class="bi bi-clock-fill" style="color:var(--accent-light)"></i> {{ T.footer_hours }}</span></li>
                 </ul>
                 <a href="{{ url_for('set_lang', lang=T.switch_code) }}" class="btn btn-sm btn-outline-light rounded-pill mt-2">
@@ -307,11 +323,4 @@
     </div>
 </footer>
 
-<a href="https://wa.me/923111820660?text=Hello%2C%20ApnaGhar%20se%20rabta%20karna%20chahta%20hoon." target="_blank" class="wa-float">
-    <i class="bi bi-whatsapp"></i>
-</a>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-{% block extra_js %}{% endblock %}
-</body>
-</html>
+<a href="https://wa.me/923111820660?text=Hello%2C%20ApnaGhar%20se%20rabta%20karna%20chahta%20hoon." target="_blank" class="

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}{% block title %}{{ action }} Page — Admin{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+{% endblock %}
+{% block content %}
+<div style="background:var(--primary);color:#fff;padding:18px 0;">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div><h4 class="mb-0" style="color:#fff;"><i class="bi bi-file-earmark-text me-2"></i>{{ action }} CMS Page</h4></div>
+        <a href="{{ url_for('admin_panel') }}#aPages" class="btn btn-sm btn-outline-light rounded-pill">← Back</a>
+    </div>
+</div>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Page Title *</label>
+                            <input type="text" name="title" class="form-control" required
+                                   value="{{ page.title if page else '' }}"
+                                   placeholder="e.g. About Us"
+                                   oninput="autoSlug(this.value)">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Slug (URL)</label>
+                            <div class="input-group">
+                                <span class="input-group-text text-muted" style="font-size:.8rem;">/page/</span>
+                                <input type="text" name="slug" id="slugField" class="form-control"
+                                       value="{{ page.slug if page else '' }}"
+                                       placeholder="about-us">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Content</label>
+                            <textarea name="content" id="pageContent" class="form-control" rows="15"
+                                      placeholder="Write your page content here... HTML is supported.">{{ page.content if page else '' }}</textarea>
+                            <small class="text-muted">HTML tags are supported. You can use &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;img&gt;, etc.</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Meta Title (SEO)</label>
+                            <input type="text" name="meta_title" class="form-control"
+                                   value="{{ page.meta_title if page else '' }}"
+                                   placeholder="Page title for search engines">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Meta Description (SEO)</label>
+                            <input type="text" name="meta_description" class="form-control"
+                                   value="{{ page.meta_description if page else '' }}"
+                                   placeholder="Brief description for search engines (160 chars)">
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="is_published" id="isPublished"
+                                       {% if not page or page.is_published %}checked{% endif %}>
+                                <label class="form-check-label fw-semibold" for="isPublished">Published (visible on website)</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 d-flex gap-3">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5">
+                            <i class="bi bi-check-circle me-1"></i>{{ action }} Page
+                        </button>
+                        <a href="{{ url_for('admin_panel') }}#aPages" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+                        {% if page %}
+                        <a href="{{ url_for('cms_page', slug=page.slug) }}" target="_blank" class="btn btn-outline-success rounded-pill px-4 ms-auto">
+                            <i class="bi bi-eye me-1"></i>Preview
+                        </a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% block extra_js %}
+<script>
+function autoSlug(val) {
+    const slugField = document.getElementById('slugField');
+    if (!slugField.dataset.manual) {
+        slugField.value = val.toLowerCase().trim()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/[\s]+/g, '-')
+            .replace(/-+/g, '-');
+    }
+}
+document.getElementById('slugField').addEventListener('input', function() {
+    this.dataset.manual = 'true';
+});
+</script>
+{% endblock %}
+{% endblock %}

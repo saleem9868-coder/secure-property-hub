@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.meta_title or post.title }} — ApnaGhar{% endblock %}
+{% block extra_css %}
+{% if post.meta_description %}
+<meta name="description" content="{{ post.meta_description }}">
+{% endif %}
+<style>
+.blog-content h2{color:var(--primary);margin-top:2rem;margin-bottom:1rem;}
+.blog-content h3{color:var(--primary-light);margin-top:1.5rem;}
+.blog-content p{line-height:1.9;color:#334;margin-bottom:1rem;}
+.blog-content ul,.blog-content ol{color:#334;line-height:1.9;margin-bottom:1rem;}
+.blog-content img{max-width:100%;border-radius:12px;margin:1rem 0;}
+.blog-content strong{color:var(--primary);}
+.blog-content blockquote{border-left:4px solid var(--accent);padding:12px 20px;background:var(--light-bg);border-radius:0 8px 8px 0;margin:1rem 0;}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <!-- Breadcrumb -->
+            <nav class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('blog') }}">Blog</a></li>
+                    <li class="breadcrumb-item active">{{ post.title[:40] }}</li>
+                </ol>
+            </nav>
+
+            <!-- Header -->
+            <span class="badge rounded-pill mb-3" style="background:#e3f0ff;color:var(--primary);">{{ post.category }}</span>
+            <h1 style="color:var(--primary);line-height:1.4;" class="mb-3">{{ post.title }}</h1>
+            <p class="text-muted mb-4"><i class="bi bi-calendar3 me-2"></i>{{ post.created_at[:10] }}</p>
+
+            {% if post.image %}
+            <img src="/static/uploads/blog/{{ post.image }}"
+                 style="width:100%;max-height:400px;object-fit:cover;border-radius:16px;margin-bottom:2rem;"
+                 alt="{{ post.title }}">
+            {% endif %}
+
+            <!-- Content -->
+            <div class="blog-content">
+                {{ post.content | safe }}
+            </div>
+
+            <!-- Share CTA -->
+            <div class="card border-0 rounded-4 p-4 mt-5" style="background:var(--primary);text-align:center;">
+                <h5 style="color:#fff;" class="mb-3">Questions? Contact Us!</h5>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="https://wa.me/923111820660?text=Hello%2C%20I%20read%20your%20blog%3A%20{{ post.title | urlencode }}" target="_blank" class="btn btn-whatsapp rounded-pill px-4 fw-bold">
+                        <i class="bi bi-whatsapp me-2"></i>WhatsApp
+                    </a>
+                    <a href="{{ url_for('blog') }}" class="btn btn-outline-light rounded-pill px-4">
+                        ← More Articles
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

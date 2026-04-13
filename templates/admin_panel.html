@@ -1,8 +1,8 @@
 {% extends 'base.html' %}{% block title %}Admin Panel{% endblock %}
 {% block content %}
 <div style="background:var(--primary);color:#fff;padding:18px 0;">
-    <div class="container d-flex justify-content-between align-items-center">
-        <div><h4 class="mb-0" style="color:#fff;"><i class="bi bi-shield-check me-2"></i>Admin Panel</h4><small style="color:rgba(255,255,255,.7);">Secure Property Hub Management</small></div>
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div><h4 class="mb-0" style="color:#fff;"><i class="bi bi-shield-check me-2"></i>Admin Panel — CMS</h4><small style="color:rgba(255,255,255,.7);">ApnaGhar Full Management System</small></div>
         <a href="{{ url_for('index') }}" class="btn btn-sm btn-outline-light rounded-pill">← Website</a>
     </div>
 </div>
@@ -12,83 +12,72 @@
         <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:var(--primary-light);">{{ stats.users }}</div><div class="text-muted small">Users</div></div></div>
         <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#1565c0;">{{ stats.rent }}</div><div class="text-muted small">Rent</div></div></div>
         <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#2e7d32;">{{ stats.sale }}</div><div class="text-muted small">Sale</div></div></div>
-        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#e65100;">{{ stats.rent_reqs }}</div><div class="text-muted small">Rent Reqs</div></div></div>
-        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#6a1b9a;">{{ stats.buy_reqs }}</div><div class="text-muted small">Buy Reqs</div></div></div>
-        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#c62828;">{{ stats.verifs }}</div><div class="text-muted small">Verifs</div></div></div>
+        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#6a1b9a;">{{ stats.pages }}</div><div class="text-muted small">Pages</div></div></div>
+        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm"><div style="font-size:1.6rem;font-weight:700;color:#c62828;">{{ stats.blogs }}</div><div class="text-muted small">Blog Posts</div></div></div>
         <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#e3f0ff;"><div style="font-size:1.6rem;font-weight:700;color:#1565c0;">{{ traffic_today }}</div><div class="text-muted small">👁 Today</div></div></div>
-        <div class="col-6 col-md-2"><div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#f3e5f5;"><div style="font-size:1.6rem;font-weight:700;color:#6a1b9a;">{{ unique_ips_today }}</div><div class="text-muted small">👤 Unique Today</div></div></div>
     </div>
 
-    <ul class="nav nav-tabs border-0 mb-4 flex-wrap">
+    <!-- Tabs -->
+    <ul class="nav nav-tabs border-0 mb-4 flex-wrap" id="adminTabs">
         <li class="nav-item"><a class="nav-link active fw-semibold" data-bs-toggle="tab" href="#aUsers">👤 Users</a></li>
         <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aRent">🔑 Rent</a></li>
         <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aSale">🏡 Sale</a></li>
         <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aRentReqs">📋 Rent Reqs</a></li>
         <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aBuyReqs">📋 Buy Reqs</a></li>
         <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aVerifs">✅ Verifications</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aPages">📄 Pages</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aBlog">📰 Blog</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aMenu">🔗 Menu</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aMedia">🖼️ Media</a></li>
         <li class="nav-item"><a class="nav-link fw-semibold" data-bs-toggle="tab" href="#aTraffic">📊 Traffic</a></li>
     </ul>
 
     <div class="tab-content">
-        <!-- Users -->
+
+        <!-- ── Users ────────────────────────────────────────────────────── -->
         <div class="tab-pane fade show active" id="aUsers">
             <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:var(--light-bg);"><tr><th>#</th><th>Naam</th><th>Email</th><th>Joined</th><th>Action</th></tr></thead><tbody>
             {% for u in users %}<tr><td>{{ u.id }}</td><td>{{ u.name }}</td><td>{{ u.email }}</td><td class="text-muted small">{{ u.created_at[:10] }}</td>
             <td><a href="{{ url_for('admin_delete', table='users', rid=u.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></td></tr>{% endfor %}
+            {% if not users %}<tr><td colspan="5" class="text-center text-muted py-3">Koi user nahi.</td></tr>{% endif %}
             </tbody></table></div>
         </div>
 
-        <!-- Rent Properties -->
+        <!-- ── Rent Properties ──────────────────────────────────────────── -->
         <div class="tab-pane fade" id="aRent">
-            <div class="alert alert-info small mb-3">💡 <strong>Approve karne ke liye:</strong> ✗ (red) badge pe click karein — green ✓ ho jayega aur property website pe live ho jayegi.</div>
+            <div class="alert alert-info small mb-3">💡 <strong>Approve karne ke liye:</strong> ✗ (red) badge pe click karein — green ✓ ho jayega aur property live ho jayegi.</div>
             <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:#e3f0ff;"><tr><th>#</th><th>Title</th><th>Owner</th><th>Phone</th><th>Location</th><th>Price</th><th>Featured</th><th>Approved</th><th>Action</th></tr></thead><tbody>
             {% for p in rent_props %}<tr>
                 <td>{{ p.id }}</td>
                 <td><a href="{{ url_for('rent_detail', pid=p.id) }}" target="_blank" style="font-size:.85rem;">{{ p.title[:25] }}</a></td>
-                <td class="small">{{ p.owner_name }}</td>
-                <td class="small">{{ p.owner_phone }}</td>
-                <td class="small text-muted">{{ p.location }}</td>
-                <td class="small">Rs. {{ p.price }}</td>
+                <td class="small">{{ p.owner_name }}</td><td class="small">{{ p.owner_phone }}</td>
+                <td class="small text-muted">{{ p.location }}</td><td class="small">Rs. {{ p.price }}</td>
                 <td><a href="{{ url_for('admin_toggle', table='rent_properties', field='is_featured', pid=p.id) }}" class="badge text-decoration-none {% if p.is_featured %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{% if p.is_featured %}⭐ Yes{% else %}No{% endif %}</a></td>
-                <td>
-                    <a href="{{ url_for('admin_toggle', table='rent_properties', field='is_approved', pid=p.id) }}"
-                       class="badge text-decoration-none fs-6 {% if p.is_approved %}bg-success{% else %}bg-danger{% endif %}"
-                       title="{% if p.is_approved %}Click to Unapprove{% else %}Click to APPROVE{% endif %}">
-                       {% if p.is_approved %}✓ Live{% else %}✗ Pending{% endif %}
-                    </a>
-                </td>
+                <td><a href="{{ url_for('admin_toggle', table='rent_properties', field='is_approved', pid=p.id) }}" class="badge text-decoration-none fs-6 {% if p.is_approved %}bg-success{% else %}bg-danger{% endif %}">{% if p.is_approved %}✓ Live{% else %}✗ Pending{% endif %}</a></td>
                 <td><a href="{{ url_for('admin_delete', table='rent_properties', rid=p.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></td>
             </tr>{% endfor %}
             {% if not rent_props %}<tr><td colspan="9" class="text-center text-muted py-3">Koi rent listing nahi.</td></tr>{% endif %}
             </tbody></table></div>
         </div>
 
-        <!-- Sale Properties -->
+        <!-- ── Sale Properties ─────────────────────────────────────────── -->
         <div class="tab-pane fade" id="aSale">
-            <div class="alert alert-info small mb-3">💡 <strong>Approve karne ke liye:</strong> ✗ (red) badge pe click karein — green ✓ ho jayega aur property website pe live ho jayegi.</div>
+            <div class="alert alert-info small mb-3">💡 ✗ (red) badge pe click karein — green ✓ ho jayega aur property live ho jayegi.</div>
             <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:#e8f5e9;"><tr><th>#</th><th>Title</th><th>Owner</th><th>Phone</th><th>Location</th><th>Price</th><th>Featured</th><th>Approved</th><th>Action</th></tr></thead><tbody>
             {% for p in sale_props %}<tr>
                 <td>{{ p.id }}</td>
                 <td><a href="{{ url_for('sale_detail', pid=p.id) }}" target="_blank" style="font-size:.85rem;">{{ p.title[:25] }}</a></td>
-                <td class="small">{{ p.owner_name }}</td>
-                <td class="small">{{ p.owner_phone }}</td>
-                <td class="small text-muted">{{ p.location }}</td>
-                <td class="small">Rs. {{ p.price }}</td>
+                <td class="small">{{ p.owner_name }}</td><td class="small">{{ p.owner_phone }}</td>
+                <td class="small text-muted">{{ p.location }}</td><td class="small">Rs. {{ p.price }}</td>
                 <td><a href="{{ url_for('admin_toggle', table='sale_properties', field='is_featured', pid=p.id) }}" class="badge text-decoration-none {% if p.is_featured %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{% if p.is_featured %}⭐ Yes{% else %}No{% endif %}</a></td>
-                <td>
-                    <a href="{{ url_for('admin_toggle', table='sale_properties', field='is_approved', pid=p.id) }}"
-                       class="badge text-decoration-none fs-6 {% if p.is_approved %}bg-success{% else %}bg-danger{% endif %}"
-                       title="{% if p.is_approved %}Click to Unapprove{% else %}Click to APPROVE{% endif %}">
-                       {% if p.is_approved %}✓ Live{% else %}✗ Pending{% endif %}
-                    </a>
-                </td>
+                <td><a href="{{ url_for('admin_toggle', table='sale_properties', field='is_approved', pid=p.id) }}" class="badge text-decoration-none fs-6 {% if p.is_approved %}bg-success{% else %}bg-danger{% endif %}">{% if p.is_approved %}✓ Live{% else %}✗ Pending{% endif %}</a></td>
                 <td><a href="{{ url_for('admin_delete', table='sale_properties', rid=p.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a></td>
             </tr>{% endfor %}
             {% if not sale_props %}<tr><td colspan="9" class="text-center text-muted py-3">Koi sale listing nahi.</td></tr>{% endif %}
             </tbody></table></div>
         </div>
 
-        <!-- Rent Requirements -->
+        <!-- ── Rent Requirements ───────────────────────────────────────── -->
         <div class="tab-pane fade" id="aRentReqs">
             <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:#fff3e0;"><tr><th>#</th><th>Naam</th><th>Phone</th><th>Area</th><th>Budget</th><th>Type</th><th>Date</th><th>Action</th></tr></thead><tbody>
             {% for r in rent_reqs %}<tr>
@@ -101,7 +90,7 @@
             </tbody></table></div>
         </div>
 
-        <!-- Buy Requirements -->
+        <!-- ── Buy Requirements ───────────────────────────────────────── -->
         <div class="tab-pane fade" id="aBuyReqs">
             <div class="table-responsive"><table class="table table-hover align-middle"><thead style="background:#e8f5e9;"><tr><th>#</th><th>Naam</th><th>Phone</th><th>Area</th><th>Budget</th><th>Payment</th><th>Date</th><th>Action</th></tr></thead><tbody>
             {% for r in buy_reqs %}<tr>
@@ -114,7 +103,7 @@
             </tbody></table></div>
         </div>
 
-        <!-- Verifications -->
+        <!-- ── Verifications ─────────────────────────────────────────── -->
         <div class="tab-pane fade" id="aVerifs">
             <div class="accordion" id="verifAcc">
             {% for v in verifs %}
@@ -158,7 +147,7 @@
                                     </form>
                                     <hr>
                                     <div class="d-flex gap-2">
-                                        <a href="{{ url_for('generate_pdf', vid=v.id) }}" class="btn btn-sm btn-accent rounded-pill flex-grow-1"><i class="bi bi-file-pdf me-1"></i>PDF Download</a>
+                                        <a href="{{ url_for('generate_pdf', vid=v.id) }}" class="btn btn-sm btn-accent rounded-pill flex-grow-1"><i class="bi bi-file-pdf me-1"></i>PDF</a>
                                         <a href="{{ url_for('admin_delete', table='tenant_verification', rid=v.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a>
                                     </div>
                                 </div>
@@ -171,35 +160,277 @@
             </div>
         </div>
 
-        <!-- Traffic Monitor -->
-        <div class="tab-pane fade" id="aTraffic">
-            <div class="row g-3 mb-4">
-                <div class="col-6 col-md-3">
-                    <div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#e3f0ff;">
-                        <div style="font-size:1.8rem;font-weight:700;color:#1565c0;">{{ traffic_today }}</div>
-                        <div class="text-muted small">Views Today</div>
+        <!-- ── CMS Pages ─────────────────────────────────────────────── -->
+        <div class="tab-pane fade" id="aPages">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold mb-0">📄 CMS Pages</h6>
+                <a href="{{ url_for('admin_page_new') }}" class="btn btn-primary rounded-pill btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i>New Page
+                </a>
+            </div>
+            <div class="alert alert-info small">💡 Pages are accessible at <strong>/page/slug</strong> — you can link them from the Menu Manager below.</div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead style="background:#f3e5f5;">
+                        <tr><th>#</th><th>Title</th><th>Slug (URL)</th><th>Status</th><th>Updated</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                    {% for p in pages %}
+                    <tr>
+                        <td>{{ p.id }}</td>
+                        <td class="fw-semibold">{{ p.title }}</td>
+                        <td>
+                            <a href="{{ url_for('cms_page', slug=p.slug) }}" target="_blank" class="text-decoration-none small">
+                                <i class="bi bi-link-45deg"></i>/page/{{ p.slug }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin_toggle', table='cms_pages', field='is_published', pid=p.id) }}"
+                               class="badge text-decoration-none {% if p.is_published %}bg-success{% else %}bg-secondary{% endif %}">
+                               {% if p.is_published %}✓ Published{% else %}Draft{% endif %}
+                            </a>
+                        </td>
+                        <td class="text-muted small">{{ p.updated_at[:10] }}</td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a href="{{ url_for('admin_page_edit', pid=p.id) }}" class="btn btn-sm btn-outline-primary rounded-pill"><i class="bi bi-pencil"></i></a>
+                                <a href="{{ url_for('admin_delete', table='cms_pages', rid=p.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete page?')"><i class="bi bi-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="text-center text-muted py-4">Koi page nahi. "New Page" se banayein!</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── Blog Posts ─────────────────────────────────────────────── -->
+        <div class="tab-pane fade" id="aBlog">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold mb-0">📰 Blog Posts</h6>
+                <a href="{{ url_for('admin_blog_new') }}" class="btn btn-primary rounded-pill btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i>New Post
+                </a>
+            </div>
+            <div class="alert alert-info small">💡 Blog posts are accessible at <strong>/blog/slug</strong></div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead style="background:#fff3e0;">
+                        <tr><th>#</th><th>Title</th><th>Category</th><th>Slug</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                    {% for post in blog_posts %}
+                    <tr>
+                        <td>{{ post.id }}</td>
+                        <td class="fw-semibold" style="max-width:200px;">{{ post.title[:40] }}</td>
+                        <td><span class="badge rounded-pill" style="background:#e3f0ff;color:#1565c0;">{{ post.category }}</span></td>
+                        <td><a href="{{ url_for('blog_detail', slug=post.slug) }}" target="_blank" class="text-decoration-none small"><i class="bi bi-link-45deg"></i>{{ post.slug[:25] }}</a></td>
+                        <td>
+                            <a href="{{ url_for('admin_toggle', table='blog_posts', field='is_published', pid=post.id) }}"
+                               class="badge text-decoration-none {% if post.is_published %}bg-success{% else %}bg-secondary{% endif %}">
+                               {% if post.is_published %}✓ Live{% else %}Draft{% endif %}
+                            </a>
+                        </td>
+                        <td class="text-muted small">{{ post.created_at[:10] }}</td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a href="{{ url_for('admin_blog_edit', bid=post.id) }}" class="btn btn-sm btn-outline-primary rounded-pill"><i class="bi bi-pencil"></i></a>
+                                <a href="{{ url_for('admin_delete', table='blog_posts', rid=post.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete post?')"><i class="bi bi-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="7" class="text-center text-muted py-4">Koi blog post nahi. "New Post" se banayein!</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── Menu Manager ───────────────────────────────────────────── -->
+        <div class="tab-pane fade" id="aMenu">
+            <div class="row g-4">
+                <!-- Add New Item -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4" style="background:#e8edf5;">
+                        <h6 class="fw-bold mb-3" style="color:var(--primary);">➕ Add Menu Item</h6>
+                        <form method="POST" action="{{ url_for('admin_menu_new') }}">
+                            <div class="mb-2">
+                                <label class="form-label small fw-semibold">Title *</label>
+                                <input type="text" name="title" class="form-control form-control-sm" required placeholder="e.g. Property Laws">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small fw-semibold">URL *</label>
+                                <input type="text" name="url" class="form-control form-control-sm" required placeholder="/property-laws or /page/my-slug">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small fw-semibold">Icon (emoji)</label>
+                                <input type="text" name="icon" class="form-control form-control-sm" placeholder="⚖️">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label small fw-semibold">Order</label>
+                                <input type="number" name="display_order" class="form-control form-control-sm" value="99">
+                            </div>
+                            <div class="mb-3 d-flex gap-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="is_active" checked>
+                                    <label class="form-check-label small">Active</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="open_new_tab">
+                                    <label class="form-check-label small">New Tab</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary rounded-pill btn-sm w-100">Add Item</button>
+                        </form>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#f3e5f5;">
-                        <div style="font-size:1.8rem;font-weight:700;color:#6a1b9a;">{{ unique_ips_today }}</div>
-                        <div class="text-muted small">Unique Visitors Today</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#e8f5e9;">
-                        <div style="font-size:1.8rem;font-weight:700;color:#2e7d32;">{{ traffic_week }}</div>
-                        <div class="text-muted small">Views (Last 7 Days)</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#fff3e0;">
-                        <div style="font-size:1.8rem;font-weight:700;color:#e65100;">{{ traffic_total }}</div>
-                        <div class="text-muted small">All-Time Views</div>
+                <!-- Current Items -->
+                <div class="col-lg-8">
+                    <h6 class="fw-bold mb-3">Current Resources Menu Items</h6>
+                    <div class="alert alert-info small">💡 These items appear in the "Resources" dropdown in the navbar. Drag-reorder is not yet supported — use the Order number field instead.</div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead style="background:var(--light-bg);">
+                                <tr><th>Order</th><th>Icon</th><th>Title</th><th>URL</th><th>Active</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody>
+                            {% for item in menu_items %}
+                            <tr>
+                                <td class="text-muted small">{{ item.display_order }}</td>
+                                <td>{{ item.icon }}</td>
+                                <td class="fw-semibold">{{ item.title }}</td>
+                                <td class="small text-muted">{{ item.url }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin_toggle', table='menu_items', field='is_active', pid=item.id) }}"
+                                       class="badge text-decoration-none {% if item.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                                       {% if item.is_active %}Active{% else %}Hidden{% endif %}
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-primary rounded-pill"
+                                                data-bs-toggle="modal" data-bs-target="#editMenu{{ item.id }}">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <a href="{{ url_for('admin_delete', table='menu_items', rid=item.id) }}"
+                                           class="btn btn-sm btn-outline-danger rounded-pill"
+                                           onclick="return confirm('Delete menu item?')">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% if not menu_items %}<tr><td colspan="6" class="text-center text-muted py-3">Koi menu item nahi.</td></tr>{% endif %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+            <!-- Edit Modals -->
+            {% for item in menu_items %}
+            <div class="modal fade" id="editMenu{{ item.id }}" tabindex="-1">
+                <div class="modal-dialog"><div class="modal-content rounded-4 border-0">
+                    <div class="modal-header border-0"><h5 class="modal-title">Edit: {{ item.title }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                    <div class="modal-body">
+                        <form method="POST" action="{{ url_for('admin_menu_edit', mid=item.id) }}">
+                            <div class="mb-2"><label class="form-label small fw-semibold">Title</label><input type="text" name="title" class="form-control" value="{{ item.title }}" required></div>
+                            <div class="mb-2"><label class="form-label small fw-semibold">URL</label><input type="text" name="url" class="form-control" value="{{ item.url }}" required></div>
+                            <div class="mb-2"><label class="form-label small fw-semibold">Icon</label><input type="text" name="icon" class="form-control" value="{{ item.icon }}"></div>
+                            <div class="mb-2"><label class="form-label small fw-semibold">Order</label><input type="number" name="display_order" class="form-control" value="{{ item.display_order }}"></div>
+                            <div class="d-flex gap-3 mb-3">
+                                <div class="form-check form-switch"><input class="form-check-input" type="checkbox" name="is_active" {% if item.is_active %}checked{% endif %}><label class="form-check-label small">Active</label></div>
+                                <div class="form-check form-switch"><input class="form-check-input" type="checkbox" name="open_new_tab" {% if item.open_new_tab %}checked{% endif %}><label class="form-check-label small">New Tab</label></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary rounded-pill w-100">Save Changes</button>
+                        </form>
+                    </div>
+                </div></div>
+            </div>
+            {% endfor %}
+        </div>
 
+        <!-- ── Media Manager ──────────────────────────────────────────── -->
+        <div class="tab-pane fade" id="aMedia">
+            <div class="row g-4">
+                <!-- Upload Form -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4" style="background:#e8edf5;">
+                        <h6 class="fw-bold mb-3" style="color:var(--primary);">📤 Upload Files</h6>
+                        <form method="POST" action="{{ url_for('admin_media_upload') }}" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold">Folder</label>
+                                <select name="folder" class="form-select form-select-sm">
+                                    <option value="media">General Media</option>
+                                    <option value="blog">Blog Images</option>
+                                    <option value="pages">Page Images</option>
+                                    <option value="properties">Property Images</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold">Files (multiple allowed)</label>
+                                <input type="file" name="files" class="form-control form-control-sm" multiple accept="image/*,.pdf">
+                            </div>
+                            <button type="submit" class="btn btn-primary rounded-pill btn-sm w-100">Upload</button>
+                        </form>
+                        <hr>
+                        <div class="small text-muted">
+                            <strong>Folder paths:</strong><br>
+                            Blog: <code>static/uploads/blog/</code><br>
+                            Pages: <code>static/uploads/pages/</code><br>
+                            Properties: <code>static/uploads/properties/</code><br>
+                            Media: <code>static/uploads/media/</code>
+                        </div>
+                    </div>
+                </div>
+                <!-- Media Library -->
+                <div class="col-lg-8">
+                    <h6 class="fw-bold mb-3">Media Library (Recent 50)</h6>
+                    <div class="row g-3">
+                        {% for m in media %}
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="card border-0 rounded-3 overflow-hidden shadow-sm">
+                                {% if m.file_type in ['jpg','jpeg','png','gif','webp'] %}
+                                {% set folder_map = {'blog': 'static/uploads/blog/', 'pages': 'static/uploads/pages/', 'properties': 'static/uploads/properties/', 'media': 'static/uploads/media/'} %}
+                                <img src="/{{ folder_map.get(m.folder, 'static/uploads/media/') }}{{ m.filename }}"
+                                     style="height:100px;object-fit:cover;width:100%;"
+                                     alt="{{ m.alt_text or m.filename }}"
+                                     onerror="this.src='/static/logo.png'">
+                                {% else %}
+                                <div style="height:100px;background:#e8edf5;display:flex;align-items:center;justify-content:center;">
+                                    <i class="bi bi-file-earmark-pdf" style="font-size:2.5rem;color:var(--primary);"></i>
+                                </div>
+                                {% endif %}
+                                <div class="p-2">
+                                    <div class="small fw-semibold text-truncate" title="{{ m.filename }}">{{ m.filename[:18] }}</div>
+                                    <div class="d-flex justify-content-between align-items-center mt-1">
+                                        <span class="badge rounded-pill" style="background:var(--light-bg);color:#666;font-size:.65rem;">{{ m.folder }}</span>
+                                        <a href="{{ url_for('admin_media_delete', mid=m.id) }}"
+                                           class="btn btn-sm btn-outline-danger" style="padding:1px 6px;font-size:.7rem;"
+                                           onclick="return confirm('Delete file?')"><i class="bi bi-trash"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-12 text-center py-4"><p class="text-muted">Koi media nahi. Upar se upload karein!</p></div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Traffic ────────────────────────────────────────────────── -->
+        <div class="tab-pane fade" id="aTraffic">
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-3"><div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#e3f0ff;"><div style="font-size:1.8rem;font-weight:700;color:#1565c0;">{{ traffic_today }}</div><div class="text-muted small">Views Today</div></div></div>
+                <div class="col-6 col-md-3"><div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#f3e5f5;"><div style="font-size:1.8rem;font-weight:700;color:#6a1b9a;">{{ unique_ips_today }}</div><div class="text-muted small">Unique Visitors</div></div></div>
+                <div class="col-6 col-md-3"><div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#e8f5e9;"><div style="font-size:1.8rem;font-weight:700;color:#2e7d32;">{{ traffic_week }}</div><div class="text-muted small">Last 7 Days</div></div></div>
+                <div class="col-6 col-md-3"><div class="card border-0 rounded-4 p-3 text-center shadow-sm" style="background:#fff3e0;"><div style="font-size:1.8rem;font-weight:700;color:#e65100;">{{ traffic_total }}</div><div class="text-muted small">All-Time</div></div></div>
+            </div>
             <div class="row g-4 mb-4">
                 <div class="col-lg-7">
                     <div class="card border-0 shadow-sm rounded-4 p-4">
@@ -209,83 +440,47 @@
                             {% set max_cnt = daily_chart|map(attribute='cnt')|max %}
                             {% for row in daily_chart %}
                             <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-                                <div style="width:100%;background:var(--primary-light);border-radius:4px 4px 0 0;
-                                            height:{{ ((row.cnt / max_cnt) * 100)|int }}px;min-height:4px;cursor:pointer;"
-                                     data-bs-toggle="tooltip" data-bs-placement="top"
-                                     title="{{ row.cnt }} views on {{ row.day }}"></div>
+                                <div style="width:100%;background:var(--primary-light);border-radius:4px 4px 0 0;height:{{ ((row.cnt / max_cnt) * 100)|int }}px;min-height:4px;" data-bs-toggle="tooltip" title="{{ row.cnt }} views on {{ row.day }}"></div>
                                 <small style="font-size:.55rem;color:#888;writing-mode:vertical-rl;transform:rotate(180deg);">{{ row.day[5:] }}</small>
                             </div>
                             {% endfor %}
                         </div>
-                        {% else %}
-                        <p class="text-muted small">No data yet.</p>
-                        {% endif %}
+                        {% else %}<p class="text-muted small">No data yet.</p>{% endif %}
                     </div>
                 </div>
                 <div class="col-lg-5">
                     <div class="card border-0 shadow-sm rounded-4 p-4">
                         <h6 class="fw-bold mb-3" style="color:var(--primary);">🔥 Top Pages</h6>
-                        {% if top_pages %}
-                        {% set max_top = top_pages[0].cnt %}
+                        {% if top_pages %}{% set max_top = top_pages[0].cnt %}
                         {% for p in top_pages %}
                         <div class="mb-2">
                             <div class="d-flex justify-content-between mb-1">
                                 <small class="fw-semibold text-truncate" style="max-width:75%;color:#1a2535;">{{ p.path }}</small>
                                 <small class="fw-bold" style="color:var(--primary-light);">{{ p.cnt }}</small>
                             </div>
-                            <div style="height:6px;background:#e8edf5;border-radius:3px;">
-                                <div style="height:6px;background:var(--primary-light);border-radius:3px;width:{{ ((p.cnt / max_top)*100)|int }}%;"></div>
-                            </div>
+                            <div style="height:6px;background:#e8edf5;border-radius:3px;"><div style="height:6px;background:var(--primary-light);border-radius:3px;width:{{ ((p.cnt/max_top)*100)|int }}%;"></div></div>
                         </div>
                         {% endfor %}
-                        {% else %}
-                        <p class="text-muted small">No page data yet.</p>
-                        {% endif %}
+                        {% else %}<p class="text-muted small">No page data yet.</p>{% endif %}
                     </div>
                 </div>
             </div>
-
-            <!-- Recent Visits Table — NOW WITH CITY & COUNTRY -->
             <div class="card border-0 shadow-sm rounded-4 p-4">
                 <h6 class="fw-bold mb-3" style="color:var(--primary);">🕐 Recent Visits (Last 30)</h6>
                 <div class="table-responsive">
                     <table class="table table-sm table-hover mb-0" style="font-size:.82rem;">
-                        <thead style="background:#f8f9fc;">
-                            <tr>
-                                <th>Time</th>
-                                <th>Page</th>
-                                <th>IP</th>
-                                <th>📍 City</th>
-                                <th>🌍 Country</th>
-                                <th>Browser / Device</th>
-                            </tr>
-                        </thead>
+                        <thead style="background:#f8f9fc;"><tr><th>Time</th><th>Page</th><th>IP</th><th>City</th><th>Country</th><th>Browser</th></tr></thead>
                         <tbody>
-                            {% for v in recent_views %}
-                            <tr>
-                                <td class="text-muted" style="white-space:nowrap;">{{ v.created_at[:16] }}</td>
-                                <td><span class="badge rounded-pill" style="background:#e3f0ff;color:#1565c0;">{{ v.path }}</span></td>
-                                <td class="text-muted small">{{ v.ip[:15] if v.ip else '—' }}</td>
-                                <td>
-                                    {% if v.city %}
-                                    <span class="badge rounded-pill" style="background:#e8f5e9;color:#2e7d32;">📍 {{ v.city }}</span>
-                                    {% else %}
-                                    <span class="text-muted small">—</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if v.country %}
-                                    <span class="text-muted small">{{ v.country }}</span>
-                                    {% else %}
-                                    <span class="text-muted small">—</span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-muted text-truncate" style="max-width:180px;">{{ v.user_agent[:55] if v.user_agent else '—' }}</td>
-                            </tr>
-                            {% endfor %}
-                            {% if not recent_views %}
-                            <tr><td colspan="6" class="text-center text-muted py-3">No visits logged yet.</td></tr>
-                            {% endif %}
+                        {% for v in recent_views %}
+                        <tr>
+                            <td class="text-muted" style="white-space:nowrap;">{{ v.created_at[:16] }}</td>
+                            <td><span class="badge rounded-pill" style="background:#e3f0ff;color:#1565c0;">{{ v.path }}</span></td>
+                            <td class="text-muted small">{{ v.ip[:15] if v.ip else '—' }}</td>
+                            <td>{% if v.city %}<span class="badge rounded-pill" style="background:#e8f5e9;color:#2e7d32;">📍 {{ v.city }}</span>{% else %}—{% endif %}</td>
+                            <td class="text-muted small">{{ v.country or '—' }}</td>
+                            <td class="text-muted text-truncate" style="max-width:180px;">{{ v.user_agent[:55] if v.user_agent else '—' }}</td>
+                        </tr>
+                        {% else %}<tr><td colspan="6" class="text-center text-muted py-3">No visits yet.</td></tr>{% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -294,4 +489,17 @@
 
     </div><!-- end tab-content -->
 </div><!-- end container -->
+
+{% block extra_js %}
+<script>
+// Deep-link to tab via hash (e.g. #aPages)
+const hash = window.location.hash;
+if (hash) {
+    const tab = document.querySelector(`a[href="${hash}"]`);
+    if (tab) { new bootstrap.Tab(tab).show(); }
+}
+// Activate tooltips
+document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+</script>
+{% endblock %}
 {% endblock %}

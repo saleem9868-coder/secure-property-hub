@@ -1,0 +1,104 @@
+{% extends 'base.html' %}{% block title %}{{ action }} Blog Post — Admin{% endblock %}
+{% block content %}
+<div style="background:var(--primary);color:#fff;padding:18px 0;">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div><h4 class="mb-0" style="color:#fff;"><i class="bi bi-newspaper me-2"></i>{{ action }} Blog Post</h4></div>
+        <a href="{{ url_for('admin_panel') }}#aBlog" class="btn btn-sm btn-outline-light rounded-pill">← Back</a>
+    </div>
+</div>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Post Title *</label>
+                            <input type="text" name="title" class="form-control" required
+                                   value="{{ post.title if post else '' }}"
+                                   placeholder="e.g. Why is a Rent Agreement Important?"
+                                   oninput="autoSlug(this.value)">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Slug (URL)</label>
+                            <div class="input-group">
+                                <span class="input-group-text text-muted" style="font-size:.8rem;">/blog/</span>
+                                <input type="text" name="slug" id="slugField" class="form-control"
+                                       value="{{ post.slug if post else '' }}"
+                                       placeholder="rent-agreement-importance">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Category</label>
+                            <select name="category" class="form-select">
+                                {% for cat in ['General','Rental Tips','Buying Guide','Documents','Market Update','Fraud Alert','Verification','Legal'] %}
+                                <option {% if post and post.category==cat %}selected{% endif %}>{{ cat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Cover Image</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                            {% if post and post.image %}
+                            <small class="text-muted">Current: {{ post.image }} <img src="/static/uploads/blog/{{ post.image }}" style="height:30px;margin-left:8px;border-radius:4px;"></small>
+                            {% endif %}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Excerpt (short summary)</label>
+                            <textarea name="excerpt" class="form-control" rows="2"
+                                      placeholder="Brief summary shown in blog list (1-2 sentences)">{{ post.excerpt if post else '' }}</textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Full Content *</label>
+                            <textarea name="content" class="form-control" rows="18"
+                                      placeholder="Write the full blog post here... HTML is supported.">{{ post.content if post else '' }}</textarea>
+                            <small class="text-muted">HTML tags supported: &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt;, &lt;img&gt;, etc.</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Meta Title (SEO)</label>
+                            <input type="text" name="meta_title" class="form-control"
+                                   value="{{ post.meta_title if post else '' }}"
+                                   placeholder="Title for search engines">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Meta Description (SEO)</label>
+                            <input type="text" name="meta_description" class="form-control"
+                                   value="{{ post.meta_description if post else '' }}"
+                                   placeholder="160 char description for Google">
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="is_published" id="isPublished"
+                                       {% if not post or post.is_published %}checked{% endif %}>
+                                <label class="form-check-label fw-semibold" for="isPublished">Published</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 d-flex gap-3 flex-wrap">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5">
+                            <i class="bi bi-check-circle me-1"></i>{{ action }} Post
+                        </button>
+                        <a href="{{ url_for('admin_panel') }}#aBlog" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+                        {% if post %}
+                        <a href="{{ url_for('blog_detail', slug=post.slug) }}" target="_blank" class="btn btn-outline-success rounded-pill px-4 ms-auto">
+                            <i class="bi bi-eye me-1"></i>Preview
+                        </a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% block extra_js %}
+<script>
+function autoSlug(val) {
+    const f = document.getElementById('slugField');
+    if (!f.dataset.manual) {
+        f.value = val.toLowerCase().trim().replace(/[^a-z0-9\s-]/g,'').replace(/[\s]+/g,'-').replace(/-+/g,'-');
+    }
+}
+document.getElementById('slugField').addEventListener('input', function() { this.dataset.manual='true'; });
+</script>
+{% endblock %}
+{% endblock %}
