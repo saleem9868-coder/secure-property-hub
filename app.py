@@ -1512,6 +1512,23 @@ def admin_seed_pages():
     flash(f"Done! {inserted} pages created, {updated} pages updated.", "success")
     return redirect(url_for("admin_panel") + "#aPages")
 
+# ─── DATABASE BACKUP ──────────────────────────────────────────────────────────
+
+@app.route('/admin/backup-db')
+@admin_required
+def backup_db():
+    """Download a timestamped backup of the database. Admin only."""
+    db_dir  = os.path.dirname(os.path.abspath(__file__))
+    db_name = os.path.basename(DB_PATH)          # 'database.db'
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    download_name = f"apnaghar_backup_{timestamp}.db"
+    return send_from_directory(
+        db_dir,
+        db_name,
+        as_attachment=True,
+        download_name=download_name
+    )
+
 # ─── STARTUP ──────────────────────────────────────────────────────────────────
 
 os.makedirs('uploads', exist_ok=True)
