@@ -690,53 +690,16 @@ def init_db():
         alt_text TEXT DEFAULT '',
         created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
 
-    # -- Seed required CMS pages if they don't exist -------------------------
-    seed_pages = [
-        (
-            'About Us', 'about-us',
-            '<h2>Our Story</h2><div class="row g-4 align-items-center"><div class="col-lg-4 text-center"><img src="/static/MUHAMMAD_SALEEM.png" alt="Muhammad Saleem" style="width:100%;max-width:300px;border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.15);object-fit:cover;height:320px;"></div><div class="col-lg-8"><p style="color:#445;line-height:1.9;">My name is <strong>Muhammad Saleem</strong> - founder of ApnaGhar. I spent my professional career as an <strong>Electrical &amp; Mechanical Supervisor</strong>. After retirement, I decided to put my skills to good use.</p><p style="color:#445;line-height:1.9;">I started with a <strong>document services shop</strong> in Akhtar Colony, Karachi. Soon I expanded to include <strong>property rental and sale services</strong>.</p><p style="color:#445;line-height:1.9;">ApnaGhar is built on one simple promise: <strong>honest, reliable, and affordable service</strong> for the people of Karachi.</p><a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp rounded-pill px-4 fw-bold mt-3"><i class="bi bi-whatsapp me-2"></i>Contact Us Now</a></div></div>',
-            'About Us - ApnaGhar Karachi',
-            'Learn about Muhammad Saleem and ApnaGhar - trusted property and document services in Akhtar Colony Karachi.'
-        ),
-        (
-            'Contact Us', 'contact-us',
-            '<div class="row g-4"><div class="col-lg-5"><div class="card border-0 shadow-sm rounded-4 p-4"><h5 class="fw-bold mb-4" style="color:var(--primary);">Our Details</h5><div class="d-flex gap-3 mb-3"><i class="bi bi-geo-alt-fill" style="font-size:1.4rem;color:var(--accent);"></i><div><div class="fw-semibold">Address</div><div class="text-muted">Akhtar Colony, Karachi</div></div></div><div class="d-flex gap-3 mb-3"><i class="bi bi-telephone-fill" style="font-size:1.4rem;color:#1565c0;"></i><div><div class="fw-semibold">Phone</div><a href="tel:03111820660" style="color:#445;">0311-1820660</a></div></div><div class="d-flex gap-3 mb-3"><i class="bi bi-whatsapp" style="font-size:1.4rem;color:#25d366;"></i><div><div class="fw-semibold">WhatsApp</div><a href="https://wa.me/923111820660" target="_blank" style="color:#445;">0311-1820660</a></div></div><div class="d-flex gap-3 mb-4"><i class="bi bi-clock-fill" style="font-size:1.4rem;color:var(--accent);"></i><div><div class="fw-semibold">Hours</div><div class="text-muted">Mon-Sat 9AM-8PM</div></div></div><a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp rounded-pill fw-bold w-100 mb-2"><i class="bi bi-whatsapp me-2"></i>WhatsApp</a><a href="tel:03111820660" class="btn btn-primary rounded-pill w-100"><i class="bi bi-telephone me-2"></i>0311-1820660</a></div></div><div class="col-lg-7"><div class="card border-0 shadow-sm rounded-4 overflow-hidden"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3618.9!2d67.0374!3d24.9274!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33e7b71234567%3A0xabcdef1234567890!2sAkhtar+Colony%2C+Karachi!5e0!3m2!1sen!2spk!4v1234567890" width="100%" height="420" style="border:0;" allowfullscreen="" loading="lazy"></iframe></div></div></div>',
-            'Contact Us - ApnaGhar Karachi',
-            'Contact ApnaGhar for property rental, sale, and document services in Akhtar Colony Karachi. Call 0311-1820660.'
-        ),
-        (
-            'Privacy Policy', 'privacy-policy',
-            '<div class="row justify-content-center"><div class="col-lg-9"><p class="text-muted small">Last updated: April 2026</p><h3 style="color:var(--primary);">Information We Collect</h3><p>When you use ApnaGhar, we may collect your name, phone number, email address, and property details that you voluntarily provide through our forms.</p><h3 style="color:var(--primary);">How We Use Your Information</h3><p>Your information is used only to connect you with property listings and our services. We do not sell your personal information to third parties.</p><h3 style="color:var(--primary);">Contact</h3><p>For any privacy concerns, contact us at apnagharkarachi.pk [at] gmail.com or call 0311-1820660.</p></div></div>',
-            'Privacy Policy - ApnaGhar',
-            'Privacy policy for ApnaGhar property services Karachi.'
-        ),
-        (
-            'Terms & Conditions', 'terms-conditions',
-            '<div class="row justify-content-center"><div class="col-lg-9"><p class="text-muted small">Last updated: April 2026</p><h3 style="color:var(--primary);">Use of Services</h3><p>By using ApnaGhar, you agree to provide accurate information and use our platform for lawful purposes only.</p><h3 style="color:var(--primary);">Property Listings</h3><p>ApnaGhar acts as an intermediary between property owners and tenants/buyers. We do not guarantee the accuracy of listings provided by third parties.</p><h3 style="color:var(--primary);">Document Services</h3><p>All documents prepared by ApnaGhar are based on information provided by the client. We are not responsible for errors due to incorrect information.</p><h3 style="color:var(--primary);">Contact</h3><p>Questions? Contact us at apnagharkarachi.pk [at] gmail.com</p></div></div>',
-            'Terms & Conditions - ApnaGhar',
-            'Terms and conditions for using ApnaGhar property and document services in Karachi.'
-        ),
-    ]
-    for pg_title, pg_slug, pg_content, pg_meta_title, pg_meta_desc in seed_pages:
-        exists = c.execute("SELECT id FROM cms_pages WHERE slug=?", (pg_slug,)).fetchone()
-        if not exists:
-            c.execute(
-                "INSERT INTO cms_pages (title, slug, content, meta_title, meta_description, is_published) VALUES (?,?,?,?,?,1)",
-                (pg_title, pg_slug, pg_content, pg_meta_title, pg_meta_desc)
-            )
-
     # Seed default menu items if empty
     count = c.execute("SELECT COUNT(*) FROM menu_items").fetchone()[0]
     if count == 0:
         default_items = [
-            ('Property Laws', '/page/property-laws', '⚖️', 'resources', 1, 1, 0),
-            ('Calculators', '/page/calculators', '🧮', 'resources', 2, 1, 0),
-            ('Karachi Area Guide', '/page/area-guide', '🗺️', 'resources', 3, 1, 0),
-            ('About Us', '/page/about-us', '👤', 'resources', 4, 1, 0),
+            ('Property Laws', '/property-laws', '⚖️', 'resources', 1, 1, 0),
+            ('Calculators', '/calculators', '🧮', 'resources', 2, 1, 0),
+            ('Karachi Area Guide', '/area-guide', '🗺️', 'resources', 3, 1, 0),
+            ('About Us', '/about', '👤', 'resources', 4, 1, 0),
             ('Blog', '/blog', '📰', 'resources', 5, 1, 0),
-            ('Contact Us', '/page/contact-us', '📞', 'resources', 6, 1, 0),
-            ('Privacy Policy', '/page/privacy-policy', '🔒', 'resources', 7, 1, 0),
-            ('Terms & Conditions', '/page/terms-conditions', '📋', 'resources', 8, 1, 0),
+            ('Contact Us', '/contact', '📞', 'resources', 6, 1, 0),
         ]
         c.executemany(
             "INSERT INTO menu_items (title, url, icon, category, display_order, is_active, open_new_tab) VALUES (?,?,?,?,?,?,?)",
@@ -1412,7 +1375,7 @@ def generate_pdf(vid):
         lbl_s   = ParagraphStyle('L', parent=styles['Normal'], fontSize=9, textColor=colors.HexColor('#6b7a99'), fontName='Helvetica-Bold')
         val_s   = ParagraphStyle('V', parent=styles['Normal'], fontSize=11, textColor=colors.HexColor('#1a2535'))
         story.append(Paragraph("SECURE PROPERTY HUB", title_s))
-        story.append(Paragraph("Akhtar Colony, Karachi | 03111820660 | apnagharkarachi.pk@gmail.com", sub_s))
+        story.append(Paragraph("Akhtar Colony, Karachi | 03111820660 | saleem9868@gmail.com", sub_s))
         story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor('#c8973a')))
         story.append(Spacer(1, 0.4*cm))
         story.append(Paragraph("TENANT VERIFICATION REPORT", ParagraphStyle('R', parent=styles['Heading2'], fontSize=14, textColor=colors.HexColor('#2557a7'))))
@@ -1450,7 +1413,7 @@ def generate_pdf(vid):
         flash('reportlab install karein: pip install reportlab', 'danger')
         return redirect(url_for('admin_panel'))
 
-# ─── STATIC PAGES — 301 redirects to CMS slugs (backward compatibility) ────────
+# ─── STATIC PAGES — 301 redirects to CMS slugs ───────────────────────────────
 
 @app.route('/property-laws')
 def property_laws():
@@ -1516,6 +1479,38 @@ def cms_page(slug):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+@app.route('/admin/seed-pages')
+@admin_required
+def admin_seed_pages():
+    """Force create the 3 missing CMS pages. Safe to run multiple times."""
+    import json, os
+    seed_file = os.path.join(os.path.dirname(__file__), 'cms_seed.json')
+    if not os.path.exists(seed_file):
+        flash('cms_seed.json not found.', 'danger')
+        return redirect(url_for('admin_panel'))
+    pages = json.load(open(seed_file, encoding='utf-8'))
+    conn = get_db()
+    c = conn.cursor()
+    inserted = updated = 0
+    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    for pg in pages:
+        exists = c.execute("SELECT id FROM cms_pages WHERE slug=?", (pg['slug'],)).fetchone()
+        if not exists:
+            c.execute(
+                "INSERT INTO cms_pages (title, slug, content, meta_title, meta_description, is_published) VALUES (?,?,?,?,?,1)",
+                (pg['title'], pg['slug'], pg['content'], pg['meta_title'], pg['meta_desc'])
+            )
+            inserted += 1
+        else:
+            c.execute(
+                "UPDATE cms_pages SET title=?, content=?, meta_title=?, meta_description=?, is_published=1, updated_at=? WHERE slug=?",
+                (pg['title'], pg['content'], pg['meta_title'], pg['meta_desc'], now, pg['slug'])
+            )
+            updated += 1
+    conn.commit(); conn.close()
+    flash(f"Done! {inserted} pages created, {updated} pages updated.", "success")
+    return redirect(url_for("admin_panel") + "#aPages")
 
 # ─── STARTUP ──────────────────────────────────────────────────────────────────
 
