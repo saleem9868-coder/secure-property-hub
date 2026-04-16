@@ -429,7 +429,9 @@ def inject_globals():
         conn.close()
     except Exception:
         menu_items = []
-    return dict(now=datetime.now(), T=T(), lang=get_lang(), menu_items=menu_items)
+    # Pop WhatsApp notify link from session (show once after a listing is submitted)
+    wa_notify = session.pop('wa_notify', None)
+    return dict(now=datetime.now(), T=T(), lang=get_lang(), menu_items=menu_items, wa_notify=wa_notify)
 
 # ─── SECURITY BLOCKER ────────────────────────────────────────────────────────
 
@@ -552,6 +554,15 @@ def slugify(text):
     text = re.sub(r'[\s_-]+', '-', text)
     text = re.sub(r'^-+|-+$', '', text)
     return text
+
+# ─── WHATSAPP NOTIFY HELPER ───────────────────────────────────────────────────
+
+OWNER_WHATSAPP = '923111820660'   # Your WhatsApp number (92 = Pakistan country code)
+
+def wa_link(message):
+    """Return a WhatsApp click-to-chat URL with a pre-filled message."""
+    import urllib.parse
+    return f"https://wa.me/{OWNER_WHATSAPP}?text={urllib.parse.quote(message)}"
 
 # ─── DB INIT ──────────────────────────────────────────────────────────────────
 
@@ -810,6 +821,20 @@ def rent_dena():
                 f.save(os.path.join(app.config['UPLOAD_FOLDER'], fname))
                 conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'rent',fname))
         conn.commit(); conn.close()
+        # WhatsApp notification for admin
+        msg = (
+            f"🏠 *Nai Rent Listing!*\n"
+            f"━━━━━━━━━━━━━━━━\n"
+            f"👤 Naam: {request.form['owner_name']}\n"
+            f"📞 Phone: {request.form['owner_phone']}\n"
+            f"🏡 Property: {request.form['title']}\n"
+            f"📍 Area: {request.form['location']}\n"
+            f"💰 Kiraya: Rs. {request.form['price']}/month\n"
+            f"🛏 Beds: {request.form['bedrooms']}\n"
+            f"━━━━━━━━━━━━━━━━\n"
+            f"Admin: https://apnagharkarachi.com/admin/panel"
+        )
+        session['wa_notify'] = wa_link(msg)
         flash('Aapki property list ho gayi! Hum jald aap se rabta karenge.', 'success')
         return redirect(url_for('dashboard'))
     return render_template('rent_dena.html')
@@ -827,6 +852,19 @@ def rent_chahiye():
             request.form['tenant_type'], request.form.get('move_in_date',''),
             request.form.get('special_needs','')))
         conn.commit(); conn.close()
+        # WhatsApp notification for admin
+        msg = (
+            f"\U0001f511 *Nai Rent Requirement!*\n"
+            f"\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"
+            f"\U0001f464 Naam: {request.form['name']}\n"
+            f"\U0001f4de Phone: {request.form['phone']}\n"
+            f"\U0001f4cd Pasandida Area: {request.form['preferred_area']}\n"
+            f"\U0001f4b0 Budget: Rs. {request.form['max_budget']}\n"
+            f"\U0001f3e0 Property Type: {request.form['property_type']}\n"
+            f"\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"
+            f"Admin: https://apnagharkarachi.com/admin/panel"
+        )
+        session['wa_notify'] = wa_link(msg)
         flash('Aapki requirement submit ho gayi! 24 ghante mein rabta karenge.', 'success')
         return redirect(url_for('index'))
     return render_template('rent_chahiye.html')
@@ -885,6 +923,20 @@ def sale_dena():
                 f.save(os.path.join(app.config['UPLOAD_FOLDER'], fname))
                 conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'sale',fname))
         conn.commit(); conn.close()
+        # WhatsApp notification for admin
+        msg = (
+            f"\U0001f3e1 *Nai Sale Listing!*\n"
+            f"\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"
+            f"\U0001f464 Naam: {request.form['owner_name']}\n"
+            f"\U0001f4de Phone: {request.form['owner_phone']}\n"
+            f"\U0001f3e0 Property: {request.form['title']}\n"
+            f"\U0001f4cd Area: {request.form['location']}\n"
+            f"\U0001f4b0 Qeemat: Rs. {request.form['price']}\n"
+            f"\U0001f6cf Beds: {request.form['bedrooms']}\n"
+            f"\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"
+            f"Admin: https://apnagharkarachi.com/admin/panel"
+        )
+        session['wa_notify'] = wa_link(msg)
         flash('Aapki property sale listing ho gayi! Hum jald rabta karenge.', 'success')
         return redirect(url_for('dashboard'))
     return render_template('sale_dena.html')
@@ -902,6 +954,19 @@ def purchase_chahiye():
             request.form.get('payment_method','Cash'), request.form.get('purpose','Own Use'),
             request.form.get('special_needs','')))
         conn.commit(); conn.close()
+        # WhatsApp notification for admin
+        msg = (
+            f"\U0001f3e0 *Nai Purchase Requirement!*\n"
+            f"\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"
+            f"\U0001f464 Naam: {request.form['name']}\n"
+            f"\U0001f4de Phone: {request.form['phone']}\n"
+            f"\U0001f4cd Pasandida Area: {request.form['preferred_area']}\n"
+            f"\U0001f4b0 Budget: Rs. {request.form['max_budget']}\n"
+            f"\U0001f3e0 Property Type: {request.form['property_type']}\n"
+            f"\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"
+            f"Admin: https://apnagharkarachi.com/admin/panel"
+        )
+        session['wa_notify'] = wa_link(msg)
         flash('Aapki purchase requirement submit ho gayi! 24 ghante mein rabta karenge.', 'success')
         return redirect(url_for('index'))
     return render_template('purchase_chahiye.html')
