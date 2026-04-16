@@ -1,0 +1,92 @@
+<!-- ============================================================ -->
+<!-- FLOATING WHATSAPP BUTTON                                     -->
+<!-- Add this code just BEFORE the closing </body> tag            -->
+<!-- in your base template (templates/base.html or layout.html)  -->
+<!-- ============================================================ -->
+
+<!-- Floating WhatsApp Button -->
+<a href="https://wa.me/923111820660?text=Assalam%20o%20Alaikum!%20ApnaGhar%20se%20property%20ke%20baare%20mein%20poochna%20tha."
+   class="whatsapp-float"
+   target="_blank"
+   title="Chat on WhatsApp">
+  <i class="bi bi-whatsapp"></i>
+  <span class="wa-tooltip">Chat with us!</span>
+</a>
+
+<!-- WhatsApp Float Button CSS -->
+<!-- Add this inside your <style> tag or CSS file -->
+<style>
+  .whatsapp-float {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 9999;
+    background: #25D366;
+    color: #fff;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 4px 18px rgba(37,211,102,0.45);
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: wa-pulse 2s infinite;
+  }
+
+  .whatsapp-float:hover {
+    transform: scale(1.12);
+    box-shadow: 0 6px 24px rgba(37,211,102,0.6);
+    color: #fff;
+  }
+
+  /* Pulse animation to grab attention */
+  @keyframes wa-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(37,211,102,0.5); }
+    70%  { box-shadow: 0 0 0 14px rgba(37,211,102,0); }
+    100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+  }
+
+  /* Tooltip on hover */
+  .wa-tooltip {
+    position: absolute;
+    right: 70px;
+    background: #1a1a1a;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    font-family: sans-serif;
+  }
+
+  .whatsapp-float:hover .wa-tooltip {
+    opacity: 1;
+  }
+
+  /* Hide on very small screens so it doesn't cover content */
+  @media (max-width: 360px) {
+    .whatsapp-float {
+      width: 50px;
+      height: 50px;
+      font-size: 26px;
+      bottom: 16px;
+      right: 16px;
+    }
+  }
+</style>
+
+<!-- ============================================================ -->
+<!-- HOW TO ADD:                                                   -->
+<!-- 1. Open templates/base.html (or your main layout file)       -->
+<!-- 2. Find the closing </body> tag at the bottom                -->
+<!-- 3. Paste the <a href...> block just BEFORE </body>           -->
+<!-- 4. Copy the <style> block into your existing <style> section -->
+<!--    OR into your static/css file                              -->
+<!-- 5. Save and refresh your website!                            -->
+<!-- ============================================================ -->
