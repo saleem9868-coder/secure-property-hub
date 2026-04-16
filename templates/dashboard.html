@@ -7,6 +7,28 @@
     </div>
 </div>
 <div class="container py-4">
+
+    {% if wa_notify %}
+    <!-- WhatsApp Notification Banner -->
+    <div class="alert border-0 rounded-4 d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4 p-4"
+         style="background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;">
+        <div class="d-flex align-items-center gap-3">
+            <div style="font-size:2rem;">📲</div>
+            <div>
+                <div class="fw-bold" style="font-size:1rem;">Nai Listing Submit Ho Gayi!</div>
+                <div style="color:rgba(255,255,255,.85);font-size:.88rem;">
+                    Admin ko WhatsApp pe notify karein — ek click mein!
+                </div>
+            </div>
+        </div>
+        <a href="{{ wa_notify }}" target="_blank"
+           class="btn fw-bold rounded-pill px-4"
+           style="background:#fff;color:#128c7e;white-space:nowrap;">
+            <i class="bi bi-whatsapp me-2"></i>Admin Ko Notify Karein
+        </a>
+    </div>
+    {% endif %}
+
     <!-- Stats -->
     <div class="row g-3 mb-4">
         <div class="col-6 col-md-3"><div class="card border-0 rounded-4 p-3 text-center" style="background:#e3f0ff;"><div style="font-size:1.8rem;font-weight:700;color:#1565c0;">{{ my_rent|length }}</div><div class="small text-muted">Rent Properties</div></div></div>
