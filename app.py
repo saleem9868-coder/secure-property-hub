@@ -1529,6 +1529,45 @@ def blog_detail(slug):
         return redirect(url_for('blog'))
     return render_template('blog_detail.html', post=post)
 
+@app.route('/search')
+def search():
+    """
+    Query params:
+      purpose   = rent | buy
+      location  = string
+      type      = flat | house | room | shop | plot | upper_portion | lower_portion
+      budget    = string range e.g. "20000-40000" or "40000000+"
+      beds      = 1 | 2 | 3 | 4
+      q         = free text (for schema SearchAction)
+    """
+    purpose  = request.args.get('purpose', 'rent')
+    location = request.args.get('location', '')
+    ptype    = request.args.get('type', '')
+    budget   = request.args.get('budget', '')
+    beds     = request.args.get('beds', '')
+    q        = request.args.get('q', '')
+
+    # ── Build DB query (adapt to your ORM / raw SQL as needed) ──
+    # Example using SQLAlchemy (adjust model name to yours):
+    #
+    # from models import Property
+    # query = Property.query
+    # if purpose:   query = query.filter_by(purpose=purpose)
+    # if location:  query = query.filter(Property.location.ilike(f'%{location}%'))
+    # if ptype:     query = query.filter_by(property_type=ptype)
+    # if beds:      query = query.filter_by(bedrooms=int(beds))
+    # results = query.order_by(Property.created_at.desc()).limit(20).all()
+    #
+    # For now we pass empty results (replace with real query above):
+    results = []
+
+    return render_template('search_results.html',
+                           results=results,
+                           purpose=purpose, location=location,
+                           ptype=ptype, budget=budget, beds=beds, q=q,
+                           T=get_translations(), lang=get_lang(),
+                           menu_items=get_menu_items())
+
 # ─── DYNAMIC CMS PAGE ROUTE ──────────────────────────────────────────────────
 
 @app.route('/page/<slug>')
