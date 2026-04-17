@@ -1,206 +1,78 @@
-{% extends 'base.html' %}
-{% block title %}Blog - ApnaGhar | اپنا گھر{% endblock %}
-{% block content %}
+{% extends "base.html" %}
 
+{% block title %}Blog — Property Tips & Guides | ApnaGhar Karachi{% endblock %}
+{% block meta_desc %}Read expert property guides for Karachi: rent vs buy, best areas for families, rent agreements, DHA vs Gulshan comparison and more.{% endblock %}
+{% block meta_keys %}Karachi property blog, rent agreement Pakistan, best areas Karachi families, DHA Karachi guide, property tips Karachi 2026{% endblock %}
+
+{% block content %}
 <div class="page-hdr hdr-verif">
     <div class="container">
-        <h1>📰 {% if lang=='ur' %}بلاگ — پراپرٹی نیوز{% else %}Blog — Property News & Tips{% endif %}</h1>
-        <p>{% if lang=='ur' %}کراچی پراپرٹی مارکیٹ کی تازہ خبریں اور مشورے{% else %}Latest Karachi property news, tips and guides{% endif %}</p>
+        <h1 class="mb-2">📰 {% if lang=='ur' %}معلومات اور رہنمائی{% else %}Property Blog & Guides{% endif %}</h1>
+        <p class="mb-0">{% if lang=='ur' %}کراچی میں پراپرٹی کے بارے میں مکمل معلومات{% else %}Expert tips for renting, buying and selling in Karachi{% endif %}</p>
     </div>
 </div>
 
-<div class="container py-5">
+<section class="py-5" style="background:var(--light-bg);">
+    <div class="container">
+        <div class="row g-4">
 
-    <div class="row g-4">
-
-        <!-- Blog Post 1 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                <div style="background:linear-gradient(135deg,#1565c0,#0d47a1);height:160px;display:flex;align-items:center;justify-content:center;">
-                    <span style="font-size:4rem;">🏠</span>
-                </div>
-                <div class="p-4">
-                    <span class="badge rounded-pill mb-2" style="background:#e3f0ff;color:#1565c0;font-size:.75rem;">{% if lang=='ur' %}کرایہ{% else %}Rental Tips{% endif %}</span>
-                    <h5 class="fw-bold mb-2" style="color:var(--primary);">
-                        {% if lang=='ur' %}کرایہ نامہ کیوں ضروری ہے؟{% else %}Why is a Rent Agreement Important?{% endif %}
-                    </h5>
-                    <p class="text-muted small mb-3">
-                        {% if lang=='ur' %}
-                        کرایہ نامہ مالک اور کرایہ دار دونوں کی قانونی حفاظت کرتا ہے۔ بغیر تحریری معاہدے کے آپ عدالت میں کمزور ہیں۔
-                        {% else %}
-                        A rent agreement protects both landlord and tenant legally. Without a written agreement, you have no protection in court.
-                        {% endif %}
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>March 2026</small>
-                        <a href="https://wa.me/923111820660?text=Hello%2C%20rent%20agreement%20banwana%20hai." target="_blank" class="btn btn-sm btn-whatsapp rounded-pill">
-                            <i class="bi bi-whatsapp me-1"></i>{% if lang=='ur' %}رابطہ{% else %}Contact{% endif %}
-                        </a>
+            <!-- Post 1 -->
+            <div class="col-lg-4 col-md-6">
+                <a href="{{ url_for('blog_post', slug='rent-vs-buy-karachi-2026') }}" style="text-decoration:none;">
+                    <div class="blog-card h-100">
+                        <div class="bc-img" style="background:linear-gradient(135deg,#bbdefb,#90caf9);">⚖️</div>
+                        <div class="bc-body">
+                            <span class="bc-tag">Guide</span>
+                            <div class="bc-title">Rent vs Buy in Karachi 2026 — Which Makes More Sense?</div>
+                            <p style="font-size:.84rem;color:#555;margin-top:8px;">A detailed comparison of the true cost of renting vs buying a home in Karachi, with real numbers for 2026.</p>
+                            <div class="bc-meta"><i class="bi bi-calendar3 me-1"></i>Jan 15, 2026 · 5 min read</div>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
+
+            <!-- Post 2 -->
+            <div class="col-lg-4 col-md-6">
+                <a href="{{ url_for('blog_post', slug='best-areas-families-karachi') }}" style="text-decoration:none;">
+                    <div class="blog-card h-100">
+                        <div class="bc-img" style="background:linear-gradient(135deg,#c8e6c9,#a5d6a7);">🗺️</div>
+                        <div class="bc-body">
+                            <span class="bc-tag">Area Guide</span>
+                            <div class="bc-title">Best Areas for Families in Karachi — 2026 Complete Guide</div>
+                            <p style="font-size:.84rem;color:#555;margin-top:8px;">Which neighbourhood is right for your family? Schools, safety, transport and budget — we compare the top areas.</p>
+                            <div class="bc-meta"><i class="bi bi-calendar3 me-1"></i>Feb 3, 2026 · 7 min read</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Post 3 -->
+            <div class="col-lg-4 col-md-6">
+                <a href="{{ url_for('blog_post', slug='rent-agreement-pakistan') }}" style="text-decoration:none;">
+                    <div class="blog-card h-100">
+                        <div class="bc-img" style="background:linear-gradient(135deg,#ffe0b2,#ffcc80);">📄</div>
+                        <div class="bc-body">
+                            <span class="bc-tag">Legal</span>
+                            <div class="bc-title">How to Write a Rent Agreement in Pakistan — Step by Step</div>
+                            <p style="font-size:.84rem;color:#555;margin-top:8px;">Everything you need to know about writing a legal rent agreement in Pakistan, including clauses and stamp duty.</p>
+                            <div class="bc-meta"><i class="bi bi-calendar3 me-1"></i>Mar 10, 2026 · 6 min read</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
         </div>
 
-        <!-- Blog Post 2 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                <div style="background:linear-gradient(135deg,#2e7d32,#1b5e20);height:160px;display:flex;align-items:center;justify-content:center;">
-                    <span style="font-size:4rem;">🏡</span>
-                </div>
-                <div class="p-4">
-                    <span class="badge rounded-pill mb-2" style="background:#e8f5e9;color:#2e7d32;font-size:.75rem;">{% if lang=='ur' %}خریداری{% else %}Buying Guide{% endif %}</span>
-                    <h5 class="fw-bold mb-2" style="color:var(--primary);">
-                        {% if lang=='ur' %}کراچی میں گھر خریدنے سے پہلے یہ ضرور چیک کریں{% else %}10 Things to Check Before Buying in Karachi{% endif %}
-                    </h5>
-                    <p class="text-muted small mb-3">
-                        {% if lang=='ur' %}
-                        Title deed، NOC، property tax receipts — یہ سب چیزیں چیک کیے بغیر کبھی پیسے نہ دیں۔ دھوکہ سے بچیں!
-                        {% else %}
-                        Title deed, NOC, property tax receipts — never pay money without checking these. Protect yourself from fraud!
-                        {% endif %}
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>March 2026</small>
-                        <a href="{{ url_for('property_laws') }}" class="btn btn-sm btn-outline-primary rounded-pill">
-                            {% if lang=='ur' %}مزید پڑھیں{% else %}Read More{% endif %}
-                        </a>
-                    </div>
-                </div>
+        <!-- CTA -->
+        <div class="mt-5 text-center">
+            <div class="offer-box d-inline-block px-5 py-4" style="max-width:600px;">
+                <h4 style="color:#fff;margin-bottom:10px;">Still have questions?</h4>
+                <p style="color:rgba(255,255,255,.9);margin-bottom:18px;">Our Karachi property experts answer queries daily on WhatsApp.</p>
+                <a href="https://wa.me/923111820660?text=I%20have%20a%20property%20question." target="_blank" class="btn px-4 py-2" style="background:#fff;color:var(--accent);font-weight:700;">
+                    <i class="bi bi-whatsapp me-2"></i>Ask on WhatsApp
+                </a>
             </div>
         </div>
-
-        <!-- Blog Post 3 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                <div style="background:linear-gradient(135deg,#e65100,#bf360c);height:160px;display:flex;align-items:center;justify-content:center;">
-                    <span style="font-size:4rem;">📋</span>
-                </div>
-                <div class="p-4">
-                    <span class="badge rounded-pill mb-2" style="background:#fff3e0;color:#e65100;font-size:.75rem;">{% if lang=='ur' %}دستاویزات{% else %}Documents{% endif %}</span>
-                    <h5 class="fw-bold mb-2" style="color:var(--primary);">
-                        {% if lang=='ur' %}حلف نامہ کب اور کیوں ضروری ہے؟{% else %}When and Why Do You Need an Affidavit?{% endif %}
-                    </h5>
-                    <p class="text-muted small mb-3">
-                        {% if lang=='ur' %}
-                        نام درستگی، جائیداد کی منتقلی، آمدن کا ثبوت — ان سب کاموں میں حلف نامہ ضروری ہوتا ہے۔
-                        {% else %}
-                        Name correction, property transfer, income proof — affidavits are required for many official purposes.
-                        {% endif %}
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>March 2026</small>
-                        <a href="https://wa.me/923111820660?text=Hello%2C%20affidavit%20banwana%20hai." target="_blank" class="btn btn-sm btn-whatsapp rounded-pill">
-                            <i class="bi bi-whatsapp me-1"></i>{% if lang=='ur' %}رابطہ{% else %}Contact{% endif %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Blog Post 4 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                <div style="background:linear-gradient(135deg,#6a1b9a,#4a148c);height:160px;display:flex;align-items:center;justify-content:center;">
-                    <span style="font-size:4rem;">💰</span>
-                </div>
-                <div class="p-4">
-                    <span class="badge rounded-pill mb-2" style="background:#f3e5f5;color:#6a1b9a;font-size:.75rem;">{% if lang=='ur' %}مارکیٹ{% else %}Market Update{% endif %}</span>
-                    <h5 class="fw-bold mb-2" style="color:var(--primary);">
-                        {% if lang=='ur' %}2026 میں کراچی پراپرٹی مارکیٹ کا حال{% else %}Karachi Property Market in 2026{% endif %}
-                    </h5>
-                    <p class="text-muted small mb-3">
-                        {% if lang=='ur' %}
-                        گلشن، ڈی ایچ اے اور شمالی ناظم آباد میں کرایوں میں اضافہ ہوا ہے۔ ابھی سرمایہ کاری کا اچھا وقت ہے۔
-                        {% else %}
-                        Rents have increased in Gulshan, DHA and North Nazimabad. This is a good time for property investment in Karachi.
-                        {% endif %}
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>April 2026</small>
-                        <a href="{{ url_for('area_guide') }}" class="btn btn-sm btn-outline-primary rounded-pill">
-                            {% if lang=='ur' %}ایریا گائیڈ{% else %}Area Guide{% endif %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Blog Post 5 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                <div style="background:linear-gradient(135deg,#00796b,#004d40);height:160px;display:flex;align-items:center;justify-content:center;">
-                    <span style="font-size:4rem;">🔍</span>
-                </div>
-                <div class="p-4">
-                    <span class="badge rounded-pill mb-2" style="background:#e0f2f1;color:#00796b;font-size:.75rem;">{% if lang=='ur' %}تصدیق{% else %}Verification{% endif %}</span>
-                    <h5 class="fw-bold mb-2" style="color:var(--primary);">
-                        {% if lang=='ur' %}کرایہ دار کی تصدیق کیوں کروائیں؟{% else %}Why Verify Your Tenant Before Renting?{% endif %}
-                    </h5>
-                    <p class="text-muted small mb-3">
-                        {% if lang=='ur' %}
-                        CNIC تصدیق سے آپ جانیں گے کہ کرایہ دار کون ہے۔ دھوکہ باز کرایہ داروں سے اپنی جائیداد بچائیں۔
-                        {% else %}
-                        CNIC verification helps you know who your tenant is. Protect your property from fraudulent tenants.
-                        {% endif %}
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>April 2026</small>
-                        <a href="{{ url_for('tenant_verification') }}" class="btn btn-sm btn-outline-primary rounded-pill">
-                            {% if lang=='ur' %}تصدیق کروائیں{% else %}Verify Now{% endif %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Blog Post 6 -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                <div style="background:linear-gradient(135deg,#c62828,#b71c1c);height:160px;display:flex;align-items:center;justify-content:center;">
-                    <span style="font-size:4rem;">⚠️</span>
-                </div>
-                <div class="p-4">
-                    <span class="badge rounded-pill mb-2" style="background:#fce4ec;color:#c62828;font-size:.75rem;">{% if lang=='ur' %}احتیاط{% else %}Fraud Alert{% endif %}</span>
-                    <h5 class="fw-bold mb-2" style="color:var(--primary);">
-                        {% if lang=='ur' %}پراپرٹی فراڈ سے کیسے بچیں؟{% else %}How to Avoid Property Fraud in Karachi?{% endif %}
-                    </h5>
-                    <p class="text-muted small mb-3">
-                        {% if lang=='ur' %}
-                        جعلی مالکان، جھوٹے دستاویزات — کراچی میں پراپرٹی فراڈ عام ہے۔ یہ 5 احتیاطی تدابیر ضرور اپنائیں۔
-                        {% else %}
-                        Fake owners, forged documents — property fraud is common in Karachi. Follow these 5 precautions to stay safe.
-                        {% endif %}
-                    </p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>April 2026</small>
-                        <a href="{{ url_for('property_laws') }}" class="btn btn-sm btn-outline-primary rounded-pill">
-                            {% if lang=='ur' %}مزید پڑھیں{% else %}Read More{% endif %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
-
-    <!-- Newsletter / WhatsApp Subscribe -->
-    <div class="card border-0 rounded-4 p-5 mt-5" style="background:var(--primary);text-align:center;">
-        <h3 style="color:#fff;">
-            📱 {% if lang=='ur' %}تازہ خبریں پائیں{% else %}Get Property Updates{% endif %}
-        </h3>
-        <p style="color:rgba(255,255,255,.8);" class="mb-4">
-            {% if lang=='ur' %}
-            کراچی پراپرٹی مارکیٹ کی تازہ خبریں اور مشورے واٹس ایپ پر پائیں
-            {% else %}
-            Get latest Karachi property news and tips directly on WhatsApp
-            {% endif %}
-        </p>
-        <a href="https://wa.me/923111820660?text=Hello%2C%20mujhe%20property%20updates%20chahiye." target="_blank"
-           class="btn btn-whatsapp btn-lg rounded-pill px-5 fw-bold">
-            <i class="bi bi-whatsapp me-2"></i>
-            {% if lang=='ur' %}واٹس ایپ پر جوائن کریں{% else %}Join on WhatsApp{% endif %}
-        </a>
-    </div>
-
-</div>
+</section>
 {% endblock %}
