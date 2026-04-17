@@ -1,0 +1,316 @@
+{% extends "base.html" %}
+
+{# ═══ Dynamic meta per slug ═══ #}
+{% if slug == 'rent-vs-buy-karachi-2026' %}
+    {% set post_title = "Rent vs Buy in Karachi 2026 — Which Makes More Sense?" %}
+    {% set post_desc  = "A detailed 2026 comparison of renting vs buying property in Karachi. Real cost analysis for DHA, Gulshan, PECHS and more." %}
+    {% set post_date  = "January 15, 2026" %}
+    {% set post_tag   = "Guide" %}
+    {% set read_time  = "5 min read" %}
+{% elif slug == 'best-areas-families-karachi' %}
+    {% set post_title = "Best Areas for Families in Karachi — 2026 Complete Guide" %}
+    {% set post_desc  = "Top family-friendly neighbourhoods in Karachi in 2026 — schools, safety, transport, property prices compared." %}
+    {% set post_date  = "February 3, 2026" %}
+    {% set post_tag   = "Area Guide" %}
+    {% set read_time  = "7 min read" %}
+{% elif slug == 'rent-agreement-pakistan' %}
+    {% set post_title = "How to Write a Rent Agreement in Pakistan — Step by Step" %}
+    {% set post_desc  = "Complete guide to writing a valid rent agreement in Pakistan, including required clauses, stamp duty and registration." %}
+    {% set post_date  = "March 10, 2026" %}
+    {% set post_tag   = "Legal" %}
+    {% set read_time  = "6 min read" %}
+{% else %}
+    {% set post_title = "Blog Post Not Found" %}
+    {% set post_desc  = "" %}
+{% endif %}
+
+{% block title %}{{ post_title }} | ApnaGhar Blog{% endblock %}
+{% block meta_desc %}{{ post_desc }}{% endblock %}
+{% block og_title %}{{ post_title }}{% endblock %}
+{% block og_desc %}{{ post_desc }}{% endblock %}
+{% block og_type %}article{% endblock %}
+
+{% block extra_seo %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ post_title }}",
+  "description": "{{ post_desc }}",
+  "author": {"@type":"Organization","name":"ApnaGhar"},
+  "publisher": {"@type":"Organization","name":"ApnaGhar","logo":{"@type":"ImageObject","url":"{{ request.host_url }}static/logo.png"}},
+  "datePublished": "{{ post_date }}",
+  "url": "{{ request.url }}"
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="page-hdr hdr-verif">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <span class="badge rounded-pill mb-3" style="background:var(--accent);color:#fff;font-size:.82rem;padding:6px 14px;">{{ post_tag }}</span>
+                <h1 style="font-size:clamp(1.5rem,3.5vw,2.2rem);">{{ post_title }}</h1>
+                <p class="mb-0" style="color:rgba(255,255,255,.7);font-size:.88rem;">
+                    <i class="bi bi-calendar3 me-2"></i>{{ post_date }}
+                    <span class="mx-2">·</span>
+                    <i class="bi bi-clock me-1"></i>{{ read_time }}
+                    <span class="mx-2">·</span>
+                    <i class="bi bi-person me-1"></i>ApnaGhar Team
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="py-5">
+<div class="container">
+<div class="row justify-content-center">
+<div class="col-lg-8">
+
+<!-- ═══ BACK LINK ═══ -->
+<a href="{{ url_for('blog') }}" class="btn btn-outline-secondary btn-sm rounded-pill mb-4">
+    <i class="bi bi-arrow-left me-1"></i>Back to Blog
+</a>
+
+<!-- ══════════════════════════════════════════════════════
+     POST 1: RENT VS BUY
+══════════════════════════════════════════════════════ -->
+{% if slug == 'rent-vs-buy-karachi-2026' %}
+
+<div class="blog-content">
+    <div class="bc-img mb-4" style="height:250px;background:linear-gradient(135deg,#bbdefb,#42a5f5);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:5rem;">⚖️</div>
+
+    <p class="lead" style="color:#334;line-height:1.9;">In 2026, Karachi's property market is buzzing. Rents have jumped 18–25% over the last two years while property prices have also climbed. So the big question remains: <strong>should you rent or buy?</strong></p>
+
+    <h2 style="color:var(--primary);margin-top:2rem;">The Real Cost of Renting in Karachi</h2>
+    <p>A 3-bedroom flat in Gulshan-e-Iqbal currently rents for <strong>PKR 45,000–60,000/month</strong>. That's PKR 5.4–7.2 lakh per year — money that builds zero equity for you.</p>
+
+    <div class="table-responsive my-4">
+        <table class="table table-bordered" style="font-size:.9rem;">
+            <thead style="background:var(--primary);color:#fff;">
+                <tr><th>Area</th><th>Avg Rent (3-Bed)</th><th>Annual Cost</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>DHA Phase 6</td><td>PKR 80,000/mo</td><td>PKR 9.6 Lakh</td></tr>
+                <tr><td>Gulshan-e-Iqbal</td><td>PKR 50,000/mo</td><td>PKR 6 Lakh</td></tr>
+                <tr><td>PECHS</td><td>PKR 55,000/mo</td><td>PKR 6.6 Lakh</td></tr>
+                <tr><td>Gulistan-e-Johar</td><td>PKR 40,000/mo</td><td>PKR 4.8 Lakh</td></tr>
+                <tr><td>North Nazimabad</td><td>PKR 35,000/mo</td><td>PKR 4.2 Lakh</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 style="color:var(--primary);margin-top:2rem;">The Real Cost of Buying in Karachi</h2>
+    <p>Buying a 3-bedroom flat in Gulshan typically costs <strong>PKR 1.5–2 Crore</strong>. With a 20% down payment (PKR 30–40 Lakh), your monthly bank installment will be roughly PKR 65,000–80,000.</p>
+
+    <div class="alert alert-info">
+        <strong>💡 Key Insight:</strong> If you plan to stay in Karachi for <strong>5+ years</strong>, buying starts making financial sense. For shorter stays, renting is smarter.
+    </div>
+
+    <h2 style="color:var(--primary);margin-top:2rem;">Pros & Cons — Quick Summary</h2>
+    <div class="row g-3 my-2">
+        <div class="col-md-6">
+            <div class="p-3 rounded-3" style="background:#e8f5e9;border-left:4px solid #4caf50;">
+                <strong style="color:#2e7d32;">✅ Renting Benefits</strong><br>
+                <small>• Flexibility to move<br>• No maintenance costs<br>• Lower upfront cash needed<br>• Good while income is uncertain</small>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="p-3 rounded-3" style="background:#e3f0ff;border-left:4px solid #1565c0;">
+                <strong style="color:#1565c0;">🏡 Buying Benefits</strong><br>
+                <small>• Build long-term equity<br>• Stable monthly cost<br>• Freedom to renovate<br>• Property appreciates over time</small>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="color:var(--primary);margin-top:2rem;">Our Verdict for Karachi 2026</h2>
+    <p>For most middle-class families in Karachi — <strong>buy if you can afford 25–30% down payment</strong> and plan to stay 5+ years. If you're unsure about your location or income, renting gives peace of mind.</p>
+    <p>Not sure which is right for your situation? <a href="https://wa.me/923111820660?text=I%20need%20advice%20on%20rent%20vs%20buy%20in%20Karachi." target="_blank" class="text-success fw-semibold"><i class="bi bi-whatsapp me-1"></i>Ask our agents on WhatsApp for free advice.</a></p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     POST 2: BEST AREAS FOR FAMILIES
+══════════════════════════════════════════════════════ -->
+{% elif slug == 'best-areas-families-karachi' %}
+
+<div class="blog-content">
+    <div class="bc-img mb-4" style="height:250px;background:linear-gradient(135deg,#c8e6c9,#66bb6a);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:5rem;">🗺️</div>
+
+    <p class="lead" style="color:#334;line-height:1.9;">Choosing where to live in Karachi is one of the most important decisions for a family. Schools, safety, transport, hospitals, grocery stores — here's our honest 2026 guide.</p>
+
+    <h2 style="color:var(--primary);margin-top:2rem;">🏆 Top 6 Family-Friendly Areas in Karachi</h2>
+
+    <div class="mb-4 p-4 rounded-3" style="background:var(--light-bg);border-left:4px solid var(--accent);">
+        <h4 style="color:var(--primary);">1. Gulshan-e-Iqbal — Best Overall Value</h4>
+        <p style="margin-bottom:8px;font-size:.92rem;">One of Karachi's most established residential areas with excellent schools (DJ Science, Beaconhouse), hospitals, and markets. Well-connected with KU and Gulshan Chowrangi.</p>
+        <div class="d-flex gap-3 flex-wrap" style="font-size:.82rem;">
+            <span class="badge-rent">Rent: PKR 35k–60k/mo</span>
+            <span class="badge-sale">Buy: PKR 1–2.5 Crore</span>
+            <span style="background:#fff3cd;color:#856404;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600;">Safety: Good ✅</span>
+        </div>
+    </div>
+
+    <div class="mb-4 p-4 rounded-3" style="background:var(--light-bg);border-left:4px solid var(--primary);">
+        <h4 style="color:var(--primary);">2. DHA (Defence Housing Authority) — Premium Choice</h4>
+        <p style="margin-bottom:8px;font-size:.92rem;">The most secure and organised area in Karachi. Top-notch schools (Froebel's, LGS), restaurants, and clean roads. Best for families with higher budgets.</p>
+        <div class="d-flex gap-3 flex-wrap" style="font-size:.82rem;">
+            <span class="badge-rent">Rent: PKR 60k–1.5 Lakh/mo</span>
+            <span class="badge-sale">Buy: PKR 2.5–6 Crore</span>
+            <span style="background:#d1e7dd;color:#0f5132;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600;">Safety: Excellent ✅✅</span>
+        </div>
+    </div>
+
+    <div class="mb-4 p-4 rounded-3" style="background:var(--light-bg);border-left:4px solid #2e7d32;">
+        <h4 style="color:var(--primary);">3. Gulistan-e-Johar — Best Budget-Friendly Family Area</h4>
+        <p style="margin-bottom:8px;font-size:.92rem;">Highly popular with middle-income families. Great connectivity, large parks, active markets. Safoora Chowk and Johar Chowrangi are thriving commercial hubs.</p>
+        <div class="d-flex gap-3 flex-wrap" style="font-size:.82rem;">
+            <span class="badge-rent">Rent: PKR 25k–45k/mo</span>
+            <span class="badge-sale">Buy: PKR 80L–1.8 Crore</span>
+            <span style="background:#fff3cd;color:#856404;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600;">Safety: Average ⚠️</span>
+        </div>
+    </div>
+
+    <div class="mb-4 p-4 rounded-3" style="background:var(--light-bg);border-left:4px solid #1565c0;">
+        <h4 style="color:var(--primary);">4. North Nazimabad — Classic Established Area</h4>
+        <p style="margin-bottom:8px;font-size:.92rem;">A well-developed area with generations of established families. Good schools, mosques, and bazaars. Slightly crowded but stable.</p>
+        <div class="d-flex gap-3 flex-wrap" style="font-size:.82rem;">
+            <span class="badge-rent">Rent: PKR 25k–40k/mo</span>
+            <span class="badge-sale">Buy: PKR 80L–1.5 Crore</span>
+        </div>
+    </div>
+
+    <div class="mb-4 p-4 rounded-3" style="background:var(--light-bg);border-left:4px solid #6a1b9a;">
+        <h4 style="color:var(--primary);">5. Bahria Town Karachi — Modern Township</h4>
+        <p style="margin-bottom:8px;font-size:.92rem;">A planned gated community with 24/7 security, wide roads, schools, hospitals, and malls inside the complex. Far from city centre but excellent quality of life.</p>
+        <div class="d-flex gap-3 flex-wrap" style="font-size:.82rem;">
+            <span class="badge-rent">Rent: PKR 40k–80k/mo</span>
+            <span class="badge-sale">Buy: PKR 1.2–3 Crore</span>
+            <span style="background:#d1e7dd;color:#0f5132;padding:3px 10px;border-radius:20px;font-size:.75rem;font-weight:600;">Safety: Excellent ✅✅</span>
+        </div>
+    </div>
+
+    <div class="mb-4 p-4 rounded-3" style="background:var(--light-bg);border-left:4px solid #e65100;">
+        <h4 style="color:var(--primary);">6. PECHS — Professional & Quiet</h4>
+        <p style="margin-bottom:8px;font-size:.92rem;">Popular with professionals and smaller families. Close to Shaheed-e-Millat Road, good restaurants, and quiet streets. Limited parking can be an issue.</p>
+        <div class="d-flex gap-3 flex-wrap" style="font-size:.82rem;">
+            <span class="badge-rent">Rent: PKR 35k–65k/mo</span>
+            <span class="badge-sale">Buy: PKR 1–2.5 Crore</span>
+        </div>
+    </div>
+
+    <div class="alert alert-success mt-4">
+        <strong>💡 ApnaGhar Recommendation:</strong> For most families on a moderate budget, <strong>Gulistan-e-Johar</strong> or <strong>Gulshan-e-Iqbal</strong> offer the best value. For premium buyers, <strong>DHA or Bahria Town</strong> are unbeatable for quality of life.
+    </div>
+
+    <p>Want to see available properties in any of these areas? <a href="https://wa.me/923111820660?text=I%20want%20to%20find%20a%20family%20home%20in%20Karachi." target="_blank" class="text-success fw-semibold"><i class="bi bi-whatsapp me-1"></i>Chat with our agents on WhatsApp.</a></p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     POST 3: RENT AGREEMENT
+══════════════════════════════════════════════════════ -->
+{% elif slug == 'rent-agreement-pakistan' %}
+
+<div class="blog-content">
+    <div class="bc-img mb-4" style="height:250px;background:linear-gradient(135deg,#ffe0b2,#ffb74d);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:5rem;">📄</div>
+
+    <p class="lead" style="color:#334;line-height:1.9;">A rent agreement (کرایہ نامہ) protects both landlord and tenant. Without one, disputes are hard to resolve. Here's exactly how to write one in Pakistan.</p>
+
+    <div class="alert alert-warning">
+        <strong>⚠️ Important:</strong> A rent agreement under <strong>PKR 500/month</strong> doesn't need stamp paper, but anything above should be on proper stamp paper to be legally enforceable.
+    </div>
+
+    <h2 style="color:var(--primary);margin-top:2rem;">Step 1 — Buy the Right Stamp Paper</h2>
+    <p>In Sindh (Karachi), purchase a stamp paper from a licensed vendor. The value depends on annual rent:</p>
+    <div class="table-responsive my-3">
+        <table class="table table-sm table-bordered" style="font-size:.88rem;">
+            <thead style="background:var(--primary);color:#fff;"><tr><th>Annual Rent</th><th>Stamp Paper Value</th></tr></thead>
+            <tbody>
+                <tr><td>Up to PKR 2 Lakh/year</td><td>PKR 50–100</td></tr>
+                <tr><td>PKR 2–5 Lakh/year</td><td>PKR 200–500</td></tr>
+                <tr><td>PKR 5 Lakh+/year</td><td>PKR 1,000+</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 style="color:var(--primary);margin-top:2rem;">Step 2 — Include These Mandatory Clauses</h2>
+    <div class="mb-3">
+        <div class="p-3 rounded-3 mb-2" style="background:#e3f0ff;"><strong>1. Parties Details:</strong> Full name, CNIC number, and address of both landlord and tenant.</div>
+        <div class="p-3 rounded-3 mb-2" style="background:#e8f5e9;"><strong>2. Property Description:</strong> Full address, floor, number of rooms, and any included fixtures.</div>
+        <div class="p-3 rounded-3 mb-2" style="background:#fff3cd;"><strong>3. Rent Amount & Due Date:</strong> Monthly amount in words and figures, due date (usually 1st or 5th of month).</div>
+        <div class="p-3 rounded-3 mb-2" style="background:#fce4ec;"><strong>4. Security Deposit:</strong> Amount (usually 2 months rent), conditions for refund, and deduction rules.</div>
+        <div class="p-3 rounded-3 mb-2" style="background:#e8eaf6;"><strong>5. Tenancy Duration:</strong> Start and end date (usually 11 months or 1 year to avoid registration).</div>
+        <div class="p-3 rounded-3 mb-2" style="background:#e3f0ff;"><strong>6. Utilities:</strong> Who pays electricity, gas, and water bills.</div>
+        <div class="p-3 rounded-3 mb-2" style="background:#e8f5e9;"><strong>7. Notice Period:</strong> How much notice (usually 1 month) is needed to vacate.</div>
+        <div class="p-3 rounded-3 mb-2" style="background:#fff3cd;"><strong>8. Prohibited Activities:</strong> No subletting, no structural changes, no illegal activity.</div>
+        <div class="p-3 rounded-3"><strong>9. Witnesses:</strong> Two witnesses with CNIC numbers who sign the agreement.</div>
+    </div>
+
+    <h2 style="color:var(--primary);margin-top:2rem;">Step 3 — Registration (Optional but Recommended)</h2>
+    <p>For agreements over 1 year, register with the local Sub-Registrar office. This costs <strong>PKR 500–2,000</strong> and makes the agreement fully enforceable in court.</p>
+
+    <h2 style="color:var(--primary);margin-top:2rem;">Pro Tips</h2>
+    <ul style="font-size:.92rem;line-height:2;">
+        <li>📸 Take photos of the property before moving in and attach them</li>
+        <li>📋 Keep a written inventory of furniture and appliances</li>
+        <li>💰 Always get rent receipts (signed by landlord)</li>
+        <li>🔑 Don't hand over keys before the agreement is signed</li>
+        <li>📱 Take a WhatsApp screenshot of verbal agreements too</li>
+    </ul>
+
+    <div class="offer-box mt-4">
+        <h4 style="color:#fff;">📄 Need Help with Your Rent Agreement?</h4>
+        <p style="color:rgba(255,255,255,.9);margin-bottom:16px;">ApnaGhar offers document assistance services in Karachi — rent agreements, affidavits, and more.</p>
+        <a href="{{ url_for('document_services') }}" class="btn me-2" style="background:#fff;color:var(--accent);font-weight:700;">Document Services</a>
+        <a href="https://wa.me/923111820660?text=I%20need%20help%20with%20a%20rent%20agreement." target="_blank" class="btn" style="background:rgba(255,255,255,.2);color:#fff;border:2px solid rgba(255,255,255,.4);">
+            <i class="bi bi-whatsapp me-1"></i>WhatsApp Us
+        </a>
+    </div>
+</div>
+
+{% else %}
+<div class="alert alert-warning">Blog post not found. <a href="{{ url_for('blog') }}">Return to blog.</a></div>
+{% endif %}
+
+<!-- ══════════════════════════════════════════════════════
+     SHARE + MORE POSTS
+══════════════════════════════════════════════════════ -->
+<hr class="my-5">
+<div class="d-flex gap-2 flex-wrap mb-4 align-items-center">
+    <strong style="font-size:.88rem;">Share this article:</strong>
+    <a href="https://wa.me/?text={{ post_title | urlencode }}%20{{ request.url | urlencode }}" 
+       target="_blank" class="btn btn-sm btn-whatsapp rounded-pill">
+        <i class="bi bi-whatsapp me-1"></i>WhatsApp
+    </a>
+    <button onclick="navigator.clipboard.writeText(window.location.href);alert('Link copied!');" 
+            class="btn btn-sm btn-outline-secondary rounded-pill">
+        <i class="bi bi-link-45deg me-1"></i>Copy Link
+    </button>
+</div>
+
+<h4 style="color:var(--primary);">More Articles</h4>
+<div class="row g-3">
+    <div class="col-md-4">
+        <a href="{{ url_for('blog_post', slug='rent-vs-buy-karachi-2026') }}" style="text-decoration:none;">
+            <div class="blog-card"><div class="bc-img">⚖️</div><div class="bc-body"><div class="bc-title" style="font-size:.88rem;">Rent vs Buy in Karachi 2026</div></div></div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('blog_post', slug='best-areas-families-karachi') }}" style="text-decoration:none;">
+            <div class="blog-card"><div class="bc-img">🗺️</div><div class="bc-body"><div class="bc-title" style="font-size:.88rem;">Best Areas for Families</div></div></div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('blog_post', slug='rent-agreement-pakistan') }}" style="text-decoration:none;">
+            <div class="blog-card"><div class="bc-img">📄</div><div class="bc-body"><div class="bc-title" style="font-size:.88rem;">Rent Agreement Guide</div></div></div>
+        </a>
+    </div>
+</div>
+
+</div><!-- /col-lg-8 -->
+</div><!-- /row -->
+</div><!-- /container -->
+</section>
+{% endblock %}
