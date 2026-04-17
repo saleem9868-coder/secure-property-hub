@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ApnaGhar — Property Search</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1a6b45;
+    --green-light: #e8f5ee;
+    --green-mid: #2d8a5a;
+    --accent: #f4a623;
+    --accent-light: #fff8ec;
+    --gray-50: #f9f9f7;
+    --gray-100: #f0efe9;
+    --gray-200: #e0dfd7;
+    --gray-400: #a0a097;
+    --gray-600: #5a5a54;
+    --gray-800: #2c2c28;
+    --white: #ffffff;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.07);
+    --shadow-md: 0 4px 20px rgba(0,0,0,0.09);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    min-height: 100vh;
+  }
+
+  /* TOP NAV */
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 58px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--green);
+    text-decoration: none;
+  }
+  .logo span { color: var(--accent); }
+  .nav-spacer { flex: 1; }
+  .nav-btn {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: 1.5px solid var(--green);
+    background: transparent;
+    color: var(--green);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .nav-btn:hover { background: var(--green); color: #fff; }
+  .nav-btn.filled { background: var(--green); color: #fff; }
+  .nav-btn.filled:hover { background: var(--green-mid); }
+
+  /* HERO BAR */
+  .hero-bar {
+    background: linear-gradient(135deg, #1a6b45 0%, #0f4a2e 100%);
+    padding: 28px 24px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bar::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .hero-bar::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 30%;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(244,166,35,0.08);
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .hero-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 18px;
+  }
+
+  /* PURPOSE TOGGLE */
+  .purpose-toggle {
+    display: inline-flex;
+    background: rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 3px;
+    margin-bottom: 16px;
+    gap: 2px;
+  }
+  .purpose-btn {
+    padding: 8px 22px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    transition: all 0.2s;
+  }
+  .purpose-btn.active {
+    background: var(--white);
+    color: var(--green);
+  }
+
+  /* MAIN SEARCH ROW */
+  .search-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+  .search-field {
+    flex: 1;
+    min-width: 180px;
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--gray-800);
+    outline: none;
+    transition: box-shadow 0.15s;
+  }
+  .search-field:focus { box-shadow: 0 0 0 2px var(--accent); }
+  .search-field::placeholder { color: var(--gray-400); }
+
+  .search-btn {
+    background: var(--accent);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px 26px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .search-btn:hover { background: #e59510; }
+  .search-btn:active { transform: scale(0.98); }
+
+  /* LAYOUT */
+  .main-layout {
+    display: flex;
+    gap: 20px;
+    padding: 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+    align-items: flex-start;
+  }
+
+  /* SIDEBAR FILTERS */
+  .filter-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: sticky;
+    top: 78px;
+  }
+
+  .filter-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .filter-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .filter-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-800);
+    letter-spacing: 0.01em;
+  }
+  .filter-toggle-icon {
+    font-size: 16px;
+    color: var(--gray-400);
+    transition: transform 0.2s;
+  }
+  .filter-toggle-icon.open { transform: rotate(180deg); }
+  .filter-card-body {
+    padding: 12px 16px 14px;
+    display: block;
+  }
+  .filter-card-body.collapsed { display: none; }
+
+  /* FILTER CHIPS */
+  .chip-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .chip {
+    padding: 6px 13px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 500;
+    border: 1.5px solid var(--gray-200);
+    background: var(--white);
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--green); color: var(--green); }
+  .chip.selected {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  /* PRICE RANGE */
+  .price-inputs {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .price-input {
+    flex: 1;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--gray-800);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .price-input:focus { border-color: var(--green); }
+  .price-sep { font-size: 12px; color: var(--gray-400); }
+
+  .range-slider-wrap { position: relative; height: 20px; margin-top: 4px; }
+  .range-track {
+    position: absolute;
+    top: 8px;
+    left: 0; right: 0;
+    height: 4px;
+    background: var(--gray-200);
+    border-radius: 2px;
+  }
+  .range-fill {
+    position: absolute;
+    top: 8px;
+    height: 4px;
+    background: var(--green);
+    border-radius: 2px;
+  }
+  input[type=range].dual-range {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    height: 20px;
+    -webkit-appearance: none;
+    background: transparent;
+    pointer-events: none;
+  }
+  input[type=range].dual-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--green);
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    pointer-events: all;
+    cursor: pointer;
+  }
+  .price-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--gray-600);
+    font-weight: 500;
+  }
+
+  /* CHECKBOX LIST */
+  .check-list { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--gray-600);
+    transition: color 0.12s;
+  }
+  .check-item:hover { color: var(--green); }
+  .check-item input[type=checkbox] { display: none; }
+  .check-box {
+    width: 17px; height: 17px;
+    border-radius: 5px;
+    border: 1.5px solid var(--gray-200);
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .check-item input:checked ~ .check-box {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .check-item input:checked ~ .check-box::after {
+    content: '';
+    width: 8px; height: 5px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(-45deg) translate(1px, -1px);
+    display: block;
+  }
+  .check-label { flex: 1; }
+  .check-count {
+    font-size: 11px;
+    color: var(--gray-400);
+    background: var(--gray-100);
+    padding: 2px 7px;
+    border-radius: 10px;
+  }
+
+  /* RESET + APPLY */
+  .filter-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 2px;
+  }
+  .btn-reset {
+    flex: 1;
+    padding: 9px;
+    border-radius: 8px;
+    border: 1.5px solid var(--gray-200);
+    background: transparent;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-reset:hover { border-color: #cc3030; color: #cc3030; }
+  .btn-apply {
+    flex: 2;
+    padding: 9px;
+    border-radius: 8px;
+    border: none;
+    background: var(--green);
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-apply:hover { background: var(--green-mid); }
+
+  /* RESULTS AREA */
+  .results-area { flex: 1; min-width: 0; }
+
+  .results-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .results-count {
+    font-size: 14px;
+    color: var(--gray-600);
+  }
+  .results-count strong { color: var(--gray-800); }
+  .spacer { flex: 1; }
+
+  .sort-select {
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--gray-800);
+    background: var(--white);
+    cursor: pointer;
+    outline: none;
+  }
+
+  .view-toggle { display: flex; border: 1.5px solid var(--gray-200); border-radius: 8px; overflow: hidden; }
+  .view-btn {
+    padding: 6px 11px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--gray-400);
+    transition: all 0.12s;
+  }
+  .view-btn.active { background: var(--green); color: #fff; }
+
+  /* ACTIVE FILTERS PILLS */
+  .active-filters {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .active-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--green-light);
+    border: 1px solid #b8dfc9;
+    border-radius: 20px;
+    padding: 4px 10px 4px 12px;
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 500;
+  }
+  .active-pill button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--green);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    opacity: 0.6;
+  }
+  .active-pill button:hover { opacity: 1; }
+  .clear-all {
+    font-size: 12px;
+    color: #cc3030;
+    cursor: pointer;
+    font-weight: 500;
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 20px;
+    transition: background 0.12s;
+  }
+  .clear-all:hover { background: #fff0f0; }
+
+  /* PROPERTY CARDS */
+  .listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .listings-grid.list-view {
+    grid-template-columns: 1fr;
+  }
+
+  .prop-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .prop-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .prop-img {
+    width: 100%;
+    height: 160px;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    position: relative;
+    overflow: hidden;
+  }
+  .prop-img-bg { position: absolute; inset: 0; opacity: 0.08; }
+  .prop-badge {
+    position: absolute;
+    top: 10px; left: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .badge-rent { background: #1a6b45; color: #fff; }
+  .badge-sale { background: #1a4b6b; color: #fff; }
+  .prop-save {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 30px; height: 30px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    transition: transform 0.15s;
+  }
+  .prop-save:hover { transform: scale(1.15); }
+
+  .prop-body { padding: 13px 14px 14px; }
+  .prop-price {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--green);
+    margin-bottom: 3px;
+  }
+  .prop-price span { font-size: 12px; font-weight: 400; color: var(--gray-400); }
+  .prop-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--gray-800);
+    margin-bottom: 5px;
+    line-height: 1.4;
+  }
+  .prop-loc {
+    font-size: 12px;
+    color: var(--gray-400);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+  .prop-features {
+    display: flex;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--gray-100);
+  }
+  .prop-feat {
+    font-size: 12px;
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* LIST VIEW CARD */
+  .listings-grid.list-view .prop-card {
+    display: flex;
+    flex-direction: row;
+  }
+  .listings-grid.list-view .prop-img {
+    width: 200px;
+    height: auto;
+    flex-shrink: 0;
+    border-radius: 0;
+  }
+  .listings-grid.list-view .prop-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* MOBILE FILTER BUTTON */
+  .mobile-filter-btn {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 13px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 6px 24px rgba(26,107,69,0.4);
+    cursor: pointer;
+    z-index: 200;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* PAGINATION */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 28px;
+    padding-bottom: 40px;
+  }
+  .page-btn {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    border: 1.5px solid var(--gray-200);
+    background: var(--white);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--gray-600);
+  }
+  .page-btn:hover { border-color: var(--green); color: var(--green); }
+  .page-btn.active { background: var(--green); border-color: var(--green); color: #fff; }
+
+  /* MOBILE */
+  .mobile-filter-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 300;
+  }
+  .mobile-filter-panel {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--white);
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    max-height: 85vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 301;
+  }
+  .mobile-filter-panel.open { transform: translateY(0); }
+  .mobile-filter-overlay.open { display: block; }
+  .mobile-panel-handle {
+    width: 40px; height: 4px;
+    background: var(--gray-200);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+
+  @media (max-width: 900px) {
+    .filter-sidebar { display: none; }
+    .mobile-filter-btn { display: flex; }
+    .hero-bar { padding: 20px 16px 16px; }
+    .main-layout { padding: 16px; }
+    .hero-title { font-size: 20px; }
+  }
+
+  @media (max-width: 600px) {
+    .listings-grid { grid-template-columns: 1fr; }
+    .search-row { gap: 6px; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .prop-card { animation: fadeUp 0.3s ease both; }
+  .prop-card:nth-child(1) { animation-delay: 0.04s; }
+  .prop-card:nth-child(2) { animation-delay: 0.08s; }
+  .prop-card:nth-child(3) { animation-delay: 0.12s; }
+  .prop-card:nth-child(4) { animation-delay: 0.16s; }
+  .prop-card:nth-child(5) { animation-delay: 0.20s; }
+  .prop-card:nth-child(6) { animation-delay: 0.24s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Apna<span>Ghar</span></a>
+  <span style="font-family:'Noto Nastaliq Urdu';font-size:14px;color:var(--gray-400)">اپنا گھر</span>
+  <div class="nav-spacer"></div>
+  <button class="nav-btn">Login</button>
+  <button class="nav-btn filled">+ List Property</button>
+</nav>
+
+<!-- HERO SEARCH BAR -->
+<div class="hero-bar">
+  <div class="hero-title">Find Your Dream Home in Karachi</div>
+  <div class="hero-sub">Search from 500+ verified properties</div>
+
+  <div class="purpose-toggle">
+    <button class="purpose-btn active" onclick="setPurpose(this,'rent')">🔑 Rent</button>
+    <button class="purpose-btn" onclick="setPurpose(this,'buy')">🏡 Buy</button>
+    <button class="purpose-btn" onclick="setPurpose(this,'sell')">🏷️ Sell</button>
+  </div>
+
+  <div class="search-row">
+    <input class="search-field" placeholder="🔍  Search by area, block, society..." id="heroSearch" style="flex:2">
+    <select class="search-field" id="heroArea" style="flex:1;cursor:pointer">
+      <option value="">All Areas</option>
+      <option>DHA</option><option>Gulshan-e-Iqbal</option><option>Clifton</option>
+      <option>PECHS</option><option>Gulistan-e-Johar</option><option>Bahria Town</option>
+      <option>North Nazimabad</option><option>Federal B Area</option><option>Saddar</option>
+      <option>Nazimabad</option><option>Akhtar Colony</option><option>Korangi</option>
+      <option>Malir</option><option>Landhi</option><option>Shah Faisal Colony</option>
+    </select>
+    <select class="search-field" id="heroType" style="flex:1;cursor:pointer">
+      <option value="">All Types</option>
+      <option>Flat / Apartment</option><option>House</option><option>Room</option>
+      <option>Shop / Office</option><option>Plot / Land</option>
+      <option>Upper Portion</option><option>Lower Portion</option>
+    </select>
+    <button class="search-btn" onclick="applyFilters()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+      Search
+    </button>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- SIDEBAR FILTERS -->
+  <div class="filter-sidebar" id="filterSidebar">
+
+    <!-- PROPERTY TYPE -->
+    <div class="filter-card">
+      <div class="filter-card-header" onclick="toggleSection('type-body','type-icon')">
+        <span class="filter-card-title">Property Type</span>
+        <span class="filter-toggle-icon open" id="type-icon">▾</span>
+      </div>
+      <div class="filter-card-body" id="type-body">
+        <div class="chip-grid">
+          <div class="chip selected" onclick="toggleChip(this)">All</div>
+          <div class="chip" onclick="toggleChip(this)">🏢 Flat</div>
+          <div class="chip" onclick="toggleChip(this)">🏠 House</div>
+          <div class="chip" onclick="toggleChip(this)">🛏️ Room</div>
+          <div class="chip" onclick="toggleChip(this)">🏪 Shop</div>
+          <div class="chip" onclick="toggleChip(this)">🏗️ Plot</div>
+          <div class="chip" onclick="toggleChip(this)">⬆️ Upper</div>
+          <div class="chip" onclick="toggleChip(this)">⬇️ Lower</div>
+          <div class="chip" onclick="toggleChip(this)">🏬 Office</div>
+          <div class="chip" onclick="toggleChip(this)">🏭 Warehouse</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICE RANGE -->
+    <div class="filter-card">
+      <div class="filter-card-header" onclick="toggleSection('price-body','price-icon')">
+        <span class="filter-card-title">Price (PKR)</span>
+        <span class="filter-toggle-icon open" id="price-icon">▾</span>
+      </div>
+      <div class="filter-card-body" id="price-body">
+        <div class="price-inputs">
+          <input class="price-input" type="text" id="priceMin" placeholder="Min" value="10,000">
+          <span class="price-sep">—</span>
+          <input class="price-input" type="text" id="priceMax" placeholder="Max" value="2,00,000">
+        </div>
+        <div class="range-slider-wrap">
+          <div class="range-track"></div>
+          <div class="range-fill" id="rangeFill"></div>
+          <input type="range" class="dual-range" id="rangeMin" min="0" max="100" value="2" oninput="updateRange()">
+          <input type="range" class="dual-range" id="rangeMax" min="0" max="100" value="80" oninput="updateRange()">
+        </div>
+        <div class="price-labels">
+          <span>PKR 10K</span><span>PKR 5 Cr+</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+          <div class="chip" onclick="setPrice(this,'10,000','50,000')">Under 50K</div>
+          <div class="chip" onclick="setPrice(this,'50,000','1,00,000')">50K–1L</div>
+          <div class="chip" onclick="setPrice(this,'1,00,000','2,00,000')">1L–2L</div>
+          <div class="chip" onclick="setPrice(this,'2,00,000','5,00,000')">2L–5L</div>
+          <div class="chip" onclick="setPrice(this,'5,00,000','')">5L+</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEDROOMS -->
+    <div class="filter-card">
+      <div class="filter-card-header" onclick="toggleSection('beds-body','beds-icon')">
+        <span class="filter-card-title">Bedrooms</span>
+        <span class="filter-toggle-icon open" id="beds-icon">▾</span>
+      </div>
+      <div class="filter-card-body" id="beds-body">
+        <div class="chip-grid">
+          <div class="chip selected" onclick="toggleChip(this)">Any</div>
+          <div class="chip" onclick="toggleChip(this)">Studio</div>
+          <div class="chip" onclick="toggleChip(this)">1 BHK</div>
+          <div class="chip" onclick="toggleChip(this)">2 BHK</div>
+          <div class="chip" onclick="toggleChip(this)">3 BHK</div>
+          <div class="chip" onclick="toggleChip(this)">4 BHK</div>
+          <div class="chip" onclick="toggleChip(this)">5+ BHK</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AREA SIZE -->
+    <div class="filter-card">
+      <div class="filter-card-header" onclick="toggleSection('size-body','size-icon')">
+        <span class="filter-card-title">Area Size</span>
+        <span class="filter-toggle-icon open" id="size-icon">▾</span>
+      </div>
+      <div class="filter-card-body" id="size-body">
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <input class="price-input" style="flex:1" type="text" placeholder="Min sqft">
+          <span class="price-sep">—</span>
+          <input class="price-input" style="flex:1" type="text" placeholder="Max sqft">
+        </div>
+        <div class="chip-grid">
+          <div class="chip" onclick="toggleChip(this)">Under 500</div>
+          <div class="chip" onclick="toggleChip(this)">500–1000</div>
+          <div class="chip" onclick="toggleChip(this)">1000–2000</div>
+          <div class="chip" onclick="toggleChip(this)">2000+ sqft</div>
+        </div>
+        <div style="margin-top:10px">
+          <select class="price-input" style="width:100%;cursor:pointer">
+            <option>Sq Ft</option><option>Sq Yd</option><option>Marla</option><option>Kanal</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOCATION (AREAS) -->
+    <div class="filter-card">
+      <div class="filter-card-header" onclick="toggleSection('loc-body','loc-icon')">
+        <span class="filter-card-title">Location / Area</span>
+        <span class="filter-toggle-icon open" id="loc-icon">▾</span>
+      </div>
+      <div class="filter-card-body" id="loc-body">
+        <input class="price-input" style="width:100%;margin-bottom:10px" placeholder="Search area..." oninput="filterAreas(this.value)">
+        <div class="check-list" id="areaList">
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">DHA</span><span class="check-count">42</span></label>
+          <label class="check-item"><input type="checkbox" checked><div class="check-box"></div><span class="check-label">Gulshan-e-Iqbal</span><span class="check-count">67</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Clifton</span><span class="check-count">38</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">PECHS</span><span class="check-count">29</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Gulistan-e-Johar</span><span class="check-count">51</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Bahria Town</span><span class="check-count">44</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">North Nazimabad</span><span class="check-count">33</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Federal B Area</span><span class="check-count">22</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Saddar</span><span class="check-count">18</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Nazimabad</span><span class="check-count">26</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- AMENITIES -->
+    <div class="filter-card">
+      <div class="filter-card-header" onclick="toggleSection('amen-body','amen-icon')">
+        <span class="filter-card-title">Amenities</span>
+        <span class="filter-toggle-icon open" id="amen-icon">▾</span>
+      </div>
+      <div class="filter-card-body" id="amen-body">
+        <div class="check-list">
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Parking</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Generator / UPS</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Solar Panels</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Lift / Elevator</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">CCTV Security</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Gated Community</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Swimming Pool</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Gym</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Internet / Fiber</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Gas (Piped)</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Water Supply 24/7</span></label>
+          <label class="check-item"><input type="checkbox"><div class="check-box"></div><span class="check-label">Furnished</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONDITION -->
+    <div class="filter-card">
+      <div class="filter-card-header" onclick="toggleSection('cond-body','cond-icon')">
+        <span class="filter-card-title">Condition</span>
+        <span class="filter-toggle-icon open" id="cond-icon">▾</span>
+      </div>
+      <div class="filter-card-body" id="cond-body">
+        <div class="chip-grid">
+          <div class="chip selected" onclick="toggleChip(this)">Any</div>
+          <div class="chip" onclick="toggleChip(this)">Brand New</div>
+          <div class="chip" onclick="toggleChip(this)">Good</div>
+          <div class="chip" onclick="toggleChip(this)">Renovated</div>
+          <div class="chip" onclick="toggleChip(this)">Needs Work</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POSTED BY -->
+    <div class="filter-card">
+      <div class="filter-card-header" onclick="toggleSection('by-body','by-icon')">
+        <span class="filter-card-title">Posted By</span>
+        <span class="filter-toggle-icon open" id="by-icon">▾</span>
+      </div>
+      <div class="filter-card-body" id="by-body">
+        <div class="chip-grid">
+          <div class="chip selected" onclick="toggleChip(this)">All</div>
+          <div class="chip" onclick="toggleChip(this)">Owner</div>
+          <div class="chip" onclick="toggleChip(this)">Agent</div>
+          <div class="chip" onclick="toggleChip(this)">Builder</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="filter-actions">
+      <button class="btn-reset" onclick="resetFilters()">✕ Reset</button>
+      <button class="btn-apply" onclick="applyFilters()">Apply Filters</button>
+    </div>
+
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-area">
+
+    <div class="results-topbar">
+      <span class="results-count"><strong id="countDisplay">47</strong> properties found</span>
+      <div class="spacer"></div>
+      <select class="sort-select" onchange="applySortUpdate(this.value)">
+        <option>Sort: Latest</option>
+        <option>Price: Low to High</option>
+        <option>Price: High to Low</option>
+        <option>Area: Largest</option>
+        <option>Most Popular</option>
+      </select>
+      <div class="view-toggle">
+        <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid view">⊞</button>
+        <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="List view">☰</button>
+      </div>
+    </div>
+
+    <!-- ACTIVE FILTERS PILLS -->
+    <div class="active-filters" id="activePills">
+      <span class="active-pill">🔑 Rent <button onclick="removePill(this)">×</button></span>
+      <span class="active-pill">Gulshan-e-Iqbal <button onclick="removePill(this)">×</button></span>
+      <span class="active-pill">Flat <button onclick="removePill(this)">×</button></span>
+      <button class="clear-all" onclick="clearAllPills()">Clear all</button>
+    </div>
+
+    <!-- LISTINGS -->
+    <div class="listings-grid" id="listingsGrid">
+
+      <div class="prop-card">
+        <div class="prop-img" style="background:#e8f5ee">
+          🏢
+          <span class="prop-badge badge-rent">For Rent</span>
+          <button class="prop-save" onclick="toggleSave(this)">🤍</button>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">PKR 45,000 <span>/month</span></div>
+          <div class="prop-title">3-Bed Flat — Gulshan Block 13D</div>
+          <div class="prop-loc">📍 Gulshan-e-Iqbal, Karachi</div>
+          <div class="prop-features">
+            <span class="prop-feat">🛏 3 Beds</span>
+            <span class="prop-feat">🚿 2 Baths</span>
+            <span class="prop-feat">📐 1400 sqft</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card">
+        <div class="prop-img" style="background:#e8eef5">
+          🏡
+          <span class="prop-badge badge-sale">For Sale</span>
+          <button class="prop-save" onclick="toggleSave(this)">🤍</button>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">PKR 4.5 Crore</div>
+          <div class="prop-title">240 Sq Yd House — DHA Phase 6</div>
+          <div class="prop-loc">📍 DHA, Karachi</div>
+          <div class="prop-features">
+            <span class="prop-feat">🛏 4 Beds</span>
+            <span class="prop-feat">🅿️ Parking</span>
+            <span class="prop-feat">📐 240 Sq Yd</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card">
+        <div class="prop-img" style="background:#f5f0e8">
+          🏢
+          <span class="prop-badge badge-rent">For Rent</span>
+          <button class="prop-save" onclick="toggleSave(this)">🤍</button>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">PKR 38,000 <span>/month</span></div>
+          <div class="prop-title">2-Bed Flat — PECHS Block 2</div>
+          <div class="prop-loc">📍 PECHS, Karachi</div>
+          <div class="prop-features">
+            <span class="prop-feat">🛏 2 Beds</span>
+            <span class="prop-feat">🌐 Fiber</span>
+            <span class="prop-feat">📐 1100 sqft</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card">
+        <div class="prop-img" style="background:#f0e8f5">
+          🏢
+          <span class="prop-badge badge-sale">For Sale</span>
+          <button class="prop-save" onclick="toggleSave(this)">🤍</button>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">PKR 2.8 Crore</div>
+          <div class="prop-title">Luxury 3-Bed Apartment — Clifton Block 5</div>
+          <div class="prop-loc">📍 Clifton, Karachi</div>
+          <div class="prop-features">
+            <span class="prop-feat">🛏 3 Beds</span>
+            <span class="prop-feat">🌊 Sea View</span>
+            <span class="prop-feat">📐 2000 sqft</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card">
+        <div class="prop-img" style="background:#e8f5f0">
+          🏠
+          <span class="prop-badge badge-rent">For Rent</span>
+          <button class="prop-save" onclick="toggleSave(this)">🤍</button>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">PKR 55,000 <span>/month</span></div>
+          <div class="prop-title">120 Sq Yd House — Gulistan-e-Johar</div>
+          <div class="prop-loc">📍 Gulistan-e-Johar, Karachi</div>
+          <div class="prop-features">
+            <span class="prop-feat">🛏 3 Beds</span>
+            <span class="prop-feat">🅿️ Parking</span>
+            <span class="prop-feat">📐 120 Sq Yd</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="prop-card">
+        <div class="prop-img" style="background:#f5ebe8">
+          🏡
+          <span class="prop-badge badge-sale">For Sale</span>
+          <button class="prop-save" onclick="toggleSave(this)">🤍</button>
+        </div>
+        <div class="prop-body">
+          <div class="prop-price">PKR 1.85 Crore</div>
+          <div class="prop-title">160 Sq Yd — Bahria Town Precinct 10</div>
+          <div class="prop-loc">📍 Bahria Town, Karachi</div>
+          <div class="prop-features">
+            <span class="prop-feat">🛏 4 Beds</span>
+            <span class="prop-feat">☀️ Solar</span>
+            <span class="prop-feat">📐 160 Sq Yd</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">4</button>
+      <button class="page-btn">5</button>
+      <button class="page-btn">›</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- MOBILE FILTER BUTTON -->
+<button class="mobile-filter-btn" id="mobileFilterBtn" onclick="openMobileFilter()">
+  ⚙ Filters &amp; Sort
+</button>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-filter-overlay" id="mobileOverlay" onclick="closeMobileFilter()"></div>
+<div class="mobile-filter-panel" id="mobilePanel">
+  <div class="mobile-panel-handle"></div>
+  <div id="mobilePanelContent"></div>
+  <div style="display:flex;gap:8px;margin-top:20px">
+    <button class="btn-reset" onclick="resetFilters();closeMobileFilter()">✕ Reset</button>
+    <button class="btn-apply" onclick="applyFilters();closeMobileFilter()">Show Results</button>
+  </div>
+</div>
+
+<script>
+  // SECTION TOGGLE
+  function toggleSection(bodyId, iconId) {
+    const body = document.getElementById(bodyId);
+    const icon = document.getElementById(iconId);
+    const collapsed = body.classList.toggle('collapsed');
+    icon.classList.toggle('open', !collapsed);
+  }
+
+  // CHIP SELECT
+  function toggleChip(el) {
+    const siblings = el.parentElement.querySelectorAll('.chip');
+    const isAll = el.textContent.includes('All') || el.textContent.includes('Any');
+    if (isAll) {
+      siblings.forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    } else {
+      siblings[0].classList.remove('selected');
+      el.classList.toggle('selected');
+      const anySelected = Array.from(siblings).slice(1).some(c => c.classList.contains('selected'));
+      if (!anySelected) siblings[0].classList.add('selected');
+    }
+    updateCount();
+  }
+
+  // PRICE RANGE SLIDER
+  function updateRange() {
+    const min = parseInt(document.getElementById('rangeMin').value);
+    const max = parseInt(document.getElementById('rangeMax').value);
+    if (min > max) return;
+    document.getElementById('rangeFill').style.left = min + '%';
+    document.getElementById('rangeFill').style.width = (max - min) + '%';
+    const prices = ['10K','50K','1L','2L','5L','10L','25L','50L','1Cr','2Cr','5Cr'];
+    const idx1 = Math.floor(min / 10);
+    const idx2 = Math.floor(max / 10);
+    document.getElementById('priceMin').value = 'PKR ' + (prices[idx1] || '10K');
+    document.getElementById('priceMax').value = 'PKR ' + (prices[idx2] || '5Cr');
+  }
+
+  function setPrice(el, min, max) {
+    document.querySelectorAll('.chip').forEach(c => {
+      if (c.parentElement.id === undefined) {/* skip */}
+    });
+    document.getElementById('priceMin').value = min;
+    document.getElementById('priceMax').value = max;
+    const siblings = el.parentElement.querySelectorAll('.chip');
+    siblings.forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    updateCount();
+  }
+
+  // PURPOSE TOGGLE
+  function setPurpose(btn, purpose) {
+    document.querySelectorAll('.purpose-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    updateCount();
+  }
+
+  // AREA FILTER SEARCH
+  function filterAreas(q) {
+    document.querySelectorAll('#areaList .check-item').forEach(item => {
+      const label = item.querySelector('.check-label').textContent.toLowerCase();
+      item.style.display = label.includes(q.toLowerCase()) ? '' : 'none';
+    });
+  }
+
+  // SAVE TOGGLE
+  function toggleSave(btn) {
+    btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍';
+  }
+
+  // VIEW TOGGLE
+  function setView(type) {
+    const grid = document.getElementById('listingsGrid');
+    document.getElementById('gridViewBtn').classList.toggle('active', type === 'grid');
+    document.getElementById('listViewBtn').classList.toggle('active', type === 'list');
+    grid.classList.toggle('list-view', type === 'list');
+  }
+
+  // ACTIVE PILLS
+  function removePill(btn) {
+    btn.closest('.active-pill').remove();
+    updateCount();
+  }
+  function clearAllPills() {
+    document.querySelectorAll('#activePills .active-pill').forEach(p => p.remove());
+    updateCount();
+  }
+
+  // RESET
+  function resetFilters() {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.chip-grid .chip:first-child').forEach(c => c.classList.add('selected'));
+    document.querySelectorAll('input[type=checkbox]').forEach(c => c.checked = false);
+    document.getElementById('priceMin').value = '10,000';
+    document.getElementById('priceMax').value = '2,00,000';
+    document.getElementById('rangeMin').value = 2;
+    document.getElementById('rangeMax').value = 80;
+    updateRange();
+    clearAllPills();
+  }
+
+  // APPLY
+  function applyFilters() {
+    updateCount();
+    // flash count
+    const el = document.getElementById('countDisplay');
+    el.style.color = 'var(--green)';
+    setTimeout(() => el.style.color = '', 600);
+  }
+
+  function updateCount() {
+    const n = Math.floor(Math.random() * 80) + 20;
+    document.getElementById('countDisplay').textContent = n;
+  }
+
+  function applySortUpdate(v) {
+    updateCount();
+  }
+
+  // MOBILE PANEL
+  function openMobileFilter() {
+    document.getElementById('mobileOverlay').classList.add('open');
+    document.getElementById('mobilePanel').classList.add('open');
+    const sidebar = document.getElementById('filterSidebar');
+    document.getElementById('mobilePanelContent').innerHTML = sidebar.innerHTML;
+  }
+  function closeMobileFilter() {
+    document.getElementById('mobileOverlay').classList.remove('open');
+    document.getElementById('mobilePanel').classList.remove('open');
+  }
+
+  // INIT RANGE
+  updateRange();
+
+  // PAGINATION
+  document.querySelectorAll('.page-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
