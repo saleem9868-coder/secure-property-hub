@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if location %}Properties in {{ location }}{% else %}Property Search Results{% endif %} | ApnaGhar Karachi
+{% endblock %}
+{% block meta_desc %}
+    Search results for {% if purpose=='rent' %}rental{% else %}sale{% endif %} properties 
+    {% if location %}in {{ location }}{% endif %} Karachi. ApnaGhar — 0311-1820660.
+{% endblock %}
+
+{% block content %}
+
+<div class="page-hdr" style="background:linear-gradient(135deg,#1a3c5e,#2557a7);padding:30px 0 20px;">
+    <div class="container">
+        <h1 style="font-size:1.5rem;color:#fff;margin-bottom:8px;">
+            🔍 Search Results
+            {% if location %} — <span style="color:var(--accent-light);">{{ location }}</span>{% endif %}
+        </h1>
+        <p class="mb-0" style="color:rgba(255,255,255,.8);font-size:.88rem;">
+            {% if purpose=='rent' %}🔑 For Rent{% else %}🏡 For Sale{% endif %}
+            {% if ptype %} · {{ ptype|title }}{% endif %}
+            {% if beds %} · {{ beds }} Bed{% endif %}
+            {% if budget %} · Budget: {{ budget }}{% endif %}
+        </p>
+    </div>
+</div>
+
+<section class="py-4" style="background:var(--light-bg);">
+    <div class="container">
+
+        <!-- Refine Search Bar -->
+        <div class="p-3 rounded-3 mb-4" style="background:#fff;border:1px solid var(--card-border);">
+            <form action="{{ url_for('search') }}" method="GET">
+                <input type="hidden" name="purpose" value="{{ purpose }}">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-3 col-6">
+                        <select name="location" class="form-select form-select-sm">
+                            <option value="">All Areas</option>
+                            {% for area in ['DHA','Gulshan-e-Iqbal','Clifton','PECHS','Gulistan-e-Johar','Bahria Town','North Nazimabad','Federal B Area','Saddar','Nazimabad','Akhtar Colony'] %}
+                            <option {% if location==area %}selected{% endif %}>{{ area }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <select name="type" class="form-select form-select-sm">
+                            <option value="">All Types</option>
+                            <option value="flat" {% if ptype=='flat' %}selected{% endif %}>Flat</option>
+                            <option value="house" {% if ptype=='house' %}selected{% endif %}>House</option>
+                            <option value="room" {% if ptype=='room' %}selected{% endif %}>Room</option>
+                            <option value="shop" {% if ptype=='shop' %}selected{% endif %}>Shop</option>
+                            <option value="plot" {% if ptype=='plot' %}selected{% endif %}>Plot</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <select name="beds" class="form-select form-select-sm">
+                            <option value="">Any Beds</option>
+                            <option value="1" {% if beds=='1' %}selected{% endif %}>1 BHK</option>
+                            <option value="2" {% if beds=='2' %}selected{% endif %}>2 BHK</option>
+                            <option value="3" {% if beds=='3' %}selected{% endif %}>3 BHK</option>
+                            <option value="4" {% if beds=='4' %}selected{% endif %}>4+ BHK</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary btn-sm flex-grow-1">
+                                <i class="bi bi-search me-1"></i>Refine
+                            </button>
+                            <a href="{{ url_for('search') }}?purpose={{ purpose }}" class="btn btn-outline-secondary btn-sm">Clear</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if results %}
+        <p class="text-muted mb-3" style="font-size:.88rem;"><strong>{{ results|length }}</strong> properties found</p>
+        <div class="row g-4">
+            {% for prop in results %}
+            <div class="col-lg-4 col-md-6">
+                <div class="prop-card">
+                    {% if prop.image %}
+                    <img src="{{ prop.image }}" alt="{{ prop.title }}">
+                    {% else %}
+                    <div class="img-ph"><i class="bi bi-building" style="font-size:2rem;"></i></div>
+                    {% endif %}
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2 flex-wrap">
+                            <span class="{{ 'badge-rent' if prop.purpose=='rent' else 'badge-sale' }}">
+                                {{ 'For Rent' if prop.purpose=='rent' else 'For Sale' }}
+                            </span>
+                            {% if prop.property_type %}<span class="badge-type">{{ prop.property_type|title }}</span>{% endif %}
+                        </div>
+                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">{{ prop.title }}</h5>
+                        <p class="text-muted mb-2" style="font-size:.84rem;">
+                            <i class="bi bi-geo-alt me-1"></i>{{ prop.location }}, Karachi
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="prop-price">PKR {{ prop.price | int | format_price }}</span>
+                            <a href="https://wa.me/923111820660?text=I'm%20interested%20in%20{{ prop.title | urlencode }}." 
+                               target="_blank" class="btn btn-sm btn-whatsapp">
+                                <i class="bi bi-whatsapp"></i> Inquire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <!-- No Results State -->
+        <div class="text-center py-5">
+            <div style="font-size:4rem;margin-bottom:20px;">🏚️</div>
+            <h4 style="color:var(--primary);">No listings found yet</h4>
+            <p class="text-muted mb-4">
+                We're adding properties daily. Contact us directly — our agents know the latest availabilities!
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="https://wa.me/923111820660?text=I'm%20looking%20for%20a%20property%20{% if location %}in%20{{ location | urlencode }}{% endif %}%20{% if purpose=='rent' %}for%20rent{% else %}to%20buy{% endif %}." 
+                   target="_blank" class="btn btn-whatsapp px-4">
+                    <i class="bi bi-whatsapp me-2"></i>Ask on WhatsApp
+                </a>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-primary px-4">
+                    <i class="bi bi-house me-2"></i>Back to Home
+                </a>
+            </div>
+
+            <div class="mt-4 p-4 rounded-3" style="background:#fff;border:1px solid var(--card-border);max-width:500px;margin:20px auto 0;">
+                <h6 style="color:var(--primary);margin-bottom:12px;">📋 Post a Requirement</h6>
+                <p class="text-muted mb-3" style="font-size:.88rem;">Tell us exactly what you need and we'll find it for you.</p>
+                <a href="{{ url_for('rent_chahiye') if purpose=='rent' else url_for('purchase_chahiye') }}" 
+                   class="btn btn-primary btn-sm px-4">
+                    Post My Requirement
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}
