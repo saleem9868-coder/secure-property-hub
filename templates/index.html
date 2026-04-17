@@ -1,335 +1,759 @@
-{% extends 'base.html' %}
-{% block title %}{{ T.nav_home }} - ApnaGhar | اپنا گھر{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}ApnaGhar | اپنا گھر — Rent & Buy Property in Karachi{% endblock %}
+{% block meta_desc %}Find houses, flats, and plots for rent and sale in Karachi. DHA, Gulshan, Clifton, PECHS, Bahria Town and more. Call 0311-1820660 — ApnaGhar.{% endblock %}
+{% block meta_keys %}property for rent Karachi, house for sale Karachi, flat rent DHA Karachi, property Gulshan Iqbal, Bahria Town Karachi property, real estate Karachi 2026{% endblock %}
+{% block og_title %}ApnaGhar — Karachi's Trusted Property Portal{% endblock %}
+{% block og_desc %}Rent or buy your dream property in Karachi. Verified listings in DHA, Gulshan, Clifton, PECHS, Saddar and more. Call 0311-1820660.{% endblock %}
+
+{% block extra_seo %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "ApnaGhar",
+  "url": "{{ request.host_url }}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ request.host_url }}search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+{% endblock %}
+
 {% block content %}
 
-<!-- ══ HERO ══ -->
-<section style="background:linear-gradient(135deg,#1a3c5e 0%,#0f2340 100%);color:#fff;padding:80px 0 60px;position:relative;overflow:hidden;">
-    <div style="position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(200,151,58,.07);pointer-events:none;"></div>
-    <div style="position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none;"></div>
-
+<!-- ═══════════════════════════════════════
+     HERO + SEARCH BAR
+════════════════════════════════════════ -->
+<section class="search-hero">
     <div class="container">
-        <div class="row align-items-center g-4">
-
-            <!-- LEFT: Brand + Search -->
-            <div class="col-lg-6">
-                <p style="color:var(--accent-light);font-weight:600;font-size:.85rem;letter-spacing:2px;text-transform:uppercase;" class="mb-3">
-                    {{ T.hero_tag }}
+        <div class="row justify-content-center text-center mb-4">
+            <div class="col-lg-8">
+                <h1 style="color:#fff;font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:12px;">
+                    🏡 {% if lang=='ur' %}اپنا گھر تلاش کریں{% else %}Find Your Dream Property in Karachi{% endif %}
+                </h1>
+                <p style="color:rgba(255,255,255,.8);font-size:1.05rem;">
+                    {% if lang=='ur' %}کرایہ، خریداری، فروخت — سب کچھ ایک جگہ{% else %}Rent · Buy · Sell — All in one place. Trusted since 2018.{% endif %}
                 </p>
+            </div>
+        </div>
 
-
-
-                <!-- Tagline -->
-                <p style="color:rgba(255,255,255,.88);font-size:1rem;line-height:1.8;margin-bottom:10px;">
-                    {% if lang == 'ur' %}
-                        محفوظ ڈیل، آسان اقدام —
-                        <strong style="color:var(--accent-light);">ڈیل بھی، ڈاکومنٹس بھی — سب ایک جگہ۔</strong>
-                    {% else %}
-                        Secure Deals, Easy Steps —
-                        <strong style="color:var(--accent-light);">Deals &amp; Documents, All in One Place.</strong>
-                    {% endif %}
-                </p>
-
-                <!-- ✅ TRUST SIGNALS -->
-                <p style="color:rgba(255,255,255,.7);font-size:.88rem;margin-bottom:20px;">
-                    ✔ 100+ Properties &nbsp;&nbsp;
-                    ✔ Verified Listings &nbsp;&nbsp;
-                    ✔ Trusted Service
-                </p>
-
-                <!-- ✅ PREMIUM WHITE SEARCH BOX -->
-                <form action="{{ url_for('rent_lena') }}" method="GET"
-                      style="background:#fff;border-radius:16px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:520px;">
-
-                    <p style="color:var(--primary);font-weight:700;font-size:.9rem;margin-bottom:12px;">
-                        🔍 {% if lang=='ur' %}پراپرٹی تلاش کریں{% else %}Search Property{% endif %}
-                    </p>
-
-                    <div class="row g-2">
-                        <div class="col-md-4">
-                            <select name="purpose" class="form-select rounded-pill"
-                                    style="font-weight:500;border-color:#e0e0e0;font-size:.88rem;"
-                                    onchange="this.form.action=this.value=='Buy'?'{{ url_for('purchase_lena') }}':'{{ url_for('rent_lena') }}'">
-                                <option value="Rent">🔑 {% if lang=='ur' %}کرایہ{% else %}Rent{% endif %}</option>
-                                <option value="Buy">🏡 {% if lang=='ur' %}خریدیں{% else %}Buy{% endif %}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <select name="type" class="form-select rounded-pill"
-                                    style="font-weight:500;border-color:#e0e0e0;font-size:.88rem;">
-                                <option value="">{% if lang=='ur' %}تمام اقسام{% else %}All Types{% endif %}</option>
-                                <option>House</option>
-                                <option>Flat</option>
-                                <option>Portion</option>
-                                <option>Shop</option>
-                                <option>Plot</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <button type="submit" class="btn w-100 rounded-pill fw-bold"
-                                    style="background:#c8973a;color:#fff;font-size:.88rem;">
-                                🔍 {% if lang=='ur' %}تلاش{% else %}Search{% endif %}
+        <!-- SEARCH BOX -->
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="search-box">
+                    <!-- Tabs: Rent / Buy -->
+                    <ul class="nav search-tabs mb-3" id="searchTabs">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-tab="rent" onclick="setSearchType('rent',this)">
+                                🔑 {% if lang=='ur' %}کرایہ{% else %}Rent{% endif %}
                             </button>
-                        </div>
-                        <div class="col-12">
-                            <input type="text" name="location" class="form-control rounded-pill"
-                                   placeholder="{% if lang=='ur' %}علاقہ لکھیں... مثلاً گلشن، ڈی ایچ اے، کلفٹن{% else %}Enter location... e.g. Gulshan, DHA, Clifton{% endif %}"
-                                   style="border-color:#e0e0e0;font-size:.9rem;padding:10px 16px;">
-                        </div>
-                    </div>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-tab="buy" onclick="setSearchType('buy',this)">
+                                🏡 {% if lang=='ur' %}خریدیں{% else %}Buy{% endif %}
+                            </button>
+                        </li>
+                    </ul>
 
-                    <!-- Popular searches -->
-                    <div class="mt-2 d-flex flex-wrap gap-1">
-                        <small style="color:#888;">Popular:</small>
-                        {% for area in ['Gulshan', 'DHA', 'Clifton', 'North Nazimabad', 'Akhtar Colony'] %}
-                        <a href="{{ url_for('rent_lena') }}?location={{ area }}"
-                           style="background:#f5f5f5;color:#555;border-radius:20px;padding:2px 10px;font-size:.75rem;text-decoration:none;">
-                            {{ area }}
-                        </a>
-                        {% endfor %}
-                    </div>
-                </form>
+                    <form action="{{ url_for('search') }}" method="GET" id="mainSearchForm">
+                        <input type="hidden" name="purpose" id="searchPurpose" value="rent">
+                        <div class="row g-3">
+                            <!-- Location -->
+                            <div class="col-md-3 col-sm-6">
+                                <label class="form-label small fw-semibold text-muted">
+                                    <i class="bi bi-geo-alt me-1"></i>{% if lang=='ur' %}علاقہ{% else %}Area / Location{% endif %}
+                                </label>
+                                <select name="location" class="form-select">
+                                    <option value="">{% if lang=='ur' %}تمام علاقے{% else %}All Areas{% endif %}</option>
+                                    <option>DHA</option>
+                                    <option>Gulshan-e-Iqbal</option>
+                                    <option>Clifton</option>
+                                    <option>PECHS</option>
+                                    <option>Gulistan-e-Johar</option>
+                                    <option>Bahria Town</option>
+                                    <option>North Nazimabad</option>
+                                    <option>Federal B Area</option>
+                                    <option>Saddar</option>
+                                    <option>Nazimabad</option>
+                                    <option>Akhtar Colony</option>
+                                    <option>Korangi</option>
+                                    <option>Malir</option>
+                                    <option>Landhi</option>
+                                    <option>Shah Faisal Colony</option>
+                                </select>
+                            </div>
+                            <!-- Property Type -->
+                            <div class="col-md-3 col-sm-6">
+                                <label class="form-label small fw-semibold text-muted">
+                                    <i class="bi bi-building me-1"></i>{% if lang=='ur' %}پراپرٹی کی قسم{% else %}Property Type{% endif %}
+                                </label>
+                                <select name="type" class="form-select">
+                                    <option value="">{% if lang=='ur' %}تمام اقسام{% else %}All Types{% endif %}</option>
+                                    <option value="flat">{% if lang=='ur' %}فلیٹ{% else %}Flat / Apartment{% endif %}</option>
+                                    <option value="house">{% if lang=='ur' %}گھر{% else %}House{% endif %}</option>
+                                    <option value="room">{% if lang=='ur' %}کمرہ{% else %}Room{% endif %}</option>
+                                    <option value="shop">{% if lang=='ur' %}دکان{% else %}Shop / Office{% endif %}</option>
+                                    <option value="plot">{% if lang=='ur' %}پلاٹ{% else %}Plot / Land{% endif %}</option>
+                                    <option value="upper_portion">{% if lang=='ur' %}اوپری حصہ{% else %}Upper Portion{% endif %}</option>
+                                    <option value="lower_portion">{% if lang=='ur' %}نچلا حصہ{% else %}Lower Portion{% endif %}</option>
+                                </select>
+                            </div>
+                            <!-- Budget -->
+                            <div class="col-md-3 col-sm-6">
+                                <label class="form-label small fw-semibold text-muted">
+                                    <i class="bi bi-cash me-1"></i>{% if lang=='ur' %}بجٹ{% else %}Budget{% endif %}
+                                </label>
+                                <select name="budget" class="form-select" id="budgetSelect">
+                                    <option value="">{% if lang=='ur' %}کوئی بھی{% else %}Any Budget{% endif %}</option>
+                                    <!-- Options set by JS based on rent/buy tab -->
+                                </select>
+                            </div>
+                            <!-- Bedrooms -->
+                            <div class="col-md-3 col-sm-6">
+                                <label class="form-label small fw-semibold text-muted">
+                                    <i class="bi bi-door-open me-1"></i>{% if lang=='ur' %}کمرے{% else %}Bedrooms{% endif %}
+                                </label>
+                                <select name="beds" class="form-select">
+                                    <option value="">{% if lang=='ur' %}کوئی بھی{% else %}Any{% endif %}</option>
+                                    <option value="1">1 BHK</option>
+                                    <option value="2">2 BHK</option>
+                                    <option value="3">3 BHK</option>
+                                    <option value="4">4+ BHK</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12 d-flex gap-2 flex-wrap">
+                                <button type="submit" class="btn btn-primary px-4 py-2 flex-grow-1 flex-sm-grow-0">
+                                    <i class="bi bi-search me-2"></i>{% if lang=='ur' %}تلاش کریں{% else %}Search Properties{% endif %}
+                                </button>
+                                <a href="https://wa.me/923111820660?text=I%20need%20help%20finding%20a%20property%20in%20Karachi." 
+                                   target="_blank" class="btn btn-whatsapp px-4 py-2">
+                                    <i class="bi bi-whatsapp me-2"></i>{% if lang=='ur' %}واٹس ایپ پر پوچھیں{% else %}Ask on WhatsApp{% endif %}
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 
                 <!-- Quick Links -->
-                <div class="mt-3 d-flex flex-wrap gap-2">
-                    <a href="{{ url_for('document_services') }}" class="btn btn-sm rounded-pill" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);">
-                        📄 {% if lang=='ur' %}دستاویزات{% else %}Documents{% endif %}
-                    </a>
-                    <a href="{{ url_for('tenant_verification') }}" class="btn btn-sm rounded-pill" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);">
-                        ✅ {% if lang=='ur' %}کرایہ دار تصدیق{% else %}Tenant Verify{% endif %}
-                    </a>
-                    <a href="https://wa.me/923111820660" target="_blank" class="btn btn-sm btn-whatsapp rounded-pill">
-                        <i class="bi bi-whatsapp me-1"></i>WhatsApp
-                    </a>
+                <div class="mt-3 d-flex flex-wrap gap-2 justify-content-center">
+                    <span style="color:rgba(255,255,255,.7);font-size:.82rem;align-self:center;">🔥 Popular:</span>
+                    <a href="{{ url_for('search') }}?location=DHA&purpose=rent" class="area-chip" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);">DHA Rent</a>
+                    <a href="{{ url_for('search') }}?location=Gulshan-e-Iqbal&purpose=rent" class="area-chip" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);">Gulshan Rent</a>
+                    <a href="{{ url_for('search') }}?location=Clifton&purpose=buy" class="area-chip" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);">Clifton Buy</a>
+                    <a href="{{ url_for('search') }}?location=Bahria+Town&purpose=buy" class="area-chip" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);">Bahria Town</a>
+                    <a href="{{ url_for('search') }}?type=flat&purpose=rent" class="area-chip" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);">Flat for Rent</a>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
 
-            <!-- ✅ RIGHT SIDE — Muhammad Saleem Photo + AG watermark -->
-            <div class="col-lg-6 d-none d-lg-flex flex-column align-items-center justify-content-center" style="position:relative;">
+<!-- ═══════════════════════════════════════
+     TRUST STATS STRIP
+════════════════════════════════════════ -->
+<section class="stats-strip">
+    <div class="container">
+        <div class="row text-center g-3">
+            <div class="col-6 col-md-3">
+                <div class="stat-num">500+</div>
+                <div style="font-size:.82rem;opacity:.85;">{% if lang=='ur' %}تصدیق شدہ فہرستیں{% else %}Verified Listings{% endif %}</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-num">1200+</div>
+                <div style="font-size:.82rem;opacity:.85;">{% if lang=='ur' %}خوش گراہک{% else %}Happy Clients{% endif %}</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-num">7+</div>
+                <div style="font-size:.82rem;opacity:.85;">{% if lang=='ur' %}سال کا تجربہ{% else %}Years Experience{% endif %}</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-num">20+</div>
+                <div style="font-size:.82rem;opacity:.85;">{% if lang=='ur' %}کراچی کے علاقے{% else %}Karachi Areas{% endif %}</div>
+            </div>
+        </div>
+    </div>
+</section>
 
-                <!-- Big AG watermark background -->
-                <div style="position:absolute;color:rgba(255,255,255,.06);font-size:180px;font-weight:800;font-family:'Playfair Display',serif;line-height:1;user-select:none;pointer-events:none;z-index:0;">
-                    AG
-                </div>
+<!-- ═══════════════════════════════════════
+     FEATURED LISTINGS — 10 SAMPLE PROPERTIES
+════════════════════════════════════════ -->
+<section class="py-5" style="background:var(--light-bg);">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+            <div>
+                <h2 class="sec-title mb-0">{% if lang=='ur' %}تازہ ترین پراپرٹیز{% else %}Latest Properties{% endif %}</h2>
+                <p class="text-muted mt-2 mb-0" style="font-size:.9rem;">{% if lang=='ur' %}کراچی کی بہترین پراپرٹیز{% else %}Handpicked properties across Karachi{% endif %}</p>
+            </div>
+            <a href="{{ url_for('rent_lena') }}" class="btn btn-outline-primary btn-sm rounded-pill">
+                {% if lang=='ur' %}تمام دیکھیں{% else %}View All{% endif %} <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
 
-                <!-- Photo on top -->
-                <div style="position:relative;z-index:1;">
-                    <div style="position:absolute;inset:-8px;border-radius:20px;border:2px solid rgba(200,151,58,.5);z-index:0;"></div>
-                    <img src="/static/MUHAMMAD_SALEEM.png"
-                         alt="Muhammad Saleem"
-                         style="position:relative;z-index:1;width:100%;max-width:480px;height:340px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5);object-fit:cover;object-position:center top;display:block;">
-                </div>
+        <!-- Filter Tabs -->
+        <div class="d-flex gap-2 mb-4 flex-wrap">
+            <button class="btn btn-primary btn-sm rounded-pill px-3 prop-filter-btn active" data-filter="all">
+                {% if lang=='ur' %}تمام{% else %}All{% endif %}
+            </button>
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 prop-filter-btn" data-filter="rent">
+                🔑 {% if lang=='ur' %}کرایہ{% else %}For Rent{% endif %}
+            </button>
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 prop-filter-btn" data-filter="sale">
+                🏷️ {% if lang=='ur' %}فروخت{% else %}For Sale{% endif %}
+            </button>
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 prop-filter-btn" data-filter="flat">
+                🏢 {% if lang=='ur' %}فلیٹ{% else %}Flats{% endif %}
+            </button>
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 prop-filter-btn" data-filter="house">
+                🏠 {% if lang=='ur' %}گھر{% else %}Houses{% endif %}
+            </button>
+        </div>
 
-                <!-- Name card -->
-                <div class="mt-3 px-4 py-2 rounded-pill text-center" style="background:rgba(200,151,58,.25);border:1px solid rgba(200,151,58,.5);position:relative;z-index:1;">
-                    <div style="color:var(--accent-light);font-weight:700;font-size:.92rem;">Muhammad Saleem</div>
-                    <div style="color:rgba(255,255,255,.7);font-size:.78rem;">Founder — ApnaGhar | اپنا گھر</div>
-                </div>
+        <div class="row g-4" id="listingsGrid">
 
-                <!-- Stats cards -->
-                <div class="row g-2 mt-3 w-100" style="max-width:480px;position:relative;z-index:1;">
-                    {% for num, label in [('100+','Properties'),('24hr','Response'),('5★','Service')] %}
-                    <div class="col-4">
-                        <div class="text-center rounded-3 py-2" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);">
-                            <div style="color:var(--accent-light);font-weight:700;font-size:1.1rem;">{{ num }}</div>
-                            <div style="color:rgba(255,255,255,.7);font-size:.7rem;">{{ label }}</div>
+            <!-- Listing 1 -->
+            <div class="col-lg-4 col-md-6 listing-item" data-cat="rent flat">
+                <div class="prop-card">
+                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#bbdefb,#90caf9);font-size:3.5rem;">🏢</div>
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2 flex-wrap">
+                            <span class="badge-rent">For Rent</span>
+                            <span class="badge-type">Flat</span>
+                        </div>
+                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">3-Bedroom Flat — Gulshan-e-Iqbal Block 13D</h5>
+                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Gulshan-e-Iqbal, Block 13D, Karachi</p>
+                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
+                            <span><i class="bi bi-door-open me-1"></i>3 Beds</span>
+                            <span><i class="bi bi-grid me-1"></i>1,400 sqft</span>
+                            <span><i class="bi bi-droplet me-1"></i>2 Baths</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="prop-price">PKR 45,000/mo</span>
+                            <a href="https://wa.me/923111820660?text=I'm%20interested%20in%20the%203-bed%20flat%20in%20Gulshan%20Block%2013D." 
+                               target="_blank" class="btn btn-sm btn-whatsapp">
+                                <i class="bi bi-whatsapp"></i> Inquire
+                            </a>
                         </div>
                     </div>
-                    {% endfor %}
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- ══ STATS STRIP ══ -->
-<div class="stats-strip">
-    <div class="container">
-        <div class="row g-2 text-center">
-            <div class="col-3"><div class="stat-num">{{ stats.rent }}+</div><div style="font-size:.8rem;">{{ T.rent_props_title }}</div></div>
-            <div class="col-3"><div class="stat-num">{{ stats.sale }}+</div><div style="font-size:.8rem;">{{ T.sale_props_title }}</div></div>
-            <div class="col-3"><div class="stat-num">{{ stats.verified }}+</div><div style="font-size:.8rem;">{{ T.nav_verify }}</div></div>
-            <div class="col-3"><div class="stat-num">{{ stats.clients }}+</div><div style="font-size:.8rem;">{{ T.nav_home }}</div></div>
-        </div>
-    </div>
-</div>
-
-<!-- ══ 4 ACTION CARDS ══ -->
-<div class="container py-5">
-    <div class="text-center mb-4">
-        <h2 class="sec-title mx-auto">{{ T.choose_title }}</h2>
-        <p class="text-muted mt-2">{{ T.choose_sub }}</p>
-    </div>
-    <div class="row g-4">
-        <div class="col-md-6 col-lg-3">
-            <a href="{{ url_for('rent_lena') }}" class="action-card card-rl">
-                <span class="c-icon">🔑</span>
-                <div class="c-title">{{ T.card_rent_lena_title }}</div>
-                <div class="c-sub">{{ T.card_rent_lena_sub }}</div>
-                <span class="c-btn">{{ T.card_rent_lena_btn }}</span>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <a href="{{ url_for('rent_dena') }}" class="action-card card-rd">
-                <span class="c-icon">🏠</span>
-                <div class="c-title">{{ T.card_rent_dena_title }}</div>
-                <div class="c-sub">{{ T.card_rent_dena_sub }}</div>
-                <span class="c-btn">{{ T.card_rent_dena_btn }}</span>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <a href="{{ url_for('purchase_lena') }}" class="action-card card-buy">
-                <span class="c-icon">🏡</span>
-                <div class="c-title">{{ T.card_buy_title }}</div>
-                <div class="c-sub">{{ T.card_buy_sub }}</div>
-                <span class="c-btn">{{ T.card_buy_btn }}</span>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <a href="{{ url_for('sale_dena') }}" class="action-card card-sell">
-                <span class="c-icon">🏷️</span>
-                <div class="c-title">{{ T.card_sell_title }}</div>
-                <div class="c-sub">{{ T.card_sell_sub }}</div>
-                <span class="c-btn">{{ T.card_sell_btn }}</span>
-            </a>
-        </div>
-    </div>
-    <div class="row g-3 mt-2">
-        <div class="col-md-6">
-            <div class="card border-0 rounded-4 p-3" style="background:#e3f0ff;">
-                <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <i class="bi bi-clipboard-check-fill" style="font-size:2rem;color:#1565c0;flex-shrink:0;"></i>
-                    <div class="flex-grow-1">
-                        <strong style="color:#1565c0;display:block;">{{ T.rent_req_title }}</strong>
-                        <small class="text-muted">{{ T.rent_req_sub }}</small>
-                    </div>
-                    <a href="{{ url_for('rent_chahiye') }}" class="btn btn-sm rounded-pill flex-shrink-0" style="background:#1565c0;color:#fff;">{{ T.rent_req_btn }}</a>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card border-0 rounded-4 p-3" style="background:#e8f5e9;">
-                <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <i class="bi bi-clipboard-check-fill" style="font-size:2rem;color:#2e7d32;flex-shrink:0;"></i>
-                    <div class="flex-grow-1">
-                        <strong style="color:#2e7d32;display:block;">{{ T.buy_req_title }}</strong>
-                        <small class="text-muted">{{ T.buy_req_sub }}</small>
-                    </div>
-                    <a href="{{ url_for('purchase_chahiye') }}" class="btn btn-sm rounded-pill flex-shrink-0" style="background:#2e7d32;color:#fff;">{{ T.buy_req_btn }}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- ══ FEATURED RENT ══ -->
-{% if featured_rent %}
-<section class="py-4" style="background:var(--light-bg);">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-end mb-3">
-            <div><h2 class="sec-title mb-0" style="font-size:1.4rem;">{{ T.rent_props_title }}</h2><p class="text-muted small mt-1 mb-0">{{ T.rent_props_sub }}</p></div>
-            <a href="{{ url_for('rent_lena') }}" class="btn btn-sm rounded-pill" style="background:#e3f0ff;color:#1565c0;font-weight:600;">{{ T.view_all }}</a>
-        </div>
-        <div class="row g-3">
-            {% for p in featured_rent %}
-            <div class="col-md-4"><div class="prop-card">
-                {% if p.filename %}<img src="/uploads/{{ p.filename }}" alt="{{ p.title }}">
-                {% else %}<div class="img-ph"><i class="bi bi-building" style="font-size:2.5rem;"></i></div>{% endif %}
-                <div class="p-3">
-                    <div class="d-flex gap-2 mb-2"><span class="badge-rent">{{ T.footer_rent }}</span><span class="badge-type">{{ p.property_type }}</span></div>
-                    <h6 class="fw-bold mb-1">{{ p.title }}</h6>
-                    <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>{{ p.location }}</p>
-                    <div class="mb-2"><span class="prop-price">Rs. {{ p.price }}{{ T.per_month }}</span></div>
-                    <a href="{{ url_for('rent_detail', pid=p.id) }}" class="btn w-100 rounded-pill btn-sm" style="background:#1565c0;color:#fff;">{{ T.view_details }}</a>
-                </div>
-            </div></div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
-
-<!-- ══ FEATURED SALE ══ -->
-{% if featured_sale %}
-<section class="py-4">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-end mb-3">
-            <div><h2 class="sec-title mb-0" style="font-size:1.4rem;">{{ T.sale_props_title }}</h2><p class="text-muted small mt-1 mb-0">{{ T.sale_props_sub }}</p></div>
-            <a href="{{ url_for('purchase_lena') }}" class="btn btn-sm rounded-pill" style="background:#e8f5e9;color:#2e7d32;font-weight:600;">{{ T.view_all }}</a>
-        </div>
-        <div class="row g-3">
-            {% for p in featured_sale %}
-            <div class="col-md-4"><div class="prop-card">
-                {% if p.filename %}<img src="/uploads/{{ p.filename }}" alt="{{ p.title }}">
-                {% else %}<div class="img-ph"><i class="bi bi-building" style="font-size:2.5rem;"></i></div>{% endif %}
-                <div class="p-3">
-                    <div class="d-flex gap-2 mb-2"><span class="badge-sale">Sale</span><span class="badge-type">{{ p.property_type }}</span></div>
-                    <h6 class="fw-bold mb-1">{{ p.title }}</h6>
-                    <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>{{ p.location }}</p>
-                    <div class="mb-2"><span class="prop-price">Rs. {{ p.price }}</span></div>
-                    <a href="{{ url_for('sale_detail', pid=p.id) }}" class="btn w-100 rounded-pill btn-sm" style="background:#2e7d32;color:#fff;">{{ T.view_details }}</a>
-                </div>
-            </div></div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
-
-<!-- ══ SERVICES ══ -->
-<section class="py-4" style="background:var(--light-bg);">
-    <div class="container">
-        <h2 class="sec-title mb-4" style="font-size:1.4rem;">{{ T.services_title }}</h2>
-        <div class="row g-3">
-            <div class="col-md-4"><div class="card border-0 rounded-4 p-4 text-center h-100">
-                <i class="bi bi-person-check-fill" style="font-size:2.5rem;color:#1565c0;"></i>
-                <h6 class="fw-bold mt-2">{{ T.nav_verify }}</h6>
-                <p class="text-muted small">{{ T.verif_sub }}</p>
-                <a href="{{ url_for('tenant_verification') }}" class="btn btn-sm btn-outline-primary rounded-pill">{{ T.verif_btn }}</a>
-            </div></div>
-            <div class="col-md-4"><div class="card border-0 rounded-4 p-4 text-center h-100">
-                <i class="bi bi-file-earmark-text-fill" style="font-size:2.5rem;color:var(--accent);"></i>
-                <h6 class="fw-bold mt-2">{{ T.nav_docs }}</h6>
-                <p class="text-muted small">{{ T.doc_sub }}</p>
-                <a href="{{ url_for('document_services') }}" class="btn btn-sm btn-outline-primary rounded-pill">{% if lang=='ur' %}دیکھیں{% else %}View All{% endif %}</a>
-            </div></div>
-            <div class="col-md-4"><div class="card border-0 rounded-4 p-4 text-center h-100">
-                <i class="bi bi-whatsapp" style="font-size:2.5rem;color:#25d366;"></i>
-                <h6 class="fw-bold mt-2">WhatsApp Support</h6>
-                <p class="text-muted small">0311-1820660</p>
-                <a href="https://wa.me/923111820660" target="_blank" class="btn btn-sm btn-whatsapp rounded-pill">{% if lang=='ur' %}چیٹ کریں{% else %}Chat Now{% endif %}</a>
-            </div></div>
-        </div>
-    </div>
-</section>
-
-<!-- ══ OFFER BOX ══ -->
-<section class="py-4">
-    <div class="container">
-        <div class="offer-box">
-            <div class="row align-items-center">
-                <div class="col-lg-7">
-                    <h3 style="color:#fff;">⭐ {{ T.offer_title }}</h3>
-                    <div class="row g-2 mt-2">
-                        {% for o in [T.offer_1, T.offer_2, T.offer_3] %}
-                        <div class="col-sm-4">
-                            <div style="background:rgba(255,255,255,.2);border-radius:10px;padding:12px;text-align:center;font-size:.85rem;font-weight:600;">✓ {{ o }}</div>
+            <!-- Listing 2 -->
+            <div class="col-lg-4 col-md-6 listing-item" data-cat="sale house">
+                <div class="prop-card">
+                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#c8e6c9,#a5d6a7);font-size:3.5rem;">🏡</div>
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2 flex-wrap">
+                            <span class="badge-sale">For Sale</span>
+                            <span class="badge-type">House</span>
                         </div>
-                        {% endfor %}
+                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">240 Sq Yd House — DHA Phase 6</h5>
+                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>DHA Phase 6, Karachi</p>
+                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
+                            <span><i class="bi bi-door-open me-1"></i>4 Beds</span>
+                            <span><i class="bi bi-grid me-1"></i>240 Sq Yd</span>
+                            <span><i class="bi bi-car-front me-1"></i>Parking</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="prop-price">PKR 4.5 Crore</span>
+                            <a href="https://wa.me/923111820660?text=I'm%20interested%20in%20the%20240sqyd%20house%20in%20DHA%20Phase%206." 
+                               target="_blank" class="btn btn-sm btn-whatsapp">
+                                <i class="bi bi-whatsapp"></i> Inquire
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-5 mt-3 mt-lg-0 text-center">
-                    <a href="https://wa.me/923111820660?text=Hello%2C%20ApnaGhar%20se%20rabta%20karna%20chahta%20hoon." target="_blank" class="btn btn-light rounded-pill px-4 fw-bold" style="color:var(--accent);">
-                        <i class="bi bi-whatsapp me-2"></i>{{ T.offer_btn }}
-                    </a><br>
-                    <a href="tel:03111820660" class="btn btn-outline-light rounded-pill px-4 mt-2">
-                        <i class="bi bi-telephone me-2"></i>0311-1820660
-                    </a>
+            </div>
+
+            <!-- Listing 3 -->
+            <div class="col-lg-4 col-md-6 listing-item" data-cat="rent flat">
+                <div class="prop-card">
+                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#ffe0b2,#ffcc80);font-size:3.5rem;">🏢</div>
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2 flex-wrap">
+                            <span class="badge-rent">For Rent</span>
+                            <span class="badge-type">Flat</span>
+                        </div>
+                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">2-Bedroom Flat — PECHS Block 2</h5>
+                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>PECHS Block 2, Karachi</p>
+                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
+                            <span><i class="bi bi-door-open me-1"></i>2 Beds</span>
+                            <span><i class="bi bi-grid me-1"></i>1,100 sqft</span>
+                            <span><i class="bi bi-wifi me-1"></i>Fiber Ready</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="prop-price">PKR 38,000/mo</span>
+                            <a href="https://wa.me/923111820660?text=I'm%20interested%20in%20the%202-bed%20flat%20in%20PECHS." 
+                               target="_blank" class="btn btn-sm btn-whatsapp">
+                                <i class="bi bi-whatsapp"></i> Inquire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listing 4 -->
+            <div class="col-lg-4 col-md-6 listing-item" data-cat="sale flat">
+                <div class="prop-card">
+                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#e1bee7,#ce93d8);font-size:3.5rem;">🏢</div>
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2 flex-wrap">
+                            <span class="badge-sale">For Sale</span>
+                            <span class="badge-type">Apartment</span>
+                        </div>
+                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">Luxury 3-Bed Apartment — Clifton Block 5</h5>
+                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Clifton Block 5, Karachi</p>
+                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
+                            <span><i class="bi bi-door-open me-1"></i>3 Beds</span>
+                            <span><i class="bi bi-grid me-1"></i>2,000 sqft</span>
+                            <span><i class="bi bi-building me-1"></i>Sea View</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="prop-price">PKR 2.8 Crore</span>
+                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20Clifton%20Block%205%20apartment." 
+                               target="_blank" class="btn btn-sm btn-whatsapp">
+                                <i class="bi bi-whatsapp"></i> Inquire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listing 5 -->
+            <div class="col-lg-4 col-md-6 listing-item" data-cat="rent house">
+                <div class="prop-card">
+                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#b2dfdb,#80cbc4);font-size:3.5rem;">🏠</div>
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2 flex-wrap">
+                            <span class="badge-rent">For Rent</span>
+                            <span class="badge-type">House</span>
+                        </div>
+                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">120 Sq Yd House — Gulistan-e-Johar Block 14</h5>
+                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Gulistan-e-Johar, Karachi</p>
+                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
+                            <span><i class="bi bi-door-open me-1"></i>3 Beds</span>
+                            <span><i class="bi bi-grid me-1"></i>120 Sq Yd</span>
+                            <span><i class="bi bi-car-front me-1"></i>Parking</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="prop-price">PKR 55,000/mo</span>
+                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20house%20in%20Gulistan-e-Johar." 
+                               target="_blank" class="btn btn-sm btn-whatsapp">
+                                <i class="bi bi-whatsapp"></i> Inquire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listing 6 -->
+            <div class="col-lg-4 col-md-6 listing-item" data-cat="sale house">
+                <div class="prop-card">
+                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#f8bbd9,#f48fb1);font-size:3.5rem;">🏡</div>
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2 flex-wrap">
+                            <span class="badge-sale">For Sale</span>
+                            <span class="badge-type">House</span>
+                        </div>
+                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">160 Sq Yd House — Bahria Town Precinct 10</h5>
+                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Bahria Town Karachi</p>
+                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
+                            <span><i class="bi bi-door-open me-1"></i>4 Beds</span>
+                            <span><i class="bi bi-grid me-1"></i>160 Sq Yd</span>
+                            <span><i class="bi bi-lightning me-1"></i>Solar</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="prop-price">PKR 1.85 Crore</span>
+                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20Bahria%20Town%20house." 
+                               target="_blank" class="btn btn-sm btn-whatsapp">
+                                <i class="bi bi-whatsapp"></i> Inquire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listing 7 -->
+            <div class="col-lg-4 col-md-6 listing-item" data-cat="rent flat">
+                <div class="prop-card">
+                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#c5cae9,#9fa8da);font-size:3.5rem;">🏢</div>
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2 flex-wrap">
+                            <span class="badge-rent">For Rent</span>
+                            <span class="badge-type">Flat</span>
+                        </div>
+                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">1-Bedroom Flat — North Nazimabad Block H</h5>
+                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>North Nazimabad, Karachi</p>
+                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
+                            <span><i class="bi bi-door-open me-1"></i>1 Bed</span>
+                            <span><i class="bi bi-grid me-1"></i>750 sqft</span>
+                            <span><i class="bi bi-droplet me-1"></i>1 Bath</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="prop-price">PKR 22,000/mo</span>
+                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20flat%20in%20North%20Nazimabad." 
+                               target="_blank" class="btn btn-sm btn-whatsapp">
+                                <i class="bi bi-whatsapp"></i> Inquire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listing 8 -->
+            <div class="col-lg-4 col-md-6 listing-item" data-cat="sale flat">
+                <div class="prop-card">
+                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#d7ccc8,#bcaaa4);font-size:3.5rem;">🏢</div>
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2 flex-wrap">
+                            <span class="badge-sale">For Sale</span>
+                            <span class="badge-type">Flat</span>
+                        </div>
+                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">2-Bed Flat — Federal B Area Block 12</h5>
+                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Federal B Area, Karachi</p>
+                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
+                            <span><i class="bi bi-door-open me-1"></i>2 Beds</span>
+                            <span><i class="bi bi-grid me-1"></i>950 sqft</span>
+                            <span><i class="bi bi-check-circle me-1"></i>Registry Ready</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="prop-price">PKR 85 Lakh</span>
+                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20flat%20in%20Federal%20B%20Area." 
+                               target="_blank" class="btn btn-sm btn-whatsapp">
+                                <i class="bi bi-whatsapp"></i> Inquire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listing 9 -->
+            <div class="col-lg-4 col-md-6 listing-item" data-cat="rent house">
+                <div class="prop-card">
+                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#dcedc8,#c5e1a5);font-size:3.5rem;">🏠</div>
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2 flex-wrap">
+                            <span class="badge-rent">For Rent</span>
+                            <span class="badge-type">Upper Portion</span>
+                        </div>
+                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">Upper Portion — Saddar near Empress Market</h5>
+                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Saddar, Karachi</p>
+                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
+                            <span><i class="bi bi-door-open me-1"></i>2 Beds</span>
+                            <span><i class="bi bi-grid me-1"></i>80 Sq Yd</span>
+                            <span><i class="bi bi-bus-front me-1"></i>Bus Stop Nearby</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="prop-price">PKR 28,000/mo</span>
+                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20upper%20portion%20in%20Saddar." 
+                               target="_blank" class="btn btn-sm btn-whatsapp">
+                                <i class="bi bi-whatsapp"></i> Inquire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listing 10 -->
+            <div class="col-lg-4 col-md-6 listing-item" data-cat="sale house">
+                <div class="prop-card">
+                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#ffecb3,#ffe082);font-size:3.5rem;">🏡</div>
+                    <div class="p-3">
+                        <div class="d-flex gap-2 mb-2 flex-wrap">
+                            <span class="badge-sale">For Sale</span>
+                            <span class="badge-type">House</span>
+                        </div>
+                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">200 Sq Yd Corner House — Nazimabad No. 3</h5>
+                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Nazimabad No. 3, Karachi</p>
+                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
+                            <span><i class="bi bi-door-open me-1"></i>5 Beds</span>
+                            <span><i class="bi bi-grid me-1"></i>200 Sq Yd</span>
+                            <span><i class="bi bi-star me-1"></i>Corner Plot</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="prop-price">PKR 2.2 Crore</span>
+                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20corner%20house%20in%20Nazimabad." 
+                               target="_blank" class="btn btn-sm btn-whatsapp">
+                                <i class="bi bi-whatsapp"></i> Inquire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /row -->
+        <div class="text-center mt-4">
+            <a href="{{ url_for('rent_lena') }}" class="btn btn-primary px-5 py-2 me-2">
+                <i class="bi bi-key me-2"></i>{% if lang=='ur' %}تمام کرایہ کی پراپرٹیز{% else %}All Rental Properties{% endif %}
+            </a>
+            <a href="{{ url_for('purchase_lena') }}" class="btn btn-outline-primary px-5 py-2">
+                <i class="bi bi-building me-2"></i>{% if lang=='ur' %}تمام فروخت کی پراپرٹیز{% else %}All Properties for Sale{% endif %}
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     BROWSE BY AREA
+════════════════════════════════════════ -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="sec-title mb-2">{% if lang=='ur' %}علاقے کے مطابق تلاش کریں{% else %}Browse by Area{% endif %}</h2>
+        <p class="text-muted mb-4" style="font-size:.9rem;">{% if lang=='ur' %}کراچی کے مشہور علاقے{% else %}Karachi's most popular neighbourhoods{% endif %}</p>
+        <div class="d-flex flex-wrap">
+            <a href="{{ url_for('search') }}?location=DHA" class="area-chip">🏖️ DHA</a>
+            <a href="{{ url_for('search') }}?location=Gulshan-e-Iqbal" class="area-chip">🌳 Gulshan-e-Iqbal</a>
+            <a href="{{ url_for('search') }}?location=Clifton" class="area-chip">🌊 Clifton</a>
+            <a href="{{ url_for('search') }}?location=PECHS" class="area-chip">🏢 PECHS</a>
+            <a href="{{ url_for('search') }}?location=Gulistan-e-Johar" class="area-chip">🌿 Gulistan-e-Johar</a>
+            <a href="{{ url_for('search') }}?location=Bahria+Town" class="area-chip">🏘️ Bahria Town</a>
+            <a href="{{ url_for('search') }}?location=North+Nazimabad" class="area-chip">🏙️ North Nazimabad</a>
+            <a href="{{ url_for('search') }}?location=Federal+B+Area" class="area-chip">🏛️ Federal B Area</a>
+            <a href="{{ url_for('search') }}?location=Saddar" class="area-chip">🏪 Saddar</a>
+            <a href="{{ url_for('search') }}?location=Nazimabad" class="area-chip">🏠 Nazimabad</a>
+            <a href="{{ url_for('search') }}?location=Korangi" class="area-chip">🏭 Korangi</a>
+            <a href="{{ url_for('search') }}?location=Malir" class="area-chip">🌾 Malir</a>
+            <a href="{{ url_for('search') }}?location=Landhi" class="area-chip">🏗️ Landhi</a>
+            <a href="{{ url_for('search') }}?location=Shah+Faisal" class="area-chip">🛣️ Shah Faisal Colony</a>
+            <a href="{{ url_for('search') }}?location=Akhtar+Colony" class="area-chip">📍 Akhtar Colony</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     4 ACTION CARDS
+════════════════════════════════════════ -->
+<section class="py-5" style="background:var(--light-bg);">
+    <div class="container">
+        <h2 class="sec-title mb-2">{% if lang=='ur' %}ہم کیا پیش کرتے ہیں{% else %}What We Offer{% endif %}</h2>
+        <p class="text-muted mb-4" style="font-size:.9rem;">{% if lang=='ur' %}آپ کی پراپرٹی کی تمام ضروریات ایک جگہ{% else %}All your property needs under one roof{% endif %}</p>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ url_for('rent_lena') }}" class="action-card card-rl">
+                    <span class="c-icon">🔑</span>
+                    <div class="c-title">{% if lang=='ur' %}کرایہ پر گھر لیں{% else %}Rent a Property{% endif %}</div>
+                    <div class="c-sub">{% if lang=='ur' %}فلیٹ، گھر، کمرے — کراچی میں{% else %}Flats, houses & rooms across Karachi{% endif %}</div>
+                    <span class="c-btn">{% if lang=='ur' %}دیکھیں{% else %}Browse{% endif %} →</span>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ url_for('rent_dena') }}" class="action-card card-rd">
+                    <span class="c-icon">🏠</span>
+                    <div class="c-title">{% if lang=='ur' %}اپنی پراپرٹی کرایہ پر دیں{% else %}List for Rent{% endif %}</div>
+                    <div class="c-sub">{% if lang=='ur' %}اپنا گھر یا دکان کرایہ پر دیں{% else %}List your property free in 5 minutes{% endif %}</div>
+                    <span class="c-btn">{% if lang=='ur' %}فہرست بنائیں{% else %}List Now{% endif %} →</span>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ url_for('purchase_lena') }}" class="action-card card-buy">
+                    <span class="c-icon">🏡</span>
+                    <div class="c-title">{% if lang=='ur' %}پراپرٹی خریدیں{% else %}Buy Property{% endif %}</div>
+                    <div class="c-sub">{% if lang=='ur' %}کراچی میں گھر یا پلاٹ خریدیں{% else %}Houses, flats & plots in Karachi{% endif %}</div>
+                    <span class="c-btn">{% if lang=='ur' %}خریدیں{% else %}Buy{% endif %} →</span>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ url_for('sale_dena') }}" class="action-card card-sell">
+                    <span class="c-icon">🏷️</span>
+                    <div class="c-title">{% if lang=='ur' %}پراپرٹی بیچیں{% else %}Sell Property{% endif %}</div>
+                    <div class="c-sub">{% if lang=='ur' %}جلدی اور آسانی سے بیچیں{% else %}Fast, hassle-free property sale{% endif %}</div>
+                    <span class="c-btn">{% if lang=='ur' %}بیچیں{% else %}Sell{% endif %} →</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     TRUST BADGES
+════════════════════════════════════════ -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="sec-title mb-2 text-center" style="display:block;">{% if lang=='ur' %}آپ ہم پر کیوں بھروسہ کریں{% else %}Why Trust ApnaGhar?{% endif %}</h2>
+        <p class="text-muted text-center mb-4" style="font-size:.9rem;">{% if lang=='ur' %}ہمارے ساتھ لاکھوں لوگوں نے گھر بنایا{% else %}Thousands of families trust us in Karachi{% endif %}</p>
+        <div class="row g-3">
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="trust-badge">
+                    <span class="tb-icon">✅</span>
+                    <div class="tb-num">100%</div>
+                    <div class="tb-lbl">Verified Listings</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="trust-badge">
+                    <span class="tb-icon">⚡</span>
+                    <div class="tb-num">24hr</div>
+                    <div class="tb-lbl">Quick Response</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="trust-badge">
+                    <span class="tb-icon">🤝</span>
+                    <div class="tb-num">Free</div>
+                    <div class="tb-lbl">Agent Service</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="trust-badge">
+                    <span class="tb-icon">📄</span>
+                    <div class="tb-num">Legal</div>
+                    <div class="tb-lbl">Docs Help</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="trust-badge">
+                    <span class="tb-icon">🕐</span>
+                    <div class="tb-num">7yr+</div>
+                    <div class="tb-lbl">Experience</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="trust-badge">
+                    <span class="tb-icon">💬</span>
+                    <div class="tb-num">WA</div>
+                    <div class="tb-lbl">Support</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- ═══════════════════════════════════════
+     BLOG PREVIEW
+════════════════════════════════════════ -->
+<section class="py-5" style="background:var(--light-bg);">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+            <div>
+                <h2 class="sec-title mb-0">{% if lang=='ur' %}مفید معلومات{% else %}Property Tips & Guides{% endif %}</h2>
+                <p class="text-muted mt-2 mb-0" style="font-size:.9rem;">{% if lang=='ur' %}کراچی میں پراپرٹی کے بارے میں جانیں{% else %}Learn about Karachi real estate{% endif %}</p>
+            </div>
+            <a href="{{ url_for('blog') }}" class="btn btn-outline-primary btn-sm rounded-pill">
+                {% if lang=='ur' %}تمام پوسٹس{% else %}All Posts{% endif %} <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <a href="{{ url_for('blog_post', slug='rent-vs-buy-karachi-2026') }}" style="text-decoration:none;">
+                    <div class="blog-card">
+                        <div class="bc-img">⚖️</div>
+                        <div class="bc-body">
+                            <span class="bc-tag">Guide</span>
+                            <div class="bc-title">Rent vs Buy in Karachi 2026 — Which Makes More Sense?</div>
+                            <div class="bc-meta"><i class="bi bi-calendar3 me-1"></i>Jan 2026 · 5 min read</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="{{ url_for('blog_post', slug='best-areas-families-karachi') }}" style="text-decoration:none;">
+                    <div class="blog-card">
+                        <div class="bc-img">🗺️</div>
+                        <div class="bc-body">
+                            <span class="bc-tag">Area Guide</span>
+                            <div class="bc-title">Best Areas for Families in Karachi — 2026 Complete Guide</div>
+                            <div class="bc-meta"><i class="bi bi-calendar3 me-1"></i>Feb 2026 · 7 min read</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="{{ url_for('blog_post', slug='rent-agreement-pakistan') }}" style="text-decoration:none;">
+                    <div class="blog-card">
+                        <div class="bc-img">📄</div>
+                        <div class="bc-body">
+                            <span class="bc-tag">Legal</span>
+                            <div class="bc-title">How to Write a Rent Agreement in Pakistan — Step by Step</div>
+                            <div class="bc-meta"><i class="bi bi-calendar3 me-1"></i>Mar 2026 · 6 min read</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CTA BANNER
+════════════════════════════════════════ -->
+<section class="py-5">
+    <div class="container">
+        <div class="offer-box text-center">
+            <h2 style="color:#fff;margin-bottom:12px;">
+                {% if lang=='ur' %}ابھی رابطہ کریں{% else %}Ready to Find Your Property?{% endif %}
+            </h2>
+            <p style="color:rgba(255,255,255,.9);font-size:1.05rem;margin-bottom:24px;">
+                {% if lang=='ur' %}ہمارے ماہر ایجنٹ آپ کی مدد کے لیے تیار ہیں{% else %}Our expert agents in Akhtar Colony are here to help — free of charge.{% endif %}
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="https://wa.me/923111820660?text=Hello%20ApnaGhar%2C%20I%20need%20property%20help." 
+                   target="_blank" class="btn btn-lg px-5" style="background:#fff;color:var(--accent);font-weight:700;">
+                    <i class="bi bi-whatsapp me-2"></i>WhatsApp Now
+                </a>
+                <a href="tel:03111820660" class="btn btn-lg px-5" style="background:rgba(255,255,255,.2);color:#fff;border:2px solid rgba(255,255,255,.5);font-weight:600;">
+                    <i class="bi bi-telephone me-2"></i>0311-1820660
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── Search type tabs ──
+const rentBudgets = [
+    {val:'',txt:'Any Budget'},
+    {val:'0-20000',txt:'Under PKR 20,000/mo'},
+    {val:'20000-40000',txt:'PKR 20k–40k/mo'},
+    {val:'40000-70000',txt:'PKR 40k–70k/mo'},
+    {val:'70000-100000',txt:'PKR 70k–1 Lakh/mo'},
+    {val:'100000+',txt:'Above 1 Lakh/mo'},
+];
+const buyBudgets = [
+    {val:'',txt:'Any Budget'},
+    {val:'0-5000000',txt:'Under 50 Lakh'},
+    {val:'5000000-10000000',txt:'50L – 1 Crore'},
+    {val:'10000000-20000000',txt:'1–2 Crore'},
+    {val:'20000000-40000000',txt:'2–4 Crore'},
+    {val:'40000000+',txt:'Above 4 Crore'},
+];
+
+function populateBudget(opts) {
+    const sel = document.getElementById('budgetSelect');
+    sel.innerHTML = opts.map(o=>`<option value="${o.val}">${o.txt}</option>`).join('');
+}
+
+function setSearchType(type, btn) {
+    document.querySelectorAll('.search-tabs .nav-link').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('searchPurpose').value = type;
+    populateBudget(type==='rent' ? rentBudgets : buyBudgets);
+}
+
+populateBudget(rentBudgets);
+
+// ── Listing filter ──
+document.querySelectorAll('.prop-filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.prop-filter-btn').forEach(b=>{
+            b.classList.remove('btn-primary','active');
+            b.classList.add('btn-outline-secondary');
+        });
+        this.classList.add('btn-primary','active');
+        this.classList.remove('btn-outline-secondary');
+
+        const filter = this.dataset.filter;
+        document.querySelectorAll('.listing-item').forEach(item => {
+            const cats = item.dataset.cat || '';
+            item.style.display = (filter==='all' || cats.includes(filter)) ? '' : 'none';
+        });
+    });
+});
+</script>
 {% endblock %}
