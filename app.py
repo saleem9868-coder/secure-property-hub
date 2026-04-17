@@ -764,37 +764,41 @@ def index():
     conn.close()
     return render_template('index.html', featured_rent=featured_rent, featured_sale=featured_sale, stats=stats)
 
+# ─── SEARCH ───────────────────────────────────────────────────────────────────
+
 @app.route('/search')
 def search():
     conn = get_db()
-    purpose  = request.args.get('purpose', 'rent')   # 'rent' or 'buy'
+    purpose  = request.args.get('purpose', 'rent')
     location = request.args.get('location', '')
     ptype    = request.args.get('type', '')
-    bedrooms = request.args.get('bedrooms', '')
-    price_min = request.args.get('price_min', '')
-    price_max = request.args.get('price_max', '')
+    bedrooms = request.args.get('beds', '')
 
     if purpose == 'buy':
-        q = "SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.is_approved=1"
+        q = ("SELECT s.*, pi.filename FROM sale_properties s "
+             "LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' "
+             "WHERE s.is_approved=1")
         params = []
-        if ptype:    q += " AND s.property_type=?";                        params.append(ptype)
-        if location: q += " AND (s.location LIKE ? OR s.area LIKE ?)";     params += [f'%{location}%', f'%{location}%']
-        if bedrooms: q += " AND s.bedrooms=?";                             params.append(bedrooms)
+        if ptype:    q += " AND s.property_type=?";                     params.append(ptype)
+        if location: q += " AND (s.location LIKE ? OR s.area LIKE ?)";  params += [f'%{location}%', f'%{location}%']
+        if bedrooms: q += " AND s.bedrooms=?";                          params.append(bedrooms)
         q += " GROUP BY s.id ORDER BY s.is_featured DESC, s.created_at DESC"
         props = conn.execute(q, params).fetchall()
         conn.close()
         return render_template('purchase_lena.html', props=props, ptype=ptype, loc=location, bed=bedrooms)
     else:
-        q = "SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.is_approved=1"
+        q = ("SELECT r.*, pi.filename FROM rent_properties r "
+             "LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' "
+             "WHERE r.is_approved=1")
         params = []
-        if ptype:    q += " AND r.property_type=?";                        params.append(ptype)
-        if location: q += " AND (r.location LIKE ? OR r.area LIKE ?)";     params += [f'%{location}%', f'%{location}%']
-        if bedrooms: q += " AND r.bedrooms=?";                             params.append(bedrooms)
+        if ptype:    q += " AND r.property_type=?";                     params.append(ptype)
+        if location: q += " AND (r.location LIKE ? OR r.area LIKE ?)";  params += [f'%{location}%', f'%{location}%']
+        if bedrooms: q += " AND r.bedrooms=?";                          params.append(bedrooms)
         q += " GROUP BY r.id ORDER BY r.is_featured DESC, r.created_at DESC"
         props = conn.execute(q, params).fetchall()
         conn.close()
         return render_template('rent_lena.html', props=props, ptype=ptype, loc=location, bed=bedrooms)
-        
+
 # ─── RENT SECTION ─────────────────────────────────────────────────────────────
 
 @app.route('/kiraya-par-lena')
