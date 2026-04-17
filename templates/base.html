@@ -3,10 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ApnaGhar | اپنا گھر{% endblock %}</title>
-    {% block seo_meta %}
-    <meta name="description" content="ApnaGhar — Karachi's trusted property rental, sale, and document services. Based in Akhtar Colony, Karachi.">
-    {% endblock %}
+
+    <!-- ═══ PRIMARY SEO META ═══ -->
+    <title>{% block title %}ApnaGhar | اپنا گھر — Karachi Property Rental & Sale{% endblock %}</title>
+    <meta name="description"        content="{% block meta_desc %}ApnaGhar — Karachi's most trusted property portal. Rent, buy, or sell homes in Gulshan, DHA, Clifton, PECHS, Bahria Town and more. Call 0311-1820660.{% endblock %}">
+    <meta name="keywords"           content="{% block meta_keys %}property for rent Karachi, house for sale Karachi, ApnaGhar, real estate Karachi, DHA Karachi property, Gulshan property, flat for rent Karachi, Zameen Karachi{% endblock %}">
+    <meta name="author"             content="ApnaGhar — Akhtar Colony, Karachi">
+    <meta name="robots"             content="index, follow">
+    <link rel="canonical"           href="{% block canonical %}{{ request.url }}{% endblock %}">
+
+    <!-- ═══ OPEN GRAPH (Facebook / WhatsApp previews) ═══ -->
+    <meta property="og:type"        content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url"         content="{{ request.url }}">
+    <meta property="og:title"       content="{% block og_title %}ApnaGhar | اپنا گھر — Karachi Property Portal{% endblock %}">
+    <meta property="og:description" content="{% block og_desc %}Rent, buy or sell property in Karachi. Trusted agents in Akhtar Colony. Call 0311-1820660.{% endblock %}">
+    <meta property="og:image"       content="{% block og_image %}{{ request.host_url }}static/og-banner.jpg{% endblock %}">
+    <meta property="og:site_name"   content="ApnaGhar | اپنا گھر">
+    <meta property="og:locale"      content="{{ 'ur_PK' if lang=='ur' else 'en_PK' }}">
+
+    <!-- ═══ TWITTER CARD ═══ -->
+    <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:title"       content="{% block tw_title %}ApnaGhar — Karachi's Property Portal{% endblock %}">
+    <meta name="twitter:description" content="{% block tw_desc %}Rent or buy property in Karachi with ApnaGhar. DHA, Gulshan, Clifton, PECHS and more.{% endblock %}">
+    <meta name="twitter:image"       content="{% block tw_image %}{{ request.host_url }}static/og-banner.jpg{% endblock %}">
+
+    <!-- ═══ SCHEMA.ORG LOCAL BUSINESS ═══ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateAgent",
+      "name": "ApnaGhar | اپنا گھر",
+      "url": "{{ request.host_url }}",
+      "logo": "{{ request.host_url }}static/logo.png",
+      "image": "{{ request.host_url }}static/og-banner.jpg",
+      "description": "Karachi's trusted property rental, sale and document services.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Akhtar Colony",
+        "addressLocality": "Karachi",
+        "addressRegion": "Sindh",
+        "postalCode": "75300",
+        "addressCountry": "PK"
+      },
+      "telephone": "+923111820660",
+      "email": "apnagharkarachi.pk@gmail.com",
+      "openingHours": "Mo-Sa 09:00-20:00",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "24.8607",
+        "longitude": "67.0011"
+      },
+      "areaServed": "Karachi",
+      "sameAs": []
+    }
+    </script>
+
+    {% block extra_seo %}{% endblock %}
+
+    <!-- Favicon -->
+    <link rel="icon" href="/static/logo.png" type="image/png">
+
+    <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@600;700&family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -33,26 +90,11 @@
 
         /* ── Navbar ── */
         .navbar{background:var(--primary)!important;padding:10px 0;box-shadow:0 2px 20px rgba(0,0,0,.15);}
-
-        /* CLEAN BRAND — single logo only */
-        .navbar-brand {
-            display:flex;align-items:center;gap:10px;text-decoration:none;
-        }
-        .navbar-brand .brand-logo {
-            height:46px;width:auto;object-fit:contain;
-        }
-        .navbar-brand .brand-text {
-            display:flex;flex-direction:column;line-height:1.1;
-        }
-        .navbar-brand .brand-urdu {
-            font-family:'Noto Nastaliq Urdu',serif;
-            font-size:1.15rem;font-weight:700;color:#fff;
-        }
-        .navbar-brand .brand-en {
-            font-size:.65rem;color:var(--accent-light);
-            letter-spacing:.5px;font-weight:600;
-        }
-
+        .navbar-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+        .navbar-brand .brand-logo{height:46px;width:auto;object-fit:contain;}
+        .navbar-brand .brand-text{display:flex;flex-direction:column;line-height:1.1;}
+        .navbar-brand .brand-urdu{font-family:'Noto Nastaliq Urdu',serif;font-size:1.15rem;font-weight:700;color:#fff;}
+        .navbar-brand .brand-en{font-size:.65rem;color:var(--accent-light);letter-spacing:.5px;font-weight:600;}
         .nav-link{color:rgba(255,255,255,.88)!important;font-weight:500;padding:6px 10px!important;border-radius:6px;transition:all .2s;font-size:.88rem;white-space:nowrap;}
         .nav-link:hover,.nav-link.active{color:#fff!important;background:rgba(255,255,255,.15);}
         .navbar-toggler{border-color:rgba(255,255,255,.3);}
@@ -104,6 +146,14 @@
         .form-control:focus,.form-select:focus{border-color:var(--primary-light);box-shadow:0 0 0 3px rgba(37,87,167,.12);}
         .form-label{font-weight:500;margin-bottom:4px;font-size:.9rem;}
 
+        /* ── Search Bar ── */
+        .search-hero{background:linear-gradient(135deg,#0d2137 0%,#1a3c5e 60%,#1565c0 100%);padding:70px 0 50px;position:relative;overflow:hidden;}
+        .search-hero::before{content:'';position:absolute;top:-50%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(200,151,58,.15) 0%,transparent 70%);pointer-events:none;}
+        .search-box{background:#fff;border-radius:18px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+        .search-tabs .nav-link{color:#666;font-weight:600;border-radius:8px 8px 0 0;padding:10px 24px;font-size:.9rem;}
+        .search-tabs .nav-link.active{background:var(--primary-light);color:#fff;}
+        .search-tabs{gap:4px;}
+
         /* ── Flash ── */
         .alert{border:none;border-left:4px solid;border-radius:10px;}
         .alert-success{border-left-color:#198754;background:#d1e7dd;}
@@ -113,6 +163,8 @@
 
         /* ── Float WA ── */
         .wa-float{position:fixed;bottom:28px;right:24px;z-index:1000;width:58px;height:58px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.5);text-decoration:none;animation:pulse 2.5s infinite;}
+        .wa-float::after{content:'Chat with us!';position:absolute;right:70px;background:#25d366;color:#fff;padding:5px 12px;border-radius:8px;font-size:.78rem;font-weight:600;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none;}
+        .wa-float:hover::after{opacity:1;}
         .wa-float i{font-size:1.8rem;color:#fff;}
         @keyframes pulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.5)}50%{box-shadow:0 4px 30px rgba(37,211,102,.8)}}
 
@@ -136,6 +188,26 @@
         .st-approved{background:#d1e7dd;color:#0f5132;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;}
         .st-rejected{background:#f8d7da;color:#842029;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;}
 
+        /* ── Trust Badges ── */
+        .trust-badge{background:#fff;border:1px solid var(--card-border);border-radius:14px;padding:20px;text-align:center;transition:all .2s;}
+        .trust-badge:hover{box-shadow:0 8px 25px rgba(0,0,0,.08);transform:translateY(-3px);}
+        .trust-badge .tb-icon{font-size:2.2rem;display:block;margin-bottom:10px;}
+        .trust-badge .tb-num{font-size:1.6rem;font-weight:700;color:var(--primary);font-family:'Playfair Display',serif;}
+        .trust-badge .tb-lbl{font-size:.82rem;color:#666;}
+
+        /* ── Blog Cards ── */
+        .blog-card{border:1px solid var(--card-border);border-radius:14px;overflow:hidden;transition:all .25s;background:#fff;height:100%;}
+        .blog-card:hover{transform:translateY(-4px);box-shadow:0 12px 35px rgba(0,0,0,.1);}
+        .blog-card .bc-img{height:180px;background:linear-gradient(135deg,#e8edf5,#d0d9ec);display:flex;align-items:center;justify-content:center;font-size:3rem;}
+        .blog-card .bc-body{padding:20px;}
+        .blog-card .bc-tag{background:var(--light-bg);color:var(--primary-light);font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;}
+        .blog-card .bc-title{font-size:1rem;font-weight:700;color:#1a2535;margin-bottom:8px;line-height:1.5;}
+        .blog-card .bc-meta{font-size:.78rem;color:#888;}
+
+        /* ── Area Chips ── */
+        .area-chip{display:inline-flex;align-items:center;gap:6px;background:var(--light-bg);border:1px solid var(--card-border);color:var(--primary);border-radius:25px;padding:7px 16px;font-size:.84rem;font-weight:500;text-decoration:none;transition:all .2s;margin:4px;}
+        .area-chip:hover{background:var(--primary);color:#fff;border-color:var(--primary);}
+
         /* ── Footer ── */
         footer{background:var(--primary);color:rgba(255,255,255,.8);padding:45px 0 20px;}
         footer h6{color:#fff;}
@@ -154,25 +226,19 @@
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-
-        <!-- SINGLE CLEAN LOGO -->
         <a class="navbar-brand" href="{{ url_for('index') }}">
             <img src="/static/logo.png" alt="ApnaGhar Logo" class="brand-logo" style="height:52px;width:auto;">
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navMain">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
-
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('index') }}">
                         <i class="bi bi-house me-1"></i>{{ T.nav_home }}
                     </a>
                 </li>
-
-                <!-- Kiraya Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                         <i class="bi bi-key me-1"></i>{{ T.nav_rent }}
@@ -184,8 +250,6 @@
                         <li><a class="dropdown-item" href="{{ url_for('rent_chahiye') }}"><em class="di">📋</em><span class="dt">{{ T.nav_rent_req }}</span></a></li>
                     </ul>
                 </li>
-
-                <!-- Buy/Sell Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                         <i class="bi bi-building me-1"></i>{{ T.nav_buy_sell }}
@@ -197,11 +261,8 @@
                         <li><a class="dropdown-item" href="{{ url_for('purchase_chahiye') }}"><em class="di">📋</em><span class="dt">{{ T.nav_buy_req }}</span></a></li>
                     </ul>
                 </li>
-
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('tenant_verification') }}"><i class="bi bi-person-check me-1"></i>{{ T.nav_verify }}</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('document_services') }}"><i class="bi bi-file-earmark-text me-1"></i>{{ T.nav_docs }}</a></li>
-
-                <!-- Resources Dropdown — Dynamic from DB -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                         <i class="bi bi-info-circle me-1"></i>{% if lang=='ur' %}معلومات{% else %}Resources{% endif %}
@@ -218,7 +279,6 @@
                             </li>
                             {% endfor %}
                         {% else %}
-                            {# Fallback to static links if DB is empty #}
                             <li><a class="dropdown-item" href="{{ url_for('property_laws') }}"><em class="di">⚖️</em><span class="dt">{% if lang=='ur' %}پراپرٹی قوانین{% else %}Property Laws{% endif %}</span></a></li>
                             <li><a class="dropdown-item" href="{{ url_for('calculators') }}"><em class="di">🧮</em><span class="dt">{% if lang=='ur' %}کیلکولیٹر{% else %}Calculators{% endif %}</span></a></li>
                             <li><a class="dropdown-item" href="{{ url_for('area_guide') }}"><em class="di">🗺️</em><span class="dt">{% if lang=='ur' %}کراچی ایریا گائیڈ{% else %}Karachi Area Guide{% endif %}</span></a></li>
@@ -229,7 +289,6 @@
                         {% endif %}
                     </ul>
                 </li>
-
                 {% if session.user_id %}
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}"><i class="bi bi-person-circle me-1"></i>{{ session.user_name.split()[0] }}</a></li>
                 {% if session.is_admin %}<li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('admin_panel') }}"><i class="bi bi-shield me-1"></i>{{ T.nav_admin }}</a></li>{% endif %}
@@ -238,8 +297,6 @@
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">{{ T.nav_login }}</a></li>
                 <li class="nav-item"><a class="nav-link ms-1" href="{{ url_for('register') }}" style="background:var(--accent);border-radius:8px;color:#fff!important;padding:6px 14px!important;font-weight:600;">{{ T.nav_register }}</a></li>
                 {% endif %}
-
-                <!-- Language Toggle -->
                 <li class="nav-item ms-1">
                     <a href="{{ url_for('set_lang', lang=T.switch_code) }}" class="nav-link lang-btn">
                         🌐 {{ T.switch_lang }}
@@ -270,7 +327,6 @@
     <div class="container">
         <div class="row g-4">
             <div class="col-lg-4">
-                <!-- Footer Logo — clean single logo -->
                 <div class="d-flex align-items-center gap-2 mb-3">
                     <img src="/static/logo.png" alt="ApnaGhar" style="height:42px;width:auto;">
                     <div>
@@ -329,7 +385,13 @@
     </div>
 </footer>
 
-<a href="https://wa.me/923111820660?text=Hello%2C%20ApnaGhar%20se%20rabta%20karna%20chahta%20hoon." target="_blank" class="wa-float"><i class="bi bi-whatsapp"></i></a>
+<!-- ✅ WhatsApp Float Button — pulsing with tooltip -->
+<a href="https://wa.me/923111820660?text=Hello%20ApnaGhar%2C%20I%20need%20help%20with%20a%20property%20in%20Karachi." 
+   target="_blank" 
+   class="wa-float" 
+   title="Chat with us on WhatsApp!">
+    <i class="bi bi-whatsapp"></i>
+</a>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 {% block extra_js %}{% endblock %}
