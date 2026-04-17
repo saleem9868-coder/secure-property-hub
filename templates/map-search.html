@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Map Search — ApnaGhar Karachi</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1a6b45;--green-mid:#2d8a5a;--green-light:#e8f5ee;--green-xlight:#f2faf6;
+  --accent:#f4a623;--gray-50:#f9f9f7;--gray-100:#f0efe9;--gray-200:#e0dfd7;
+  --gray-400:#a0a097;--gray-600:#5a5a54;--gray-800:#2c2c28;--white:#fff;
+  --radius:10px;--radius-lg:16px;
+  --shadow-sm:0 1px 4px rgba(0,0,0,.07);--shadow-md:0 4px 20px rgba(0,0,0,.10);--shadow-lg:0 8px 40px rgba(0,0,0,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--gray-800);height:100vh;overflow:hidden;display:flex;flex-direction:column;}
+
+/* NAV */
+nav{background:var(--white);border-bottom:1px solid var(--gray-200);padding:0 16px;display:flex;align-items:center;gap:12px;height:56px;flex-shrink:0;z-index:100;box-shadow:var(--shadow-sm);}
+.logo{font-family:'Playfair Display',serif;font-size:20px;color:var(--green);text-decoration:none;}
+.logo span{color:var(--accent);}
+.nav-spacer{flex:1;}
+.nav-pill{font-size:12px;font-weight:500;padding:5px 12px;border-radius:16px;border:1.5px solid var(--gray-200);background:var(--white);color:var(--gray-600);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.nav-pill.active,.nav-pill:hover{border-color:var(--green);color:var(--green);}
+.nav-pill.filled{background:var(--green);color:#fff;border-color:var(--green);}
+
+/* SEARCH BAR */
+.search-bar{background:var(--white);border-bottom:1px solid var(--gray-200);padding:10px 16px;display:flex;gap:8px;align-items:center;flex-shrink:0;flex-wrap:wrap;z-index:90;}
+.search-input-wrap{flex:2;min-width:160px;position:relative;}
+.search-input{width:100%;border:1.5px solid var(--gray-200);border-radius:8px;padding:9px 12px 9px 34px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--gray-800);outline:none;transition:border-color .15s;}
+.search-input:focus{border-color:var(--green);}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none;}
+.filter-select{flex:1;min-width:110px;border:1.5px solid var(--gray-200);border-radius:8px;padding:9px 10px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--gray-800);background:var(--white);cursor:pointer;outline:none;}
+.search-btn{background:var(--green);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background .15s;white-space:nowrap;}
+.search-btn:hover{background:var(--green-mid);}
+
+/* LAYOUT */
+.map-layout{flex:1;display:flex;overflow:hidden;}
+
+/* LISTINGS PANEL */
+.listings-panel{width:380px;flex-shrink:0;background:var(--white);border-right:1px solid var(--gray-200);display:flex;flex-direction:column;overflow:hidden;}
+.panel-header{padding:12px 16px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.panel-count{font-size:13px;color:var(--gray-600);}
+.panel-count strong{color:var(--gray-800);}
+.sort-mini{font-size:12px;border:none;background:none;color:var(--green);font-family:'DM Sans',sans-serif;cursor:pointer;}
+.listings-scroll{flex:1;overflow-y:auto;padding:12px;}
+.listings-scroll::-webkit-scrollbar{width:4px;}
+.listings-scroll::-webkit-scrollbar-thumb{background:var(--gray-200);border-radius:2px;}
+
+/* LIST CARDS */
+.list-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:10px;cursor:pointer;transition:all .2s;display:flex;gap:0;}
+.list-card:hover,.list-card.active{border-color:var(--green);box-shadow:0 0 0 2px rgba(26,107,69,.15);}
+.list-card.active{background:var(--green-xlight);}
+.list-card-img{width:100px;flex-shrink:0;background:linear-gradient(135deg,#e8f5ee,#d0eadc);display:flex;align-items:center;justify-content:center;font-size:28px;position:relative;}
+.list-card-badge{position:absolute;top:6px;left:6px;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;background:var(--green);color:#fff;}
+.list-card-body{flex:1;padding:10px 12px;}
+.list-card-price{font-size:15px;font-weight:600;color:var(--green);}
+.list-card-title{font-size:12px;font-weight:500;color:var(--gray-800);margin:2px 0;line-height:1.3;}
+.list-card-loc{font-size:11px;color:var(--gray-400);display:flex;align-items:center;gap:3px;}
+.list-card-feats{display:flex;gap:8px;margin-top:6px;}
+.list-card-feat{font-size:11px;color:var(--gray-500);}
+.list-card-save{padding:4px;background:none;border:none;cursor:pointer;font-size:14px;align-self:flex-start;margin-left:auto;}
+
+/* MAP AREA */
+.map-area{flex:1;position:relative;overflow:hidden;background:#e8f0e8;}
+
+/* SVG MAP */
+.map-svg{width:100%;height:100%;position:absolute;inset:0;}
+
+/* AREA LABELS */
+.area-zone{cursor:pointer;transition:all .2s;}
+.area-zone:hover .zone-fill{opacity:.35;}
+.area-zone.highlighted .zone-fill{opacity:.45;}
+
+/* MAP PINS */
+.map-pin-group{cursor:pointer;transition:transform .2s;}
+.map-pin-group:hover{transform:scale(1.15);}
+.map-pin-group.active-pin{transform:scale(1.25);}
+.pin-bubble{filter:drop-shadow(0 3px 6px rgba(0,0,0,.25));}
+
+/* MAP CONTROLS */
+.map-controls{position:absolute;top:16px;right:16px;display:flex;flex-direction:column;gap:8px;z-index:10;}
+.map-ctrl-btn{width:36px;height:36px;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;box-shadow:var(--shadow-sm);transition:all .15s;}
+.map-ctrl-btn:hover{box-shadow:var(--shadow-md);background:var(--green-xlight);}
+
+/* MAP TYPE TOGGLE */
+.map-type-toggle{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;background:var(--white);border:1px solid var(--gray-200);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-md);z-index:10;}
+.map-type-btn{padding:7px 16px;font-size:12px;font-weight:500;border:none;background:transparent;cursor:pointer;color:var(--gray-600);font-family:'DM Sans',sans-serif;transition:all .15s;}
+.map-type-btn.active{background:var(--green);color:#fff;}
+
+/* PROPERTY POPUP */
+.prop-popup{position:absolute;background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);width:240px;padding:0;overflow:hidden;z-index:20;transition:all .2s;display:none;border:1px solid var(--gray-200);}
+.prop-popup.visible{display:block;}
+.popup-img{height:110px;background:linear-gradient(135deg,#e8f5ee,#d0eadc);display:flex;align-items:center;justify-content:center;font-size:40px;position:relative;}
+.popup-close{position:absolute;top:6px;right:6px;background:rgba(255,255,255,.9);border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.popup-body{padding:12px 14px;}
+.popup-price{font-size:16px;font-weight:600;color:var(--green);}
+.popup-title{font-size:13px;font-weight:500;margin:3px 0;color:var(--gray-800);}
+.popup-loc{font-size:12px;color:var(--gray-400);}
+.popup-feats{display:flex;gap:10px;margin:8px 0;}
+.popup-feat{font-size:12px;color:var(--gray-600);}
+.popup-btns{display:flex;gap:6px;}
+.popup-btn{flex:1;padding:8px;border-radius:8px;border:none;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;}
+.popup-wa{background:#25D366;color:#fff;}
+.popup-view{background:var(--green);color:#fff;}
+
+/* CLUSTER */
+.cluster-circle{cursor:pointer;transition:transform .2s;}
+.cluster-circle:hover{transform:scale(1.1);}
+
+/* DRAW MODE BANNER */
+.draw-banner{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:500;display:none;z-index:10;box-shadow:var(--shadow-md);}
+.draw-banner.visible{display:block;}
+
+/* LEGEND */
+.map-legend{position:absolute;bottom:70px;right:16px;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:10px 12px;font-size:12px;box-shadow:var(--shadow-sm);z-index:10;}
+.legend-item{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.legend-item:last-child{margin-bottom:0;}
+.legend-dot{width:10px;height:10px;border-radius:50%;}
+
+/* MOBILE TOGGLE */
+.mobile-map-toggle{display:none;position:fixed;bottom:20px;right:20px;z-index:200;background:var(--green);color:#fff;border:none;border-radius:30px;padding:12px 20px;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;box-shadow:0 6px 24px rgba(26,107,69,.4);cursor:pointer;}
+
+@media(max-width:800px){
+  .listings-panel{width:100%;position:absolute;bottom:0;left:0;right:0;height:55%;border-right:none;border-top:1px solid var(--gray-200);border-radius:20px 20px 0 0;z-index:50;transform:translateY(calc(100% - 60px));transition:transform .3s;box-shadow:0 -4px 20px rgba(0,0,0,.12);}
+  .listings-panel.open{transform:translateY(0);}
+  .map-layout{position:relative;}
+  .map-area{width:100%;}
+  .mobile-map-toggle{display:block;}
+  .panel-header{cursor:pointer;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Apna<span>Ghar</span></a>
+  <div class="nav-spacer"></div>
+  <button class="nav-pill active">🗺️ Map View</button>
+  <button class="nav-pill" onclick="window.location='apnaghar-filters.html'">☰ List View</button>
+  <button class="nav-pill filled">+ List Property</button>
+</nav>
+
+<!-- SEARCH BAR -->
+<div class="search-bar">
+  <div class="search-input-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" placeholder="Search area, block or society..." id="mapSearch">
+  </div>
+  <select class="filter-select" onchange="filterPins()">
+    <option value="all">All Types</option>
+    <option value="rent">For Rent</option>
+    <option value="buy">For Sale</option>
+  </select>
+  <select class="filter-select" onchange="filterPins()">
+    <option>Any Price</option>
+    <option>Under 50K/mo</option>
+    <option>50K–1L/mo</option>
+    <option>1L+/mo</option>
+    <option>Under 1 Cr</option>
+    <option>1–3 Crore</option>
+  </select>
+  <select class="filter-select">
+    <option>Any Type</option>
+    <option>Flat</option>
+    <option>House</option>
+    <option>Plot</option>
+    <option>Shop</option>
+  </select>
+  <button class="search-btn">Search</button>
+  <button class="nav-pill" onclick="toggleDraw()" id="drawBtn" title="Draw search area">✏️ Draw Area</button>
+</div>
+
+<div class="map-layout">
+
+  <!-- LISTINGS PANEL -->
+  <div class="listings-panel" id="listingsPanel">
+    <div class="panel-header" onclick="toggleMobilePanel()">
+      <span class="panel-count"><strong id="panelCount">24</strong> properties found</span>
+      <select class="sort-mini">
+        <option>Latest first</option>
+        <option>Price ↑</option>
+        <option>Price ↓</option>
+      </select>
+    </div>
+    <div class="listings-scroll" id="listingsScroll">
+      <!-- Dynamically generated by JS -->
+    </div>
+  </div>
+
+  <!-- MAP AREA -->
+  <div class="map-area" id="mapArea">
+
+    <!-- SVG MAP OF KARACHI (stylised) -->
+    <svg class="map-svg" viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg" id="mainMap">
+      <defs>
+        <pattern id="mapGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" fill="none" stroke="#c8dcc8" stroke-width="0.5"/>
+        </pattern>
+        <pattern id="roadPat" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="#e0ead0"/>
+        </pattern>
+      </defs>
+
+      <!-- Background -->
+      <rect width="900" height="700" fill="#dce8d4"/>
+      <rect width="900" height="700" fill="url(#mapGrid)"/>
+
+      <!-- Sea / Water -->
+      <ellipse cx="820" cy="600" rx="200" ry="180" fill="#b8d4e8" opacity=".7"/>
+      <ellipse cx="750" cy="680" rx="250" ry="120" fill="#b8d4e8" opacity=".6"/>
+      <text x="780" y="620" font-size="12" fill="#6a94b4" font-family="DM Sans,sans-serif" font-weight="500">Arabian Sea</text>
+
+      <!-- Roads (major arteries) -->
+      <g stroke="#f5f0e0" stroke-width="5" fill="none" opacity=".9">
+        <path d="M0 280 Q200 270 400 260 Q600 250 900 240"/><!-- University Rd -->
+        <path d="M0 380 Q300 370 500 360 Q700 350 900 340"/><!-- main road 2 -->
+        <path d="M200 0 Q210 200 220 400 Q230 550 240 700"/><!-- N-S artery 1 -->
+        <path d="M400 0 Q410 200 420 350 Q430 500 440 700"/><!-- N-S artery 2 -->
+        <path d="M600 0 Q605 200 610 380 Q615 500 620 650"/><!-- N-S artery 3 -->
+      </g>
+      <g stroke="#ece8d8" stroke-width="2.5" fill="none" opacity=".6">
+        <path d="M0 180 Q400 175 900 170"/>
+        <path d="M0 480 Q400 475 900 470"/>
+        <path d="M100 0 Q105 350 110 700"/>
+        <path d="M320 0 Q325 350 330 700"/>
+        <path d="M520 0 Q525 350 530 700"/>
+        <path d="M720 0 Q720 350 720 650"/>
+      </g>
+
+      <!-- AREA ZONES with labels -->
+      <!-- DHA -->
+      <g class="area-zone" onclick="zoomArea('DHA',660,450)" id="zone-DHA">
+        <ellipse cx="670" cy="460" rx="110" ry="80" class="zone-fill" fill="#1a6b45" opacity=".18" stroke="#1a6b45" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="670" y="455" text-anchor="middle" font-size="12" font-weight="600" fill="#1a6b45" font-family="DM Sans,sans-serif">DHA</text>
+        <text x="670" y="470" text-anchor="middle" font-size="10" fill="#2d8a5a" font-family="DM Sans,sans-serif">42 listings</text>
+      </g>
+      <!-- Clifton -->
+      <g class="area-zone" onclick="zoomArea('Clifton',620,540)" id="zone-Clifton">
+        <ellipse cx="625" cy="545" rx="80" ry="55" class="zone-fill" fill="#1a4b8a" opacity=".15" stroke="#1a4b8a" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="625" y="540" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4b8a" font-family="DM Sans,sans-serif">Clifton</text>
+        <text x="625" y="555" text-anchor="middle" font-size="10" fill="#3a6aba" font-family="DM Sans,sans-serif">38 listings</text>
+      </g>
+      <!-- Gulshan -->
+      <g class="area-zone" onclick="zoomArea('Gulshan',380,280)" id="zone-Gulshan">
+        <ellipse cx="385" cy="285" rx="95" ry="70" class="zone-fill" fill="#8a4b1a" opacity=".15" stroke="#8a4b1a" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="385" y="280" text-anchor="middle" font-size="11" font-weight="600" fill="#8a4b1a" font-family="DM Sans,sans-serif">Gulshan-e-Iqbal</text>
+        <text x="385" y="296" text-anchor="middle" font-size="10" fill="#ba6a3a" font-family="DM Sans,sans-serif">67 listings</text>
+      </g>
+      <!-- PECHS -->
+      <g class="area-zone" onclick="zoomArea('PECHS',490,390)" id="zone-PECHS">
+        <ellipse cx="490" cy="395" rx="75" ry="55" class="zone-fill" fill="#4b1a8a" opacity=".15" stroke="#4b1a8a" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="490" y="390" text-anchor="middle" font-size="11" font-weight="600" fill="#4b1a8a" font-family="DM Sans,sans-serif">PECHS</text>
+        <text x="490" y="406" text-anchor="middle" font-size="10" fill="#6a3aba" font-family="DM Sans,sans-serif">29 listings</text>
+      </g>
+      <!-- Gulistan Johar -->
+      <g class="area-zone" onclick="zoomArea('Gulistan-e-Johar',250,220)" id="zone-Johar">
+        <ellipse cx="250" cy="225" rx="90" ry="65" class="zone-fill" fill="#1a6b6b" opacity=".15" stroke="#1a6b6b" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="250" y="218" text-anchor="middle" font-size="10" font-weight="600" fill="#1a6b6b" font-family="DM Sans,sans-serif">Gulistan-e-Johar</text>
+        <text x="250" y="234" text-anchor="middle" font-size="10" fill="#2a9b9b" font-family="DM Sans,sans-serif">51 listings</text>
+      </g>
+      <!-- North Nazimabad -->
+      <g class="area-zone" onclick="zoomArea('North Nazimabad',320,160)" id="zone-NNaz">
+        <ellipse cx="320" cy="165" rx="80" ry="55" class="zone-fill" fill="#6b1a1a" opacity=".15" stroke="#6b1a1a" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="320" y="158" text-anchor="middle" font-size="10" font-weight="600" fill="#6b1a1a" font-family="DM Sans,sans-serif">North Nazimabad</text>
+        <text x="320" y="174" text-anchor="middle" font-size="10" fill="#9b3a3a" font-family="DM Sans,sans-serif">33 listings</text>
+      </g>
+      <!-- Bahria -->
+      <g class="area-zone" onclick="zoomArea('Bahria Town',120,120)" id="zone-Bahria">
+        <ellipse cx="120" cy="120" rx="90" ry="65" class="zone-fill" fill="#6b6b1a" opacity=".15" stroke="#6b6b1a" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="120" y="115" text-anchor="middle" font-size="11" font-weight="600" fill="#6b6b1a" font-family="DM Sans,sans-serif">Bahria Town</text>
+        <text x="120" y="131" text-anchor="middle" font-size="10" fill="#9b9b3a" font-family="DM Sans,sans-serif">44 listings</text>
+      </g>
+      <!-- Korangi -->
+      <g class="area-zone" onclick="zoomArea('Korangi',700,300)" id="zone-Korangi">
+        <ellipse cx="700" cy="300" rx="75" ry="55" class="zone-fill" fill="#1a4b1a" opacity=".13" stroke="#1a4b1a" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="700" y="295" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4b1a" font-family="DM Sans,sans-serif">Korangi</text>
+        <text x="700" y="311" text-anchor="middle" font-size="10" fill="#3a7a3a" font-family="DM Sans,sans-serif">18 listings</text>
+      </g>
+
+      <!-- PROPERTY PINS -->
+      <g id="pinsLayer"></g>
+
+    </svg>
+
+    <!-- PROPERTY POPUP -->
+    <div class="prop-popup" id="propPopup">
+      <div class="popup-img" id="popupImg">🏢
+        <button class="popup-close" onclick="closePopup()">×</button>
+      </div>
+      <div class="popup-body">
+        <div class="popup-price" id="popupPrice">PKR 45,000/mo</div>
+        <div class="popup-title" id="popupTitle">3-Bed Flat, Gulshan Block 13D</div>
+        <div class="popup-loc" id="popupLoc">📍 Gulshan-e-Iqbal</div>
+        <div class="popup-feats">
+          <span class="popup-feat">🛏 3</span>
+          <span class="popup-feat">🚿 2</span>
+          <span class="popup-feat">📐 1400 sqft</span>
+        </div>
+        <div class="popup-btns">
+          <button class="popup-btn popup-wa" onclick="window.open('https://wa.me/923111820660')">💬 WhatsApp</button>
+          <button class="popup-btn popup-view" onclick="window.location='property-detail.html'">View →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAP CONTROLS -->
+    <div class="map-controls">
+      <div class="map-ctrl-btn" onclick="zoom(1.2)" title="Zoom in">＋</div>
+      <div class="map-ctrl-btn" onclick="zoom(0.8)" title="Zoom out">－</div>
+      <div class="map-ctrl-btn" onclick="resetView()" title="Reset">⊙</div>
+      <div class="map-ctrl-btn" title="My location">📍</div>
+    </div>
+
+    <!-- MAP TYPE TOGGLE -->
+    <div class="map-type-toggle">
+      <button class="map-type-btn active" onclick="setMapType(this,'street')">🗺 Street</button>
+      <button class="map-type-btn" onclick="setMapType(this,'satellite')">🛰 Satellite</button>
+      <button class="map-type-btn" onclick="setMapType(this,'transit')">🚌 Transit</button>
+    </div>
+
+    <!-- DRAW BANNER -->
+    <div class="draw-banner" id="drawBanner">✏️ Click and drag to draw search area</div>
+
+    <!-- LEGEND -->
+    <div class="map-legend">
+      <div style="font-size:11px;font-weight:600;color:var(--gray-600);margin-bottom:6px;">Legend</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1a6b45"></div><span>For Rent</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1a4b8a"></div><span>For Sale</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div><span>Multiple</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MOBILE TOGGLE -->
+<button class="mobile-map-toggle" id="mobileToggle" onclick="toggleMobilePanel()">☰ 24 listings</button>
+
+<script>
+// PROPERTY DATA
+const properties = [
+  {id:1,title:"3-Bed Flat, Gulshan 13D",price:"PKR 45,000/mo",type:"rent",area:"Gulshan-e-Iqbal",beds:3,baths:2,sqft:1400,x:360,y:260,emoji:"🏢",color:"#1a6b45"},
+  {id:2,title:"240 Sq Yd House, DHA Ph6",price:"PKR 4.5 Crore",type:"buy",area:"DHA",beds:4,baths:3,sqft:3200,x:650,y:440,emoji:"🏡",color:"#1a4b8a"},
+  {id:3,title:"2-Bed Flat, PECHS Block 2",price:"PKR 38,000/mo",type:"rent",area:"PECHS",beds:2,baths:2,sqft:1100,x:470,y:370,emoji:"🏢",color:"#1a6b45"},
+  {id:4,title:"Luxury 3-Bed, Clifton B5",price:"PKR 2.8 Crore",type:"buy",area:"Clifton",beds:3,baths:2,sqft:2000,x:600,y:520,emoji:"🏢",color:"#1a4b8a"},
+  {id:5,title:"120 Yd House, G-e-Johar",price:"PKR 55,000/mo",type:"rent",area:"Gulistan-e-Johar",beds:3,baths:2,sqft:1800,x:230,y:200,emoji:"🏠",color:"#1a6b45"},
+  {id:6,title:"160 Yd House, Bahria",price:"PKR 1.85 Crore",type:"buy",area:"Bahria Town",beds:4,baths:3,sqft:2800,x:100,y:110,emoji:"🏡",color:"#1a4b8a"},
+  {id:7,title:"1-Bed Flat, North Nazimabad",price:"PKR 22,000/mo",type:"rent",area:"North Nazimabad",beds:1,baths:1,sqft:750,x:300,y:145,emoji:"🏢",color:"#1a6b45"},
+  {id:8,title:"2-Bed Flat, Federal B Area",price:"PKR 85 Lakh",type:"buy",area:"Federal B Area",beds:2,baths:1,sqft:950,x:400,y:155,emoji:"🏢",color:"#1a4b8a"},
+  {id:9,title:"Upper Portion, Saddar",price:"PKR 28,000/mo",type:"rent",area:"Saddar",beds:2,baths:1,sqft:800,x:490,y:455,emoji:"🏠",color:"#1a6b45"},
+  {id:10,title:"200 Yd Corner, Nazimabad",price:"PKR 2.2 Crore",type:"buy",area:"Nazimabad",beds:5,baths:3,sqft:2400,x:350,y:340,emoji:"🏡",color:"#1a4b8a"},
+  {id:11,title:"3-Bed Flat, Gulshan B7",price:"PKR 42,000/mo",type:"rent",area:"Gulshan-e-Iqbal",beds:3,baths:2,sqft:1300,x:410,y:295,emoji:"🏢",color:"#1a6b45"},
+  {id:12,title:"Plot 240 Yd, DHA Ph4",price:"PKR 3.2 Crore",type:"buy",area:"DHA",beds:0,baths:0,sqft:2880,x:700,y:480,emoji:"🏗️",color:"#1a4b8a"},
+  {id:13,title:"Shop, Korangi Industrial",price:"PKR 35,000/mo",type:"rent",area:"Korangi",beds:0,baths:1,sqft:600,x:690,y:280,emoji:"🏪",color:"#1a6b45"},
+  {id:14,title:"4-Bed House, Gulshan B5",price:"PKR 70,000/mo",type:"rent",area:"Gulshan-e-Iqbal",beds:4,baths:3,sqft:2000,x:375,y:238,emoji:"🏠",color:"#1a6b45"},
+];
+
+let activePin = null;
+let drawMode = false;
+
+// RENDER PINS
+function renderPins(data) {
+  const layer = document.getElementById('pinsLayer');
+  layer.innerHTML = '';
+  data.forEach(p => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','map-pin-group');
+    g.setAttribute('id','pin-'+p.id);
+    g.setAttribute('transform',`translate(${p.x},${p.y})`);
+    g.onclick = () => showPopup(p);
+
+    // bubble
+    const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x','-38'); rect.setAttribute('y','-16');
+    rect.setAttribute('width','76'); rect.setAttribute('height','32');
+    rect.setAttribute('rx','16');
+    rect.setAttribute('fill',p.color);
+    rect.setAttribute('class','pin-bubble');
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('text-anchor','middle');
+    text.setAttribute('y','6');
+    text.setAttribute('font-size','11');
+    text.setAttribute('font-weight','600');
+    text.setAttribute('fill','#fff');
+    text.setAttribute('font-family','DM Sans,sans-serif');
+    text.textContent = p.price.replace('PKR ','');
+
+    // tail
+    const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    poly.setAttribute('points','-5,16 5,16 0,24');
+    poly.setAttribute('fill',p.color);
+
+    g.appendChild(rect); g.appendChild(text); g.appendChild(poly);
+    layer.appendChild(g);
+  });
+}
+
+// SHOW POPUP
+function showPopup(p) {
+  if(activePin) document.getElementById('pin-'+activePin)?.classList.remove('active-pin');
+  activePin = p.id;
+  document.getElementById('pin-'+p.id)?.classList.add('active-pin');
+
+  // highlight list card
+  document.querySelectorAll('.list-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('card-'+p.id)?.classList.add('active');
+  document.getElementById('card-'+p.id)?.scrollIntoView({behavior:'smooth',block:'nearest'});
+
+  document.getElementById('popupPrice').textContent = p.price;
+  document.getElementById('popupTitle').textContent = p.title;
+  document.getElementById('popupLoc').textContent = '📍 '+p.area;
+  document.getElementById('popupImg').childNodes[0].textContent = p.emoji;
+
+  const popup = document.getElementById('propPopup');
+  const mapRect = document.getElementById('mapArea').getBoundingClientRect();
+  const svgEl = document.getElementById('mainMap');
+  const vb = svgEl.viewBox.baseVal;
+  const scaleX = svgEl.clientWidth / vb.width;
+  const scaleY = svgEl.clientHeight / vb.height;
+  let left = p.x * scaleX - 120;
+  let top = p.y * scaleY - 220;
+  left = Math.max(8, Math.min(left, mapRect.width - 250));
+  top = Math.max(8, Math.min(top, mapRect.height - 320));
+  popup.style.left = left+'px';
+  popup.style.top = top+'px';
+  popup.classList.add('visible');
+}
+
+function closePopup() {
+  document.getElementById('propPopup').classList.remove('visible');
+  if(activePin) { document.getElementById('pin-'+activePin)?.classList.remove('active-pin'); activePin=null; }
+}
+
+// RENDER LIST
+function renderList(data) {
+  const scroll = document.getElementById('listingsScroll');
+  scroll.innerHTML = '';
+  document.getElementById('panelCount').textContent = data.length;
+  document.getElementById('mobileToggle').textContent = '☰ '+data.length+' listings';
+  data.forEach(p => {
+    const div = document.createElement('div');
+    div.className='list-card';
+    div.id='card-'+p.id;
+    div.innerHTML=`
+      <div class="list-card-img" style="background:linear-gradient(135deg,${p.color}22,${p.color}44)">
+        ${p.emoji}
+        <span class="list-card-badge" style="background:${p.color}">${p.type==='rent'?'Rent':'Sale'}</span>
+      </div>
+      <div class="list-card-body">
+        <div style="display:flex;align-items:flex-start">
+          <div style="flex:1">
+            <div class="list-card-price">${p.price}</div>
+            <div class="list-card-title">${p.title}</div>
+            <div class="list-card-loc">📍 ${p.area}</div>
+            <div class="list-card-feats">
+              ${p.beds?`<span class="list-card-feat">🛏 ${p.beds}</span>`:''}
+              ${p.baths?`<span class="list-card-feat">🚿 ${p.baths}</span>`:''}
+              <span class="list-card-feat">📐 ${p.sqft} sqft</span>
+            </div>
+          </div>
+          <button class="list-card-save" onclick="event.stopPropagation();this.textContent=this.textContent==='🤍'?'❤️':'🤍'">🤍</button>
+        </div>
+      </div>`;
+    div.onclick = () => showPopup(p);
+    scroll.appendChild(div);
+  });
+}
+
+// FILTER
+function filterPins() {
+  renderPins(properties);
+  renderList(properties);
+}
+
+// ZOOM AREA
+function zoomArea(area, x, y) {
+  document.querySelectorAll('.area-zone').forEach(z => z.classList.remove('highlighted'));
+  document.getElementById('zone-'+area.split(' ')[0])?.classList.add('highlighted');
+  const filtered = properties.filter(p => p.area.includes(area.split(' ')[0]));
+  if(filtered.length) renderList(filtered);
+  closePopup();
+}
+
+// ZOOM CONTROLS
+function zoom(factor) {
+  const svg = document.getElementById('mainMap');
+  const vb = svg.viewBox.baseVal;
+  const cx = vb.x + vb.width/2, cy = vb.y + vb.height/2;
+  const nw = vb.width/factor, nh = vb.height/factor;
+  svg.setAttribute('viewBox',`${cx-nw/2} ${cy-nh/2} ${nw} ${nh}`);
+}
+function resetView() {
+  document.getElementById('mainMap').setAttribute('viewBox','0 0 900 700');
+  renderList(properties);
+  closePopup();
+}
+
+// MAP TYPE
+function setMapType(btn, type) {
+  document.querySelectorAll('.map-type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const bg = {street:'#dce8d4',satellite:'#2c3e2c',transit:'#e8e4d4'};
+  document.querySelector('#mainMap rect').setAttribute('fill', bg[type]);
+}
+
+// DRAW MODE
+let drawMode2 = false;
+function toggleDraw() {
+  drawMode2 = !drawMode2;
+  document.getElementById('drawBanner').classList.toggle('visible', drawMode2);
+  document.getElementById('drawBtn').classList.toggle('active', drawMode2);
+  document.getElementById('mainMap').style.cursor = drawMode2 ? 'crosshair' : '';
+}
+
+// MOBILE PANEL
+function toggleMobilePanel() {
+  document.getElementById('listingsPanel').classList.toggle('open');
+}
+
+// CLOSE popup on map click
+document.getElementById('mapArea').addEventListener('click', e => {
+  if(!e.target.closest('.map-pin-group') && !e.target.closest('.prop-popup') && !e.target.closest('.area-zone')) closePopup();
+});
+
+// INIT
+renderPins(properties);
+renderList(properties);
+</script>
+</body>
+</html>

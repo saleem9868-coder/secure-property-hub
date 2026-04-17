@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ApnaGhar Android App — Screen Designs</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1a6b45;--green-mid:#2d8a5a;--green-light:#e8f5ee;
+  --accent:#f4a623;--accent-light:#fff8ec;
+  --gray-50:#f9f9f7;--gray-100:#f0efe9;--gray-200:#e0dfd7;
+  --gray-400:#a0a097;--gray-600:#5a5a54;--gray-800:#2c2c28;--white:#fff;
+  --phone-w:320px;--phone-h:640px;
+  --radius:10px;--radius-lg:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--gray-800);padding-bottom:60px;}
+
+/* PAGE HEADER */
+.page-header{background:linear-gradient(135deg,#1a6b45,#0f4a2e);padding:36px 24px 30px;text-align:center;color:#fff;}
+.page-title{font-family:'Playfair Display',serif;font-size:30px;margin-bottom:6px;}
+.page-sub{font-size:14px;opacity:.7;margin-bottom:20px;}
+.screen-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.stab{padding:7px 16px;border-radius:20px;border:1.5px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.7);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.stab.active,.stab:hover{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.6);}
+
+/* SCREENS AREA */
+.screens-area{max-width:1280px;margin:0 auto;padding:36px 24px;}
+
+.screen-section{display:none;}
+.screen-section.active{display:flex;gap:40px;flex-wrap:wrap;justify-content:center;align-items:flex-start;}
+
+/* PHONE FRAME */
+.phone-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
+.phone-label{font-size:13px;font-weight:600;color:var(--gray-600);text-align:center;}
+.phone-frame{width:var(--phone-w);background:#111;border-radius:40px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.05),inset 0 0 0 2px #333;position:relative;}
+.phone-frame::before{content:'';position:absolute;top:18px;left:50%;transform:translateX(-50%);width:80px;height:5px;background:#222;border-radius:3px;z-index:10;}
+.phone-screen{width:100%;border-radius:30px;overflow:hidden;background:var(--white);position:relative;}
+.phone-screen-inner{height:var(--phone-h);overflow:hidden;position:relative;font-family:'DM Sans',sans-serif;}
+
+/* STATUS BAR */
+.status-bar{background:inherit;padding:8px 16px 4px;display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:600;color:inherit;}
+
+/* BOTTOM NAV */
+.bottom-nav{position:absolute;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--gray-200);display:flex;padding:6px 0 8px;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;opacity:.5;transition:opacity .15s;}
+.bnav-item.active{opacity:1;color:var(--green);}
+.bnav-icon{font-size:20px;}
+.bnav-label{font-size:9px;font-weight:600;}
+
+/* ======================== SCREEN 1: SPLASH / ONBOARDING ======================== */
+.splash-bg{height:100%;background:linear-gradient(160deg,#1a6b45 0%,#0f4a2e 60%,#0a3020 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;color:#fff;text-align:center;position:relative;overflow:hidden;}
+.splash-circles{position:absolute;inset:0;}
+.splash-circle{position:absolute;border-radius:50%;background:rgba(255,255,255,.04);}
+.splash-logo-icon{font-size:56px;margin-bottom:10px;}
+.splash-logo-text{font-family:'Playfair Display',serif;font-size:32px;margin-bottom:4px;}
+.splash-logo-text span{color:var(--accent);}
+.splash-tagline{font-size:13px;opacity:.65;margin-bottom:50px;}
+.splash-btns{width:100%;display:flex;flex-direction:column;gap:10px;}
+.splash-btn{width:100%;padding:14px;border-radius:14px;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;border:none;cursor:pointer;transition:all .15s;}
+.splash-btn-primary{background:var(--accent);color:#fff;}
+.splash-btn-secondary{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.25);}
+.splash-skip{font-size:12px;opacity:.5;margin-top:14px;cursor:pointer;}
+
+/* ======================== SCREEN 2: HOME FEED ======================== */
+.home-screen{height:100%;background:var(--gray-50);display:flex;flex-direction:column;overflow:hidden;}
+.home-header{background:linear-gradient(135deg,#1a6b45,#0f4a2e);padding:16px 16px 20px;color:#fff;flex-shrink:0;}
+.home-greeting{font-size:12px;opacity:.7;margin-bottom:2px;}
+.home-title{font-size:18px;font-weight:600;font-family:'Playfair Display',serif;margin-bottom:14px;}
+.home-search-bar{background:rgba(255,255,255,.15);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.7);}
+.home-scroll{flex:1;overflow-y:auto;padding:12px 12px 80px;scrollbar-width:none;}
+.home-scroll::-webkit-scrollbar{display:none;}
+.section-hdr{display:flex;justify-content:space-between;align-items:center;margin:14px 0 10px;}
+.section-hdr-title{font-size:13px;font-weight:600;color:var(--gray-800);}
+.section-hdr-link{font-size:11px;color:var(--green);font-weight:500;}
+.purpose-chips{display:flex;gap:8px;margin-bottom:2px;}
+.pchip{padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600;border:1.5px solid var(--gray-200);background:var(--white);color:var(--gray-600);white-space:nowrap;}
+.pchip.active{background:var(--green);color:#fff;border-color:var(--green);}
+.area-chips-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.area-chips-row::-webkit-scrollbar{display:none;}
+.area-chip{flex-shrink:0;padding:5px 12px;border-radius:14px;font-size:11px;font-weight:500;background:var(--white);border:1px solid var(--gray-200);color:var(--gray-600);}
+.area-chip.active{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.prop-card-h{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200);overflow:hidden;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.prop-card-img-h{height:130px;background:linear-gradient(135deg,#e8f5ee,#c8e8d0);display:flex;align-items:center;justify-content:center;font-size:44px;position:relative;}
+.ph-badge{position:absolute;top:8px;left:8px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;background:var(--green);color:#fff;}
+.ph-save{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.9);border:none;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;}
+.prop-card-body-h{padding:10px 12px;}
+.ph-price{font-size:15px;font-weight:600;color:var(--green);}
+.ph-title{font-size:12px;font-weight:500;color:var(--gray-800);margin:2px 0;}
+.ph-loc{font-size:11px;color:var(--gray-400);}
+.ph-feats{display:flex;gap:8px;margin-top:7px;padding-top:7px;border-top:1px solid var(--gray-100);}
+.ph-feat{font-size:10px;color:var(--gray-600);}
+
+/* ======================== SCREEN 3: SEARCH + FILTERS ======================== */
+.search-screen{height:100%;background:var(--white);display:flex;flex-direction:column;}
+.search-header{padding:14px 16px;border-bottom:1px solid var(--gray-100);}
+.search-input-row{display:flex;gap:8px;align-items:center;background:var(--gray-50);border-radius:12px;padding:9px 12px;}
+.si-icon{font-size:14px;color:var(--gray-400);}
+.si-text{font-size:13px;color:var(--gray-400);}
+.filter-row{display:flex;gap:7px;overflow-x:auto;padding:10px 16px;border-bottom:1px solid var(--gray-100);scrollbar-width:none;}
+.filter-row::-webkit-scrollbar{display:none;}
+.filter-pill{flex-shrink:0;padding:6px 12px;border-radius:16px;font-size:11px;font-weight:500;border:1.5px solid var(--gray-200);background:var(--white);color:var(--gray-600);}
+.filter-pill.active{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.results-list{flex:1;overflow-y:auto;padding:10px 12px 80px;scrollbar-width:none;}
+.results-list::-webkit-scrollbar{display:none;}
+.result-card{display:flex;gap:0;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:9px;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.rc-img{width:95px;background:linear-gradient(135deg,#e8f5ee,#c8e8d0);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;position:relative;}
+.rc-badge{position:absolute;top:6px;left:6px;font-size:9px;font-weight:600;padding:2px 5px;border-radius:4px;background:var(--green);color:#fff;}
+.rc-body{flex:1;padding:9px 10px;}
+.rc-price{font-size:13px;font-weight:600;color:var(--green);}
+.rc-title{font-size:11px;font-weight:500;color:var(--gray-800);margin:2px 0;line-height:1.3;}
+.rc-loc{font-size:10px;color:var(--gray-400);}
+.rc-feats{display:flex;gap:6px;margin-top:5px;}
+.rc-feat{font-size:10px;color:var(--gray-600);}
+.map-btn-fab{position:absolute;bottom:70px;right:14px;background:var(--green);color:#fff;border:none;border-radius:24px;padding:10px 16px;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(26,107,69,.4);cursor:pointer;}
+
+/* ======================== SCREEN 4: PROPERTY DETAIL ======================== */
+.detail-screen{height:100%;background:var(--white);display:flex;flex-direction:column;}
+.detail-img{height:200px;background:linear-gradient(135deg,#1a6b45,#0f4a2e);display:flex;align-items:center;justify-content:center;font-size:64px;position:relative;flex-shrink:0;}
+.detail-back{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.9);border:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:500;cursor:pointer;}
+.detail-save-btn{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.9);border:none;border-radius:20px;padding:5px 10px;font-size:12px;font-weight:500;cursor:pointer;}
+.img-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:4px;}
+.img-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5);}
+.img-dot.active{background:#fff;width:16px;border-radius:3px;}
+.detail-scroll{flex:1;overflow-y:auto;padding:14px 14px 90px;scrollbar-width:none;}
+.detail-scroll::-webkit-scrollbar{display:none;}
+.detail-price{font-size:20px;font-weight:600;color:var(--green);}
+.detail-title{font-size:14px;font-weight:600;margin:4px 0 4px;}
+.detail-loc{font-size:11px;color:var(--gray-400);margin-bottom:12px;}
+.detail-stats{display:flex;background:var(--gray-50);border-radius:var(--radius);padding:10px;gap:0;margin-bottom:14px;}
+.ds-item{flex:1;text-align:center;border-right:1px solid var(--gray-200);}
+.ds-item:last-child{border-right:none;}
+.ds-icon{font-size:16px;display:block;}
+.ds-val{font-size:12px;font-weight:600;}
+.ds-lbl{font-size:9px;color:var(--gray-400);}
+.detail-section{margin-bottom:14px;}
+.detail-section-title{font-size:12px;font-weight:600;margin-bottom:8px;color:var(--gray-800);}
+.detail-desc{font-size:11px;color:var(--gray-600);line-height:1.65;}
+.amenity-wrap{display:flex;flex-wrap:wrap;gap:6px;}
+.am-chip{font-size:10px;padding:4px 9px;border-radius:12px;background:var(--green-light);color:var(--green);font-weight:500;}
+.detail-cta{position:absolute;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--gray-200);padding:10px 12px;display:flex;gap:8px;}
+.d-cta-btn{flex:1;padding:12px;border-radius:10px;border:none;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;}
+.d-wa{background:#25D366;color:#fff;}
+.d-call{background:var(--green);color:#fff;}
+
+/* ======================== SCREEN 5: PROFILE / DASHBOARD ======================== */
+.profile-screen{height:100%;background:var(--gray-50);display:flex;flex-direction:column;overflow:hidden;}
+.profile-header{background:linear-gradient(135deg,#1a6b45,#0f4a2e);padding:20px 16px 24px;color:#fff;text-align:center;flex-shrink:0;}
+.profile-avatar{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 10px;border:2px solid rgba(255,255,255,.4);}
+.profile-name{font-size:16px;font-weight:600;margin-bottom:2px;}
+.profile-email{font-size:11px;opacity:.65;}
+.profile-stats-row{display:flex;background:var(--white);border-radius:var(--radius-lg);margin:12px 16px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.ps-item{flex:1;text-align:center;padding:12px 6px;border-right:1px solid var(--gray-100);}
+.ps-item:last-child{border-right:none;}
+.ps-val{font-size:16px;font-weight:600;color:var(--green);}
+.ps-lbl{font-size:10px;color:var(--gray-400);}
+.profile-scroll{flex:1;overflow-y:auto;padding:0 16px 80px;scrollbar-width:none;}
+.profile-scroll::-webkit-scrollbar{display:none;}
+.menu-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200);overflow:hidden;margin-bottom:12px;}
+.menu-item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:background .12s;}
+.menu-item:last-child{border-bottom:none;}
+.menu-item:hover{background:var(--gray-50);}
+.menu-icon{font-size:18px;width:32px;height:32px;border-radius:8px;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.menu-text{flex:1;}
+.menu-title{font-size:13px;font-weight:500;color:var(--gray-800);}
+.menu-sub{font-size:11px;color:var(--gray-400);}
+.menu-arrow{font-size:14px;color:var(--gray-400);}
+.menu-badge{font-size:10px;background:var(--green);color:#fff;padding:2px 7px;border-radius:10px;font-weight:600;}
+
+/* ======================== DESCRIPTION PANELS ======================== */
+.desc-panel{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200);padding:24px;max-width:320px;}
+.dp-title{font-size:17px;font-weight:600;margin-bottom:8px;color:var(--gray-800);}
+.dp-text{font-size:13px;color:var(--gray-600);line-height:1.65;margin-bottom:14px;}
+.dp-feature{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;}
+.dp-feat-icon{font-size:16px;margin-top:1px;}
+.dp-feat-text{font-size:12px;color:var(--gray-600);line-height:1.5;}
+.dp-feat-text strong{color:var(--gray-800);font-weight:600;display:block;margin-bottom:1px;}
+
+/* OVERALL LAYOUT */
+.two-col{display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap;justify-content:center;}
+.screen-title-area{text-align:center;margin-bottom:32px;}
+.screen-title-area h2{font-family:'Playfair Display',serif;font-size:24px;color:var(--gray-800);margin-bottom:6px;}
+.screen-title-area p{font-size:14px;color:var(--gray-600);}
+
+@media(max-width:700px){
+  :root{--phone-w:280px;--phone-h:560px;}
+  .desc-panel{max-width:100%;}
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-title">ApnaGhar Android App</div>
+  <div class="page-sub">Complete screen designs — ready for development</div>
+  <div class="screen-tabs">
+    <button class="stab active" onclick="showScreen('splash',this)">1. Splash</button>
+    <button class="stab" onclick="showScreen('home',this)">2. Home</button>
+    <button class="stab" onclick="showScreen('search',this)">3. Search</button>
+    <button class="stab" onclick="showScreen('detail',this)">4. Detail</button>
+    <button class="stab" onclick="showScreen('profile',this)">5. Profile</button>
+  </div>
+</div>
+
+<div class="screens-area">
+
+<!-- ==================== SCREEN 1: SPLASH ==================== -->
+<div class="screen-section active" id="screen-splash">
+  <div class="screen-title-area" style="width:100%">
+    <h2>Splash / Onboarding Screen</h2>
+    <p>First impression — users see this when they open the app for the first time</p>
+  </div>
+  <div class="two-col">
+
+    <div class="phone-wrap">
+      <div class="phone-label">Splash Screen</div>
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-screen-inner">
+            <div class="splash-bg">
+              <div class="splash-circles">
+                <div class="splash-circle" style="width:300px;height:300px;top:-100px;right:-80px;"></div>
+                <div class="splash-circle" style="width:200px;height:200px;bottom:80px;left:-60px;"></div>
+              </div>
+              <div class="splash-logo-icon">🏡</div>
+              <div class="splash-logo-text">Apna<span>Ghar</span></div>
+              <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:14px;opacity:.5;margin:-4px 0 4px">اپنا گھر</div>
+              <div class="splash-tagline">Karachi's trusted property portal<br>Rent · Buy · Sell</div>
+              <div class="splash-btns">
+                <button class="splash-btn splash-btn-primary">Get Started</button>
+                <button class="splash-btn splash-btn-secondary">I already have an account</button>
+              </div>
+              <div class="splash-skip">Skip for now →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phone-wrap">
+      <div class="phone-label">Onboarding Step 1</div>
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-screen-inner" style="background:#f2faf6;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;">
+            <div style="font-size:70px;margin-bottom:20px;">🗺️</div>
+            <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--green);margin-bottom:10px;">Search on Map</div>
+            <div style="font-size:13px;color:var(--gray-600);line-height:1.65;margin-bottom:30px;">Browse 500+ verified properties across Karachi's top areas — visually on a live map.</div>
+            <div style="display:flex;gap:6px;margin-bottom:24px;">
+              <div style="width:22px;height:5px;border-radius:3px;background:var(--green)"></div>
+              <div style="width:8px;height:5px;border-radius:3px;background:var(--gray-200)"></div>
+              <div style="width:8px;height:5px;border-radius:3px;background:var(--gray-200)"></div>
+            </div>
+            <button style="width:100%;padding:14px;border-radius:14px;background:var(--green);color:#fff;border:none;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;">Next →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc-panel">
+      <div class="dp-title">Splash Screen</div>
+      <div class="dp-text">The first screen users see. Clean, branded, and welcoming.</div>
+      <div class="dp-feature"><div class="dp-feat-icon">🏡</div><div class="dp-feat-text"><strong>Logo + branding</strong>ApnaGhar logo with Urdu tagline for local trust</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">📲</div><div class="dp-feat-text"><strong>Two entry points</strong>New user onboarding or direct login for returning users</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">🎨</div><div class="dp-feat-text"><strong>Brand colour</strong>Deep green gradient — consistent with the website</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">⚡</div><div class="dp-feat-text"><strong>3-step onboarding</strong>Map search → Verified listings → WhatsApp contact</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 2: HOME ==================== -->
+<div class="screen-section" id="screen-home">
+  <div class="screen-title-area" style="width:100%">
+    <h2>Home Feed Screen</h2>
+    <p>Main feed after login — personalised, easy to browse</p>
+  </div>
+  <div class="two-col">
+    <div class="phone-wrap">
+      <div class="phone-label">Home Feed</div>
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-screen-inner">
+            <div class="home-screen">
+              <div class="home-header">
+                <div class="status-bar" style="color:rgba(255,255,255,.8)"><span>9:41</span><span>●●●● 📶 🔋</span></div>
+                <div class="home-greeting">Good morning, Ahmed 👋</div>
+                <div class="home-title">Find Your Perfect Home</div>
+                <div class="home-search-bar">🔍 Search area, type, price...</div>
+              </div>
+              <div class="home-scroll">
+                <div class="section-hdr"><span class="section-hdr-title">What are you looking for?</span></div>
+                <div class="purpose-chips">
+                  <div class="pchip active">🔑 Rent</div>
+                  <div class="pchip">🏡 Buy</div>
+                  <div class="pchip">🏷️ Sell</div>
+                </div>
+                <div class="section-hdr" style="margin-top:14px"><span class="section-hdr-title">Browse by Area</span><span class="section-hdr-link">See all</span></div>
+                <div class="area-chips-row">
+                  <div class="area-chip active">DHA</div>
+                  <div class="area-chip">Gulshan</div>
+                  <div class="area-chip">Clifton</div>
+                  <div class="area-chip">PECHS</div>
+                  <div class="area-chip">Bahria</div>
+                </div>
+                <div class="section-hdr" style="margin-top:14px"><span class="section-hdr-title">Latest Properties</span><span class="section-hdr-link">View all</span></div>
+                <div class="prop-card-h">
+                  <div class="prop-card-img-h">🏢<span class="ph-badge">Rent</span><button class="ph-save">🤍</button></div>
+                  <div class="prop-card-body-h">
+                    <div class="ph-price">PKR 45,000<span style="font-size:10px;font-weight:400;color:var(--gray-400)">/mo</span></div>
+                    <div class="ph-title">3-Bed Flat, Gulshan Block 13D</div>
+                    <div class="ph-loc">📍 Gulshan-e-Iqbal, Karachi</div>
+                    <div class="ph-feats"><span class="ph-feat">🛏 3</span><span class="ph-feat">🚿 2</span><span class="ph-feat">📐 1400sqft</span></div>
+                  </div>
+                </div>
+                <div class="prop-card-h">
+                  <div class="prop-card-img-h" style="background:linear-gradient(135deg,#e8eef5,#c8d8ec)">🏡<span class="ph-badge" style="background:#1a4b8a">Sale</span><button class="ph-save">🤍</button></div>
+                  <div class="prop-card-body-h">
+                    <div class="ph-price">PKR 4.5 Crore</div>
+                    <div class="ph-title">240 Sq Yd House, DHA Phase 6</div>
+                    <div class="ph-loc">📍 DHA, Karachi</div>
+                    <div class="ph-feats"><span class="ph-feat">🛏 4</span><span class="ph-feat">🅿️ Parking</span><span class="ph-feat">📐 240yd</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="bottom-nav">
+                <div class="bnav-item active"><div class="bnav-icon">🏠</div><div class="bnav-label" style="color:var(--green)">Home</div></div>
+                <div class="bnav-item"><div class="bnav-icon">🔍</div><div class="bnav-label">Search</div></div>
+                <div class="bnav-item"><div class="bnav-icon">🗺️</div><div class="bnav-label">Map</div></div>
+                <div class="bnav-item"><div class="bnav-icon">❤️</div><div class="bnav-label">Saved</div></div>
+                <div class="bnav-item"><div class="bnav-icon">👤</div><div class="bnav-label">Profile</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc-panel">
+      <div class="dp-title">Home Feed</div>
+      <div class="dp-text">Personalised feed with purpose toggle, area chips, and latest listings.</div>
+      <div class="dp-feature"><div class="dp-feat-icon">👋</div><div class="dp-feat-text"><strong>Personalised greeting</strong>User's name shown to build connection</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">🔑</div><div class="dp-feat-text"><strong>Rent / Buy / Sell toggle</strong>Purpose toggle at the very top for quick switching</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">🗺️</div><div class="dp-feat-text"><strong>Area quick-filter chips</strong>Tap DHA, Gulshan, Clifton etc. to filter instantly</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">🏠</div><div class="dp-feat-text"><strong>Bottom Navigation</strong>Home · Search · Map · Saved · Profile — 5 core sections</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">🔔</div><div class="dp-feat-text"><strong>Push notifications</strong>Alert when new listings match saved search criteria</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 3: SEARCH ==================== -->
+<div class="screen-section" id="screen-search">
+  <div class="screen-title-area" style="width:100%">
+    <h2>Search & Filter Screen</h2>
+    <p>OLX-style comprehensive filtering on mobile</p>
+  </div>
+  <div class="two-col">
+    <div class="phone-wrap">
+      <div class="phone-label">Search Results</div>
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-screen-inner">
+            <div class="search-screen" style="position:relative">
+              <div class="status-bar" style="background:var(--white)"><span>9:41</span><span>📶 🔋</span></div>
+              <div class="search-header">
+                <div class="search-input-row">
+                  <span class="si-icon">🔍</span>
+                  <span class="si-text">Gulshan-e-Iqbal · 3 Beds · Rent</span>
+                </div>
+              </div>
+              <div class="filter-row">
+                <div class="filter-pill active">🔑 Rent</div>
+                <div class="filter-pill active">Gulshan</div>
+                <div class="filter-pill">3 BHK</div>
+                <div class="filter-pill">Under 50K</div>
+                <div class="filter-pill">⚙ More</div>
+              </div>
+              <div style="padding:8px 12px;font-size:11px;color:var(--gray-600)"><strong>47 properties</strong> · Sort: Latest</div>
+              <div class="results-list">
+                <div class="result-card">
+                  <div class="rc-img">🏢<span class="rc-badge">Rent</span></div>
+                  <div class="rc-body">
+                    <div class="rc-price">PKR 45,000/mo</div>
+                    <div class="rc-title">3-Bed Flat, Gulshan Block 13D</div>
+                    <div class="rc-loc">📍 Gulshan-e-Iqbal</div>
+                    <div class="rc-feats"><span class="rc-feat">🛏 3</span><span class="rc-feat">🚿 2</span><span class="rc-feat">📐 1400sqft</span></div>
+                  </div>
+                </div>
+                <div class="result-card">
+                  <div class="rc-img" style="background:linear-gradient(135deg,#f5f0e8,#ece0c8)">🏠<span class="rc-badge">Rent</span></div>
+                  <div class="rc-body">
+                    <div class="rc-price">PKR 55,000/mo</div>
+                    <div class="rc-title">3-Bed House, Gulshan Block 5</div>
+                    <div class="rc-loc">📍 Gulshan-e-Iqbal</div>
+                    <div class="rc-feats"><span class="rc-feat">🛏 3</span><span class="rc-feat">🅿️ Parking</span><span class="rc-feat">📐 1800sqft</span></div>
+                  </div>
+                </div>
+                <div class="result-card">
+                  <div class="rc-img" style="background:linear-gradient(135deg,#e8eef5,#c8d8ec)">🏢<span class="rc-badge">Rent</span></div>
+                  <div class="rc-body">
+                    <div class="rc-price">PKR 42,000/mo</div>
+                    <div class="rc-title">3-Bed Flat, Gulshan Block 7</div>
+                    <div class="rc-loc">📍 Gulshan-e-Iqbal</div>
+                    <div class="rc-feats"><span class="rc-feat">🛏 3</span><span class="rc-feat">🌐 Fiber</span><span class="rc-feat">📐 1300sqft</span></div>
+                  </div>
+                </div>
+                <div class="result-card">
+                  <div class="rc-img" style="background:linear-gradient(135deg,#f5e8f5,#ecc8ec)">🏢<span class="rc-badge">Rent</span></div>
+                  <div class="rc-body">
+                    <div class="rc-price">PKR 48,000/mo</div>
+                    <div class="rc-title">3-Bed Flat, Gulshan Block 10</div>
+                    <div class="rc-loc">📍 Gulshan-e-Iqbal</div>
+                    <div class="rc-feats"><span class="rc-feat">🛏 3</span><span class="rc-feat">⚡ Gen</span><span class="rc-feat">📐 1500sqft</span></div>
+                  </div>
+                </div>
+              </div>
+              <button class="map-btn-fab">🗺️ Map View</button>
+              <div class="bottom-nav">
+                <div class="bnav-item"><div class="bnav-icon">🏠</div><div class="bnav-label">Home</div></div>
+                <div class="bnav-item active"><div class="bnav-icon">🔍</div><div class="bnav-label" style="color:var(--green)">Search</div></div>
+                <div class="bnav-item"><div class="bnav-icon">🗺️</div><div class="bnav-label">Map</div></div>
+                <div class="bnav-item"><div class="bnav-icon">❤️</div><div class="bnav-label">Saved</div></div>
+                <div class="bnav-item"><div class="bnav-icon">👤</div><div class="bnav-label">Profile</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc-panel">
+      <div class="dp-title">Search + Filters</div>
+      <div class="dp-text">Full OLX-style filtering adapted for Pakistani property market.</div>
+      <div class="dp-feature"><div class="dp-feat-icon">⚙️</div><div class="dp-feat-text"><strong>Active filter pills</strong>Current filters shown as removable chips at the top</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">🗺️</div><div class="dp-feat-text"><strong>Switch to Map button</strong>Floating "Map View" button to jump to map mode</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">📋</div><div class="dp-feat-text"><strong>Compact list cards</strong>Image + price + title + features in one row for quick scanning</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">🔽</div><div class="dp-feat-text"><strong>Bottom sheet filters</strong>Full filter panel slides up from bottom (like OLX)</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">📊</div><div class="dp-feat-text"><strong>Sort options</strong>Latest / Price Low-High / Highest Rated / Most Viewed</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 4: DETAIL ==================== -->
+<div class="screen-section" id="screen-detail">
+  <div class="screen-title-area" style="width:100%">
+    <h2>Property Detail Screen</h2>
+    <p>Full property info with WhatsApp CTA always visible</p>
+  </div>
+  <div class="two-col">
+    <div class="phone-wrap">
+      <div class="phone-label">Property Detail</div>
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-screen-inner">
+            <div class="detail-screen" style="position:relative">
+              <div class="detail-img">🏢
+                <button class="detail-back">← Back</button>
+                <button class="detail-save-btn">🤍 Save</button>
+                <div class="img-dots">
+                  <div class="img-dot active"></div>
+                  <div class="img-dot"></div>
+                  <div class="img-dot"></div>
+                  <div class="img-dot"></div>
+                </div>
+              </div>
+              <div class="detail-scroll">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+                  <div class="detail-price">PKR 45,000<span style="font-size:11px;font-weight:400;color:var(--gray-400)">/mo</span></div>
+                  <span style="font-size:10px;background:var(--green);color:#fff;padding:3px 8px;border-radius:10px;font-weight:600">✓ Verified</span>
+                </div>
+                <div class="detail-title">3-Bedroom Flat — Gulshan Block 13D</div>
+                <div class="detail-loc">📍 Gulshan-e-Iqbal, Block 13D, Karachi</div>
+                <div class="detail-stats">
+                  <div class="ds-item"><span class="ds-icon">🛏️</span><span class="ds-val">3</span><span class="ds-lbl">Beds</span></div>
+                  <div class="ds-item"><span class="ds-icon">🚿</span><span class="ds-val">2</span><span class="ds-lbl">Baths</span></div>
+                  <div class="ds-item"><span class="ds-icon">📐</span><span class="ds-val">1400</span><span class="ds-lbl">Sqft</span></div>
+                  <div class="ds-item"><span class="ds-icon">🏢</span><span class="ds-val">4th</span><span class="ds-lbl">Floor</span></div>
+                </div>
+                <div class="detail-section">
+                  <div class="detail-section-title">Description</div>
+                  <div class="detail-desc">Spacious 3-bedroom flat on 4th floor with lift, generator backup and parking. Located near Karachi University. Ideal for families.</div>
+                </div>
+                <div class="detail-section">
+                  <div class="detail-section-title">Amenities</div>
+                  <div class="amenity-wrap">
+                    <div class="am-chip">🅿️ Parking</div>
+                    <div class="am-chip">⚡ Generator</div>
+                    <div class="am-chip">🛗 Lift</div>
+                    <div class="am-chip">📹 CCTV</div>
+                    <div class="am-chip">🌐 Internet</div>
+                    <div class="am-chip">💧 Water 24/7</div>
+                  </div>
+                </div>
+                <div class="detail-section">
+                  <div class="detail-section-title">Agent</div>
+                  <div style="display:flex;align-items:center;gap:10px;background:var(--gray-50);padding:10px;border-radius:var(--radius);">
+                    <div style="width:38px;height:38px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:18px;border:1.5px solid var(--green);">👨</div>
+                    <div><div style="font-size:13px;font-weight:500">Muhammad Asif</div><div style="font-size:10px;color:var(--gray-400)">★★★★★ · Verified Agent</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="detail-cta">
+                <button class="d-cta-btn d-wa">💬 WhatsApp</button>
+                <button class="d-cta-btn d-call">📞 Call</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc-panel">
+      <div class="dp-title">Property Detail</div>
+      <div class="dp-text">All property info in one scrollable screen with sticky CTA buttons.</div>
+      <div class="dp-feature"><div class="dp-feat-icon">📸</div><div class="dp-feat-text"><strong>Photo gallery</strong>Swipeable full-width photos with dot indicators</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">✅</div><div class="dp-feat-text"><strong>Verified badge</strong>Prominently shown if ApnaGhar has verified the property</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">📊</div><div class="dp-feat-text"><strong>Stats row</strong>Beds, baths, sqft, floor — at a glance</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">💬</div><div class="dp-feat-text"><strong>Sticky WhatsApp + Call</strong>Always visible at the bottom — never hidden by scroll</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">🗺️</div><div class="dp-feat-text"><strong>Mini map</strong>Location shown with nearby schools, hospitals, mosques</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCREEN 5: PROFILE ==================== -->
+<div class="screen-section" id="screen-profile">
+  <div class="screen-title-area" style="width:100%">
+    <h2>Profile / Dashboard Screen</h2>
+    <p>User account, listings management, and services</p>
+  </div>
+  <div class="two-col">
+    <div class="phone-wrap">
+      <div class="phone-label">User Profile</div>
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-screen-inner">
+            <div class="profile-screen">
+              <div class="status-bar" style="background:#1a6b45;color:rgba(255,255,255,.8)"><span>9:41</span><span>📶 🔋</span></div>
+              <div class="profile-header">
+                <div class="profile-avatar">👨</div>
+                <div class="profile-name">Ahmed Raza</div>
+                <div class="profile-email">ahmed.raza@gmail.com · Karachi</div>
+              </div>
+              <div class="profile-stats-row">
+                <div class="ps-item"><div class="ps-val">3</div><div class="ps-lbl">My Listings</div></div>
+                <div class="ps-item"><div class="ps-val">12</div><div class="ps-lbl">Saved</div></div>
+                <div class="ps-item"><div class="ps-val">5</div><div class="ps-lbl">Inquiries</div></div>
+              </div>
+              <div class="profile-scroll">
+                <div class="menu-card">
+                  <div class="menu-item"><div class="menu-icon">🏠</div><div class="menu-text"><div class="menu-title">My Listings</div><div class="menu-sub">Manage your posted properties</div></div><span class="menu-arrow">›</span></div>
+                  <div class="menu-item"><div class="menu-icon">➕</div><div class="menu-text"><div class="menu-title">Post New Property</div><div class="menu-sub">Free listing in 5 minutes</div></div><span class="menu-arrow">›</span></div>
+                  <div class="menu-item"><div class="menu-icon">❤️</div><div class="menu-text"><div class="menu-title">Saved Properties</div><div class="menu-sub">12 properties saved</div></div><span class="menu-arrow">›</span></div>
+                </div>
+                <div class="menu-card">
+                  <div class="menu-item"><div class="menu-icon">🔍</div><div class="menu-text"><div class="menu-title">Tenant Verification</div><div class="menu-sub">Verify background before renting</div></div><span class="menu-badge">PKR 500</span></div>
+                  <div class="menu-item"><div class="menu-icon">📄</div><div class="menu-text"><div class="menu-title">Document Services</div><div class="menu-sub">Rent agreement, legal docs</div></div><span class="menu-arrow">›</span></div>
+                  <div class="menu-item"><div class="menu-icon">🧮</div><div class="menu-text"><div class="menu-title">Rent Calculator</div><div class="menu-sub">Budget, affordability tools</div></div><span class="menu-arrow">›</span></div>
+                </div>
+                <div class="menu-card">
+                  <div class="menu-item"><div class="menu-icon">⚙️</div><div class="menu-text"><div class="menu-title">Settings</div><div class="menu-sub">Notifications, language, privacy</div></div><span class="menu-arrow">›</span></div>
+                  <div class="menu-item"><div class="menu-icon">📞</div><div class="menu-text"><div class="menu-title">Contact Support</div><div class="menu-sub">WhatsApp · 0311-1820660</div></div><span class="menu-arrow">›</span></div>
+                </div>
+              </div>
+              <div class="bottom-nav">
+                <div class="bnav-item"><div class="bnav-icon">🏠</div><div class="bnav-label">Home</div></div>
+                <div class="bnav-item"><div class="bnav-icon">🔍</div><div class="bnav-label">Search</div></div>
+                <div class="bnav-item"><div class="bnav-icon">🗺️</div><div class="bnav-label">Map</div></div>
+                <div class="bnav-item"><div class="bnav-icon">❤️</div><div class="bnav-label">Saved</div></div>
+                <div class="bnav-item active"><div class="bnav-icon">👤</div><div class="bnav-label" style="color:var(--green)">Profile</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc-panel">
+      <div class="dp-title">Profile Dashboard</div>
+      <div class="dp-text">User's personal hub for managing everything in one place.</div>
+      <div class="dp-feature"><div class="dp-feat-icon">📊</div><div class="dp-feat-text"><strong>Quick stats bar</strong>My Listings, Saved, Inquiries at a glance</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">🏠</div><div class="dp-feat-text"><strong>Listing management</strong>View, edit, or delete posted properties</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">🔍</div><div class="dp-feat-text"><strong>Tenant verification</strong>Direct access to the unique ApnaGhar service</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">📄</div><div class="dp-feat-text"><strong>Document services</strong>Rent agreement, legal help — all in app</div></div>
+      <div class="dp-feature"><div class="dp-feat-icon">🌐</div><div class="dp-feat-text"><strong>Language toggle</strong>Switch between English and Urdu in settings</div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /screens-area -->
+
+<script>
+function showScreen(id, btn) {
+  document.querySelectorAll('.screen-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
