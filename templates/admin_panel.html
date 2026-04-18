@@ -441,7 +441,7 @@
                             {% for row in daily_chart %}
                             <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
                                 <div style="width:100%;background:var(--primary-light);border-radius:4px 4px 0 0;height:{{ ((row.cnt / max_cnt) * 100)|int }}px;min-height:4px;" data-bs-toggle="tooltip" title="{{ row.cnt }} views on {{ row.day }}"></div>
-                                <small style="font-size:.55rem;color:#888;writing-mode:vertical-rl;transform:rotate(180deg);">{{ row.day[5:] }}</small>
+                                <small style="font-size:.55rem;color:#888;writing-mode:vertical-rl;transform:rotate(180deg);">{{ row.day.strftime("%m-%d") if row.day else "" }}</small>
                             </div>
                             {% endfor %}
                         </div>
@@ -473,7 +473,7 @@
                         <tbody>
                         {% for v in recent_views %}
                         <tr>
-                            <td class="text-muted" style="white-space:nowrap;">{{ v.created_at[:16] }}</td>
+                            <td class="text-muted" style="white-space:nowrap;">{{ v.created_at.strftime("%Y-%m-%d %H:%M") if v.created_at else "" }}</td>
                             <td><span class="badge rounded-pill" style="background:#e3f0ff;color:#1565c0;">{{ v.path }}</span></td>
                             <td class="text-muted small">{{ v.ip[:15] if v.ip else '—' }}</td>
                             <td>{% if v.city %}<span class="badge rounded-pill" style="background:#e8f5e9;color:#2e7d32;">📍 {{ v.city }}</span>{% else %}—{% endif %}</td>
