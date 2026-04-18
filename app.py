@@ -579,7 +579,14 @@ class PGConn:
 
     @property
     def lastrowid(self):
-        return self._cur.fetchone()
+        try:
+            self._cur.execute("SELECT lastval()")
+            row = self._cur.fetchone()
+            if row:
+                return list(dict(row).values())[0]
+        except Exception:
+            pass
+        return None
 
 class PGCursor:
     """Wrapper for psycopg2 cursor to mimic sqlite3 cursor."""
@@ -860,10 +867,10 @@ def save_uploaded_file(file_obj, subfolder, prefix=''):
 def index():
     conn = get_db()
     featured_rent = conn.execute(
-        "SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.is_approved=1 AND r.is_featured=1 GROUP BY r.id LIMIT 3"
+        "SELECT DISTINCT ON (r.id) r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.is_approved=1 AND r.is_featured=1 ORDER BY r.id LIMIT 3"
     ).fetchall()
     featured_sale = conn.execute(
-        "SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.is_approved=1 AND s.is_featured=1 GROUP BY s.id LIMIT 3"
+        "SELECT DISTINCT ON (s.id) s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.is_approved=1 AND s.is_featured=1 ORDER BY s.id LIMIT 3"
     ).fetchall()
     stats = {
         'rent': conn.execute("SELECT COUNT(*) as cnt FROM rent_properties WHERE is_approved=1").fetchone()['cnt'],
@@ -890,9 +897,9 @@ def search():
              "WHERE s.is_approved=1")
         params = []
         if ptype:    q += " AND s.property_type=?";                     params.append(ptype)
-        if location: q += " AND (s.location ILIKE %s OR s.area ILIKE %s)";  params += [f'%{location}%', f'%{location}%']
+        if location: q += " AND (s.location ILIKE ? OR s.area ILIKE ?)";  params += [f'%{location}%', f'%{location}%']
         if bedrooms: q += " AND s.bedrooms=?";                          params.append(bedrooms)
-        q += " GROUP BY s.id ORDER BY s.is_featured DESC, s.created_at DESC"
+        q += " ORDER BY s.is_featured DESC, s.created_at DESC"
         props = conn.execute(q, params).fetchall()
         conn.close()
         return render_template('purchase_lena.html', props=props, ptype=ptype, loc=location, bed=bedrooms)
@@ -902,9 +909,9 @@ def search():
              "WHERE r.is_approved=1")
         params = []
         if ptype:    q += " AND r.property_type=?";                     params.append(ptype)
-        if location: q += " AND (r.location ILIKE %s OR r.area ILIKE %s)";  params += [f'%{location}%', f'%{location}%']
+        if location: q += " AND (r.location ILIKE ? OR r.area ILIKE ?)";  params += [f'%{location}%', f'%{location}%']
         if bedrooms: q += " AND r.bedrooms=?";                          params.append(bedrooms)
-        q += " GROUP BY r.id ORDER BY r.is_featured DESC, r.created_at DESC"
+        q += " ORDER BY r.is_featured DESC, r.created_at DESC"
         props = conn.execute(q, params).fetchall()
         conn.close()
         return render_template('rent_lena.html', props=props, ptype=ptype, loc=location, bed=bedrooms)
@@ -920,9 +927,9 @@ def rent_lena():
     q = "SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.is_approved=1"
     params = []
     if ptype: q += " AND r.property_type=?"; params.append(ptype)
-    if loc:   q += " AND (r.location ILIKE %s OR r.area ILIKE %s)"; params += [f'%{loc}%', f'%{loc}%']
+    if loc:   q += " AND (r.location ILIKE ? OR r.area ILIKE ?)"; params += [f'%{loc}%', f'%{loc}%']
     if bed:   q += " AND r.bedrooms=?"; params.append(bed)
-    q += " GROUP BY r.id ORDER BY r.is_featured DESC, r.created_at DESC"
+    q += " ORDER BY r.is_featured DESC, r.created_at DESC"
     props = conn.execute(q, params).fetchall()
     conn.close()
     return render_template('rent_lena.html', props=props, ptype=ptype, loc=loc, bed=bed)
@@ -1024,8 +1031,8 @@ def purchase_lena():
     q = "SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.is_approved=1"
     params = []
     if ptype: q += " AND s.property_type=?"; params.append(ptype)
-    if loc:   q += " AND (s.location ILIKE %s OR s.area ILIKE %s)"; params += [f'%{loc}%', f'%{loc}%']
-    q += " GROUP BY s.id ORDER BY s.is_featured DESC, s.created_at DESC"
+    if loc:   q += " AND (s.location ILIKE ? OR s.area ILIKE ?)"; params += [f'%{loc}%', f'%{loc}%']
+    q += " ORDER BY s.is_featured DESC, s.created_at DESC"
     props = conn.execute(q, params).fetchall()
     conn.close()
     return render_template('purchase_lena.html', props=props, ptype=ptype, loc=loc)
@@ -1228,13 +1235,13 @@ def logout():
 def dashboard():
     conn = get_db()
     uid = session['user_id']
-    my_rent      = conn.execute("SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.user_id=? GROUP BY r.id ORDER BY r.created_at DESC", (uid,)).fetchall()
-    my_sale      = conn.execute("SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.user_id=? GROUP BY s.id ORDER BY s.created_at DESC", (uid,)).fetchall()
+    my_rent      = conn.execute("SELECT DISTINCT ON (r.id) r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.user_id=? ORDER BY r.id, r.created_at DESC", (uid,)).fetchall()
+    my_sale      = conn.execute("SELECT DISTINCT ON (s.id) s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.user_id=? ORDER BY s.id, s.created_at DESC", (uid,)).fetchall()
     my_rent_reqs = conn.execute("SELECT * FROM rent_requirements WHERE user_id=? ORDER BY created_at DESC", (uid,)).fetchall()
     my_buy_reqs  = conn.execute("SELECT * FROM purchase_requirements WHERE user_id=? ORDER BY created_at DESC", (uid,)).fetchall()
     my_verifs    = conn.execute("SELECT * FROM tenant_verification WHERE user_id=? ORDER BY created_at DESC", (uid,)).fetchall()
-    saved_rent   = conn.execute("SELECT r.*, pi.filename FROM saved_properties sp JOIN rent_properties r ON sp.property_id=r.id LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE sp.user_id=? AND sp.property_cat='rent' GROUP BY r.id", (uid,)).fetchall()
-    saved_sale   = conn.execute("SELECT s.*, pi.filename FROM saved_properties sp JOIN sale_properties s ON sp.property_id=s.id LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE sp.user_id=? AND sp.property_cat='sale' GROUP BY s.id", (uid,)).fetchall()
+    saved_rent   = conn.execute("SELECT DISTINCT ON (r.id) r.*, pi.filename FROM saved_properties sp JOIN rent_properties r ON sp.property_id=r.id LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE sp.user_id=? AND sp.property_cat='rent' ORDER BY r.id", (uid,)).fetchall()
+    saved_sale   = conn.execute("SELECT DISTINCT ON (s.id) s.*, pi.filename FROM saved_properties sp JOIN sale_properties s ON sp.property_id=s.id LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE sp.user_id=? AND sp.property_cat='sale' ORDER BY s.id", (uid,)).fetchall()
     user = conn.execute("SELECT * FROM users WHERE id=?", (uid,)).fetchone()
     conn.close()
     return render_template('dashboard.html', my_rent=my_rent, my_sale=my_sale,
@@ -1277,8 +1284,8 @@ def admin_login():
 def admin_panel():
     conn = get_db()
     users      = conn.execute("SELECT * FROM users WHERE is_admin=0 ORDER BY created_at DESC").fetchall()
-    rent_props = conn.execute("SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' GROUP BY r.id ORDER BY r.created_at DESC").fetchall()
-    sale_props = conn.execute("SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' GROUP BY s.id ORDER BY s.created_at DESC").fetchall()
+    rent_props = conn.execute("SELECT DISTINCT ON (r.id) r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' ORDER BY r.id, r.created_at DESC").fetchall()
+    sale_props = conn.execute("SELECT DISTINCT ON (s.id) s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' ORDER BY s.id, s.created_at DESC").fetchall()
     rent_reqs  = conn.execute("SELECT rr.*, u.name as uname FROM rent_requirements rr LEFT JOIN users u ON rr.user_id=u.id ORDER BY rr.created_at DESC").fetchall()
     buy_reqs   = conn.execute("SELECT pr.*, u.name as uname FROM purchase_requirements pr LEFT JOIN users u ON pr.user_id=u.id ORDER BY pr.created_at DESC").fetchall()
     verifs     = conn.execute("SELECT tv.*, u.name as uname FROM tenant_verification tv LEFT JOIN users u ON tv.user_id=u.id ORDER BY tv.created_at DESC").fetchall()
