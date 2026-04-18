@@ -1629,6 +1629,174 @@ def backup_db():
         download_name=download_name
     )
 
+
+# ─── BLOG SEED ROUTE ─────────────────────────────────────────────────────────
+
+@app.route('/admin/seed-blog')
+@admin_required
+def admin_seed_blog():
+    """Seed the 3 blog posts shown on the homepage. Safe to run multiple times."""
+    blog_posts = [
+        {
+            "title": "Rent vs Buy in Karachi 2026 — Which Makes More Sense?",
+            "slug": "rent-vs-buy-karachi-2026",
+            "category": "Guide",
+            "excerpt": "Should you rent or buy property in Karachi in 2026? We break down the costs, benefits and risks for both options.",
+            "meta_title": "Rent vs Buy in Karachi 2026 - ApnaGhar Guide",
+            "meta_desc": "Should you rent or buy property in Karachi in 2026? Complete guide with cost comparison, pros and cons.",
+            "content": """<div class="row justify-content-center"><div class="col-lg-10">
+<h2 style="color:var(--primary);">Rent vs Buy in Karachi 2026 — Which Makes More Sense?</h2>
+<p class="text-muted">Published: January 2026 &nbsp;·&nbsp; 5 min read</p>
+<p>One of the most common questions we hear at ApnaGhar is: <strong>"Should I rent or buy a property in Karachi?"</strong> The answer depends on your financial situation, family plans, and the current market conditions. Let's break it down.</p>
+<h3 style="color:var(--primary-light);">The Case for Renting</h3>
+<ul>
+<li><strong>Lower upfront cost</strong> — You only need a security deposit (usually 2-3 months rent) instead of millions in down payment.</li>
+<li><strong>Flexibility</strong> — If your job changes or family grows, you can move without the hassle of selling.</li>
+<li><strong>No maintenance burden</strong> — Major repairs are the landlord's responsibility.</li>
+<li><strong>Better for short-term stays</strong> — If you plan to live in Karachi for less than 5 years, renting often makes more financial sense.</li>
+</ul>
+<h3 style="color:var(--primary-light);">The Case for Buying</h3>
+<ul>
+<li><strong>Asset building</strong> — Property in Karachi has historically appreciated in value. You build equity every year.</li>
+<li><strong>Stability</strong> — No risk of landlord asking you to vacate. Your home, your rules.</li>
+<li><strong>Rental income potential</strong> — If you move, you can rent out the property and earn monthly income.</li>
+<li><strong>Hedge against inflation</strong> — Property values and rents both rise with inflation, protecting your wealth.</li>
+</ul>
+<h3 style="color:var(--primary-light);">A Simple Karachi Comparison (2026)</h3>
+<div class="table-responsive mt-3">
+<table class="table table-bordered rounded-3">
+<thead style="background:var(--primary);color:#fff;">
+<tr><th>Factor</th><th>Renting</th><th>Buying</th></tr>
+</thead>
+<tbody>
+<tr><td>Upfront cost</td><td>Rs. 60,000-1.5 Lakh</td><td>Rs. 20-50 Lakh+</td></tr>
+<tr><td>Monthly cost (2-bed Gulshan)</td><td>Rs. 35,000-50,000</td><td>Rs. 60,000-80,000 (with loan)</td></tr>
+<tr><td>Flexibility</td><td>High</td><td>Low</td></tr>
+<tr><td>Long-term wealth</td><td>Low</td><td>High</td></tr>
+<tr><td>Risk</td><td>Landlord eviction</td><td>Market fluctuation</td></tr>
+</tbody>
+</table>
+</div>
+<h3 style="color:var(--primary-light);">Our Recommendation</h3>
+<p><strong>Rent if:</strong> You are new to Karachi, your income is not yet stable, or you plan to move within 3-5 years.</p>
+<p><strong>Buy if:</strong> You have stable income, plan to settle long-term, and have enough savings for a down payment without depleting your emergency fund.</p>
+<div class="card border-0 rounded-4 p-4 mt-4" style="background:var(--primary);color:#fff;text-align:center;">
+<h5 style="color:#fff;">Need Free Property Advice?</h5>
+<p style="color:rgba(255,255,255,.85);">Talk to our experts — we help you decide what is best for your situation.</p>
+<a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp rounded-pill px-4 fw-bold"><i class="bi bi-whatsapp me-2"></i>Free Consultation</a>
+</div></div></div>"""
+        },
+        {
+            "title": "Best Areas for Families in Karachi — 2026 Complete Guide",
+            "slug": "best-areas-families-karachi",
+            "category": "Area Guide",
+            "excerpt": "Looking for the best area to raise your family in Karachi? Here are our top picks based on safety, schools, and affordability.",
+            "meta_title": "Best Areas for Families in Karachi 2026 - ApnaGhar Area Guide",
+            "meta_desc": "Top family-friendly areas in Karachi in 2026. Covers safety, schools, rent prices and community feel.",
+            "content": """<div class="row justify-content-center"><div class="col-lg-10">
+<h2 style="color:var(--primary);">Best Areas for Families in Karachi — 2026 Complete Guide</h2>
+<p class="text-muted">Published: February 2026 &nbsp;·&nbsp; 7 min read</p>
+<p>Choosing the right area for your family in Karachi is one of the most important decisions you will make. We have put together this guide based on safety, school quality, community feel, and affordability.</p>
+<h3 style="color:var(--primary-light);">1. Gulshan-e-Iqbal — Best Overall</h3>
+<div class="card border-0 shadow-sm rounded-4 p-3 mb-4" style="border-left:4px solid #2e7d32!important;">
+<p>Gulshan-e-Iqbal is the most popular family area in Karachi. It has excellent schools (Beaconhouse, The City School), good hospitals, and a strong community. University Road connects it to the rest of the city.</p>
+<p><strong>Rent:</strong> Rs. 25,000 - 80,000/month &nbsp; <strong>Verdict:</strong> 5/5</p>
+</div>
+<h3 style="color:var(--primary-light);">2. North Nazimabad — Best Value</h3>
+<div class="card border-0 shadow-sm rounded-4 p-3 mb-4" style="border-left:4px solid #6a1b9a!important;">
+<p>North Nazimabad offers wide roads, planned blocks, and a peaceful environment at a more affordable price. It has good schools and is well connected via main roads.</p>
+<p><strong>Rent:</strong> Rs. 20,000 - 60,000/month &nbsp; <strong>Verdict:</strong> 4/5</p>
+</div>
+<h3 style="color:var(--primary-light);">3. PECHS — Best for Professionals</h3>
+<div class="card border-0 shadow-sm rounded-4 p-3 mb-4" style="border-left:4px solid #1565c0!important;">
+<p>PECHS is central, clean, and has great connectivity. Good for families where both parents work. Slightly more expensive but excellent quality of life.</p>
+<p><strong>Rent:</strong> Rs. 35,000 - 90,000/month &nbsp; <strong>Verdict:</strong> 4/5</p>
+</div>
+<h3 style="color:var(--primary-light);">4. Akhtar Colony — Hidden Gem</h3>
+<div class="card border-0 shadow-sm rounded-4 p-3 mb-4" style="border-left:4px solid #e65100!important;">
+<p>Our home area! Akhtar Colony is a quiet, tight-knit community with affordable rents and a strong neighbourhood feel. Great for families on a budget who want safety and community.</p>
+<p><strong>Rent:</strong> Rs. 15,000 - 45,000/month &nbsp; <strong>Verdict:</strong> 4/5</p>
+</div>
+<h3 style="color:var(--primary-light);">5. Bahria Town Karachi — Premium Option</h3>
+<div class="card border-0 shadow-sm rounded-4 p-3 mb-4" style="border-left:4px solid #c62828!important;">
+<p>If budget is not a concern, Bahria Town offers the most modern infrastructure — gated security, parks, international schools, and clean streets.</p>
+<p><strong>Rent:</strong> Rs. 50,000 - 2,00,000/month &nbsp; <strong>Verdict:</strong> 5/5</p>
+</div>
+<div class="card border-0 rounded-4 p-4 mt-4" style="background:var(--primary);text-align:center;">
+<h5 style="color:#fff;">Not Sure Which Area Suits You?</h5>
+<p style="color:rgba(255,255,255,.85);">Tell us your budget and family size — we will recommend the best area for you!</p>
+<a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp rounded-pill px-4 fw-bold"><i class="bi bi-whatsapp me-2"></i>Get Free Advice</a>
+</div></div></div>"""
+        },
+        {
+            "title": "How to Write a Rent Agreement in Pakistan — Step by Step",
+            "slug": "rent-agreement-pakistan",
+            "category": "Legal",
+            "excerpt": "A proper rent agreement protects both landlord and tenant. Learn exactly what to include and how to make it legally valid in Pakistan.",
+            "meta_title": "How to Write a Rent Agreement in Pakistan - ApnaGhar Legal Guide",
+            "meta_desc": "Step by step guide to writing a legally valid rent agreement in Pakistan. What to include, stamp paper requirements, and witness rules.",
+            "content": """<div class="row justify-content-center"><div class="col-lg-10">
+<h2 style="color:var(--primary);">How to Write a Rent Agreement in Pakistan — Step by Step</h2>
+<p class="text-muted">Published: March 2026 &nbsp;·&nbsp; 6 min read</p>
+<p>A rent agreement is a legal contract between a landlord and tenant. A proper agreement protects both parties and prevents disputes. Here is how to write one correctly in Pakistan.</p>
+<h3 style="color:var(--primary-light);">Step 1 — Use Stamp Paper</h3>
+<p>The agreement must be written on <strong>stamp paper of appropriate value</strong>. In Sindh, a Rs. 500 to Rs. 1,000 stamp paper is typically used for residential rent agreements.</p>
+<h3 style="color:var(--primary-light);">Step 2 — Include These Essential Details</h3>
+<ul>
+<li><strong>Full names and CNIC numbers</strong> of both landlord and tenant</li>
+<li><strong>Complete property address</strong> with property description</li>
+<li><strong>Monthly rent amount</strong> in both numbers and words</li>
+<li><strong>Security/advance deposit amount</strong> and conditions for refund</li>
+<li><strong>Lease start and end date</strong> (usually 11 months for residential)</li>
+<li><strong>Utility bills responsibility</strong> — who pays electricity, gas, water</li>
+<li><strong>Notice period</strong> — how much notice is required to vacate (usually 1 month)</li>
+</ul>
+<h3 style="color:var(--primary-light);">Step 3 — Signatures and Witnesses</h3>
+<p>Both landlord and tenant must <strong>sign and thumb-print</strong> the agreement. Additionally, <strong>two witnesses</strong> must sign with their full names and CNICs.</p>
+<h3 style="color:var(--primary-light);">Step 4 — Keep Copies</h3>
+<p>Make at least <strong>two original copies</strong> on stamp paper — one for the landlord and one for the tenant.</p>
+<h3 style="color:var(--primary-light);">Step 5 — Optional: Notarisation</h3>
+<p>For extra legal protection, you can get the agreement <strong>attested by a notary public</strong>. Recommended for high-value properties or long-term leases.</p>
+<div class="card border-0 rounded-3 p-3 mt-3 mb-3" style="background:#fff3cd;border-left:4px solid #e65100!important;">
+<strong>Common Mistakes to Avoid:</strong>
+<ul class="mb-0 mt-2">
+<li>Not specifying the annual rent increase percentage</li>
+<li>Forgetting to document the property condition at move-in</li>
+<li>Not specifying what happens to the deposit if tenant leaves early</li>
+</ul>
+</div>
+<div class="card border-0 rounded-4 p-4 mt-4" style="background:var(--primary);text-align:center;">
+<h5 style="color:#fff;">Need a Professional Rent Agreement?</h5>
+<p style="color:rgba(255,255,255,.85);">We prepare legally valid rent agreements on stamp paper. Fast, affordable, and professionally done.</p>
+<a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp rounded-pill px-4 fw-bold"><i class="bi bi-whatsapp me-2"></i>Get Agreement Made</a>
+</div></div></div>"""
+        }
+    ]
+
+    conn = get_db()
+    c = conn.cursor()
+    inserted = updated = 0
+    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    for post in blog_posts:
+        exists = c.execute("SELECT id FROM blog_posts WHERE slug=?", (post['slug'],)).fetchone()
+        if not exists:
+            c.execute(
+                "INSERT INTO blog_posts (title, slug, content, excerpt, category, meta_title, meta_description, is_published) VALUES (?,?,?,?,?,?,?,1)",
+                (post['title'], post['slug'], post['content'], post['excerpt'], post['category'], post['meta_title'], post['meta_desc'])
+            )
+            inserted += 1
+        else:
+            c.execute(
+                "UPDATE blog_posts SET title=?, content=?, excerpt=?, category=?, meta_title=?, meta_description=?, is_published=1, updated_at=? WHERE slug=?",
+                (post['title'], post['content'], post['excerpt'], post['category'], post['meta_title'], post['meta_desc'], now, post['slug'])
+            )
+            updated += 1
+    conn.commit()
+    conn.close()
+    flash(f"Done! {inserted} blog posts created, {updated} updated.", "success")
+    return redirect(url_for("admin_panel"))
+
+
 # ─── STARTUP ──────────────────────────────────────────────────────────────────
 
 os.makedirs('uploads', exist_ok=True)
