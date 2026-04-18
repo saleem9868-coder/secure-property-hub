@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-import sqlite3, os, threading, re
+import os, threading, re
 from datetime import datetime
 from functools import wraps
 try:
@@ -26,7 +26,6 @@ app.secret_key = 'sph-v2-secret-2024'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'pdf'}
-DB_PATH = 'database.db'
 
 # ─── UPLOAD SUBFOLDERS ────────────────────────────────────────────────────────
 UPLOAD_BLOG       = os.path.join('static', 'uploads', 'blog')
@@ -449,7 +448,7 @@ BLOCKED_PATHS = (
 
 _banned_ips = {}
 _BAN_THRESHOLD = 5
-_ban_lock = __import__('threading').Lock()
+_ban_lock = threading.Lock()
 
 def _record_bad_ip(ip):
     with _ban_lock:
@@ -525,9 +524,111 @@ def allowed_file(f):
     return '.' in f and f.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    import psycopg2
+    import psycopg2.extras
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    if not DATABASE_URL:
+        raise RuntimeError("DATABASE_URL environment variable not set!")
+    conn = psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
+    return PGConn(conn)
+
+class PGConn:
+    """Wrapper to make psycopg2 behave like sqlite3 for our app."""
+    def __init__(self, conn):
+        self._conn = conn
+        self._cur = conn.cursor()
+
+    def execute(self, sql, params=None):
+        sql = sql.replace("?", "%s")
+        sql = sql.replace("SERIAL PRIMARY KEY", "SERIAL PRIMARY KEY")
+        sql = sql.replace("CREATE TABLE IF NOT EXISTS", "CREATE TABLE IF NOT EXISTS")
+        if params:
+            self._cur.execute(sql, params)
+        else:
+            self._cur.execute(sql)
+        return self
+
+    def executemany(self, sql, params_list):
+        sql = sql.replace("?", "%s")
+        for params in params_list:
+            self._cur.execute(sql, params)
+        return self
+
+    def fetchone(self):
+        row = self._cur.fetchone()
+        if row is None:
+            return None
+        return dict(row)
+
+    def fetchall(self):
+        rows = self._cur.fetchall()
+        return [dict(r) for r in rows]
+
+    def cursor(self):
+        return PGCursor(self._conn)
+
+    def commit(self):
+        self._conn.commit()
+
+    def close(self):
+        try:
+            self._conn.commit()
+        except Exception:
+            pass
+        self._conn.close()
+
+    @property
+    def lastrowid(self):
+        return self._cur.fetchone()
+
+class PGCursor:
+    """Wrapper for psycopg2 cursor to mimic sqlite3 cursor."""
+    def __init__(self, conn):
+        import psycopg2.extras
+        self._cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        self._lastrowid = None
+
+    def execute(self, sql, params=None):
+        sql = sql.replace("?", "%s")
+        sql = sql.replace("SERIAL PRIMARY KEY", "SERIAL PRIMARY KEY")
+        # For INSERT, add RETURNING id to get lastrowid
+        if sql.strip().upper().startswith("INSERT") and "RETURNING" not in sql.upper():
+            sql = sql.rstrip().rstrip(";") + " RETURNING id"
+        if params:
+            self._cur.execute(sql, params)
+        else:
+            self._cur.execute(sql)
+        if sql.strip().upper().startswith("INSERT"):
+            try:
+                row = self._cur.fetchone()
+                if row:
+                    self._lastrowid = dict(row).get("id")
+            except Exception:
+                pass
+        return self
+
+    def executemany(self, sql, params_list):
+        sql = sql.replace("?", "%s")
+        for params in params_list:
+            self._cur.execute(sql, params)
+        return self
+
+    def fetchone(self):
+        row = self._cur.fetchone()
+        if row is None:
+            return None
+        return dict(row)
+
+    def fetchall(self):
+        rows = self._cur.fetchall()
+        return [dict(r) for r in rows]
+
+    @property
+    def lastrowid(self):
+        return self._lastrowid
+
+    def __iter__(self):
+        return iter(self.fetchall())
 
 def login_required(f):
     @wraps(f)
@@ -572,14 +673,14 @@ def init_db():
 
     # ── Existing tables (unchanged) ──────────────────────────────────────────
     c.execute('''CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         name TEXT NOT NULL, email TEXT UNIQUE NOT NULL,
         password TEXT, is_admin INTEGER DEFAULT 0,
         phone TEXT DEFAULT '',
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS rent_properties (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         user_id INTEGER, owner_name TEXT, owner_phone TEXT,
         title TEXT, location TEXT, area TEXT,
         property_type TEXT, price TEXT,
@@ -588,10 +689,10 @@ def init_db():
         tenant_preference TEXT, description TEXT,
         is_approved INTEGER DEFAULT 0,
         is_featured INTEGER DEFAULT 0,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS sale_properties (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         user_id INTEGER, owner_name TEXT, owner_phone TEXT,
         title TEXT, location TEXT, area TEXT,
         property_type TEXT, price TEXT,
@@ -599,73 +700,80 @@ def init_db():
         total_area TEXT, possession TEXT, description TEXT,
         is_approved INTEGER DEFAULT 0,
         is_featured INTEGER DEFAULT 0,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS property_images (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         property_id INTEGER, property_cat TEXT, filename TEXT)''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS rent_requirements (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         user_id INTEGER, name TEXT, phone TEXT,
         preferred_area TEXT, property_type TEXT,
         max_budget TEXT, bedrooms TEXT,
         tenant_type TEXT, move_in_date TEXT,
         special_needs TEXT, status TEXT DEFAULT 'New',
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS purchase_requirements (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         user_id INTEGER, name TEXT, phone TEXT,
         preferred_area TEXT, property_type TEXT,
         max_budget TEXT, bedrooms TEXT,
         payment_method TEXT, purpose TEXT,
         special_needs TEXT, status TEXT DEFAULT 'New',
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS tenant_verification (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         user_id INTEGER, tenant_name TEXT, cnic TEXT,
         mobile TEXT, address TEXT, occupation TEXT,
         cnic_file TEXT, photo_file TEXT,
         status TEXT DEFAULT 'Pending',
         notes TEXT DEFAULT '',
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS saved_properties (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         user_id INTEGER, property_id INTEGER, property_cat TEXT)''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS page_views (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         path TEXT NOT NULL, method TEXT DEFAULT 'GET',
         ip TEXT, user_agent TEXT, referrer TEXT,
         user_id INTEGER,
         city TEXT DEFAULT '', country TEXT DEFAULT '',
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
     # Safe column additions for existing DBs
-    for col in ["city TEXT DEFAULT ''", "country TEXT DEFAULT ''"]:
-        try: c.execute(f"ALTER TABLE page_views ADD COLUMN {col}")
-        except: pass
+    for col_def in [("city", "TEXT DEFAULT ''"), ("country", "TEXT DEFAULT ''")]:
+        try:
+            c.execute(f"ALTER TABLE page_views ADD COLUMN {col_def[0]} {col_def[1]}")
+            c._cur.__class__.__bases__  # just access to trigger any error
+        except Exception:
+            pass
+        try:
+            conn.commit()
+        except Exception:
+            pass
 
     # ── NEW CMS Tables ───────────────────────────────────────────────────────
 
     # Pages CMS
     c.execute('''CREATE TABLE IF NOT EXISTS cms_pages (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         title TEXT NOT NULL,
         slug TEXT UNIQUE NOT NULL,
         content TEXT DEFAULT '',
         meta_title TEXT DEFAULT '',
         meta_description TEXT DEFAULT '',
         is_published INTEGER DEFAULT 1,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
     # Blog Posts
     c.execute('''CREATE TABLE IF NOT EXISTS blog_posts (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         title TEXT NOT NULL,
         slug TEXT UNIQUE NOT NULL,
         content TEXT DEFAULT '',
@@ -675,12 +783,12 @@ def init_db():
         meta_title TEXT DEFAULT '',
         meta_description TEXT DEFAULT '',
         is_published INTEGER DEFAULT 1,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        updated_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
     # Menu Items
     c.execute('''CREATE TABLE IF NOT EXISTS menu_items (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         title TEXT NOT NULL,
         url TEXT NOT NULL,
         icon TEXT DEFAULT '',
@@ -688,21 +796,21 @@ def init_db():
         display_order INTEGER DEFAULT 0,
         is_active INTEGER DEFAULT 1,
         open_new_tab INTEGER DEFAULT 0,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
     # Media Library
     c.execute('''CREATE TABLE IF NOT EXISTS media_library (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         filename TEXT NOT NULL,
         original_name TEXT DEFAULT '',
         file_type TEXT DEFAULT '',
         file_size INTEGER DEFAULT 0,
         folder TEXT DEFAULT 'media',
         alt_text TEXT DEFAULT '',
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP)''')
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
     # Seed default menu items if empty
-    count = c.execute("SELECT COUNT(*) FROM menu_items").fetchone()[0]
+    count = (c.execute("SELECT COUNT(*) as cnt FROM menu_items").fetchone() or {}).get('cnt', 0)
     if count == 0:
         default_items = [
             ('Property Laws', '/property-laws', '⚖️', 'resources', 1, 1, 0),
@@ -718,8 +826,10 @@ def init_db():
         )
 
     # Admin user
-    c.execute("SELECT COUNT(*) FROM users WHERE is_admin=1")
-    if c.fetchone()[0] == 0:
+    c.execute("SELECT COUNT(*) as cnt FROM users WHERE is_admin=1")
+    row = c.fetchone()
+    cnt = row['cnt'] if row else 0
+    if cnt == 0:
         pw = generate_password_hash('apnaghar6873')
         c.execute("INSERT INTO users (name,email,password,is_admin) VALUES (?,?,?,1)",
                   ('Admin','apnagharkarachi.pk@gmail.com', pw))
@@ -756,10 +866,10 @@ def index():
         "SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.is_approved=1 AND s.is_featured=1 GROUP BY s.id LIMIT 3"
     ).fetchall()
     stats = {
-        'rent': conn.execute("SELECT COUNT(*) FROM rent_properties WHERE is_approved=1").fetchone()[0],
-        'sale': conn.execute("SELECT COUNT(*) FROM sale_properties WHERE is_approved=1").fetchone()[0],
-        'verified': conn.execute("SELECT COUNT(*) FROM tenant_verification WHERE status='Approved'").fetchone()[0],
-        'clients': conn.execute("SELECT COUNT(*) FROM users WHERE is_admin=0").fetchone()[0],
+        'rent': conn.execute("SELECT COUNT(*) as cnt FROM rent_properties WHERE is_approved=1").fetchone()['cnt'],
+        'sale': conn.execute("SELECT COUNT(*) as cnt FROM sale_properties WHERE is_approved=1").fetchone()['cnt'],
+        'verified': conn.execute("SELECT COUNT(*) as cnt FROM tenant_verification WHERE status='Approved'").fetchone()['cnt'],
+        'clients': conn.execute("SELECT COUNT(*) as cnt FROM users WHERE is_admin=0").fetchone()['cnt'],
     }
     conn.close()
     return render_template('index.html', featured_rent=featured_rent, featured_sale=featured_sale, stats=stats)
@@ -780,7 +890,7 @@ def search():
              "WHERE s.is_approved=1")
         params = []
         if ptype:    q += " AND s.property_type=?";                     params.append(ptype)
-        if location: q += " AND (s.location LIKE ? OR s.area LIKE ?)";  params += [f'%{location}%', f'%{location}%']
+        if location: q += " AND (s.location ILIKE %s OR s.area ILIKE %s)";  params += [f'%{location}%', f'%{location}%']
         if bedrooms: q += " AND s.bedrooms=?";                          params.append(bedrooms)
         q += " GROUP BY s.id ORDER BY s.is_featured DESC, s.created_at DESC"
         props = conn.execute(q, params).fetchall()
@@ -792,7 +902,7 @@ def search():
              "WHERE r.is_approved=1")
         params = []
         if ptype:    q += " AND r.property_type=?";                     params.append(ptype)
-        if location: q += " AND (r.location LIKE ? OR r.area LIKE ?)";  params += [f'%{location}%', f'%{location}%']
+        if location: q += " AND (r.location ILIKE %s OR r.area ILIKE %s)";  params += [f'%{location}%', f'%{location}%']
         if bedrooms: q += " AND r.bedrooms=?";                          params.append(bedrooms)
         q += " GROUP BY r.id ORDER BY r.is_featured DESC, r.created_at DESC"
         props = conn.execute(q, params).fetchall()
@@ -810,7 +920,7 @@ def rent_lena():
     q = "SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.is_approved=1"
     params = []
     if ptype: q += " AND r.property_type=?"; params.append(ptype)
-    if loc:   q += " AND (r.location LIKE ? OR r.area LIKE ?)"; params += [f'%{loc}%', f'%{loc}%']
+    if loc:   q += " AND (r.location ILIKE %s OR r.area ILIKE %s)"; params += [f'%{loc}%', f'%{loc}%']
     if bed:   q += " AND r.bedrooms=?"; params.append(bed)
     q += " GROUP BY r.id ORDER BY r.is_featured DESC, r.created_at DESC"
     props = conn.execute(q, params).fetchall()
@@ -914,7 +1024,7 @@ def purchase_lena():
     q = "SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.is_approved=1"
     params = []
     if ptype: q += " AND s.property_type=?"; params.append(ptype)
-    if loc:   q += " AND (s.location LIKE ? OR s.area LIKE ?)"; params += [f'%{loc}%', f'%{loc}%']
+    if loc:   q += " AND (s.location ILIKE %s OR s.area ILIKE %s)"; params += [f'%{loc}%', f'%{loc}%']
     q += " GROUP BY s.id ORDER BY s.is_featured DESC, s.created_at DESC"
     props = conn.execute(q, params).fetchall()
     conn.close()
@@ -1181,13 +1291,13 @@ def admin_panel():
              'rent_reqs': len(rent_reqs), 'buy_reqs': len(buy_reqs), 'verifs': len(verifs),
              'pages': len(pages), 'blogs': len(blog_posts)}
     # Traffic
-    traffic_total    = conn.execute("SELECT COUNT(*) FROM page_views").fetchone()[0]
-    traffic_today    = conn.execute("SELECT COUNT(*) FROM page_views WHERE DATE(created_at)=DATE('now','localtime')").fetchone()[0]
-    traffic_week     = conn.execute("SELECT COUNT(*) FROM page_views WHERE created_at >= datetime('now','-7 days')").fetchone()[0]
+    traffic_total    = conn.execute("SELECT COUNT(*) as cnt FROM page_views").fetchone()['cnt']
+    traffic_today    = conn.execute("SELECT COUNT(*) as cnt FROM page_views WHERE DATE(created_at)=CURRENT_DATE").fetchone()['cnt']
+    traffic_week     = conn.execute("SELECT COUNT(*) as cnt FROM page_views WHERE created_at >= NOW() - INTERVAL '7 days'").fetchone()['cnt']
     top_pages        = conn.execute("SELECT path, COUNT(*) as cnt FROM page_views GROUP BY path ORDER BY cnt DESC LIMIT 10").fetchall()
     recent_views     = conn.execute("SELECT path, ip, city, country, user_agent, created_at FROM page_views ORDER BY created_at DESC LIMIT 30").fetchall()
-    daily_chart      = conn.execute("SELECT DATE(created_at,'localtime') as day, COUNT(*) as cnt FROM page_views WHERE created_at >= datetime('now','-14 days') GROUP BY day ORDER BY day ASC").fetchall()
-    unique_ips_today = conn.execute("SELECT COUNT(DISTINCT ip) FROM page_views WHERE DATE(created_at)=DATE('now','localtime')").fetchone()[0]
+    daily_chart      = conn.execute("SELECT DATE(created_at) as day, COUNT(*) as cnt FROM page_views WHERE created_at >= NOW() - INTERVAL '14 days' GROUP BY day ORDER BY day ASC").fetchall()
+    unique_ips_today = conn.execute("SELECT COUNT(DISTINCT ip) as cnt FROM page_views WHERE DATE(created_at)=CURRENT_DATE").fetchone()['cnt']
     conn.close()
     return render_template('admin_panel.html',
         users=users, rent_props=rent_props, sale_props=sale_props,
@@ -1617,17 +1727,9 @@ def admin_seed_pages():
 @app.route('/admin/backup-db')
 @admin_required
 def backup_db():
-    """Download a timestamped backup of the database. Admin only."""
-    db_dir  = os.path.dirname(os.path.abspath(__file__))
-    db_name = os.path.basename(DB_PATH)          # 'database.db'
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    download_name = f"apnaghar_backup_{timestamp}.db"
-    return send_from_directory(
-        db_dir,
-        db_name,
-        as_attachment=True,
-        download_name=download_name
-    )
+    """Backup not available with PostgreSQL - use Railway dashboard."""
+    flash('Database backup: Use Railway dashboard to export PostgreSQL data.', 'info')
+    return redirect(url_for('admin_panel'))
 
 
 # ─── BLOG SEED ROUTE ─────────────────────────────────────────────────────────
