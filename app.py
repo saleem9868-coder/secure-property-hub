@@ -816,6 +816,9 @@ def init_db():
         alt_text TEXT DEFAULT '',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
+    # Commit all CREATE TABLE statements first so tables exist before querying
+    conn.commit()
+
     # Seed default menu items if empty
     count = (c.execute("SELECT COUNT(*) as cnt FROM menu_items").fetchone() or {}).get('cnt', 0)
     if count == 0:
