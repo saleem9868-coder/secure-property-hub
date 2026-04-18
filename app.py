@@ -675,8 +675,15 @@ def wa_link(message):
 # ─── DB INIT ──────────────────────────────────────────────────────────────────
 
 def init_db():
-    conn = get_db()
-    c = conn.cursor()
+    import psycopg2
+    import psycopg2.extras
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    if not DATABASE_URL:
+        raise RuntimeError("DATABASE_URL environment variable not set!")
+    raw_conn = psycopg2.connect(DATABASE_URL)
+    raw_conn.autocommit = True
+    c = raw_conn.cursor()
+    conn = get_db()  # also keep wrapper for seed inserts below
 
     # ── Existing tables (unchanged) ──────────────────────────────────────────
     c.execute('''CREATE TABLE IF NOT EXISTS users (
@@ -756,11 +763,6 @@ def init_db():
     for col_def in [("city", "TEXT DEFAULT ''"), ("country", "TEXT DEFAULT ''")]:
         try:
             c.execute(f"ALTER TABLE page_views ADD COLUMN {col_def[0]} {col_def[1]}")
-            c._cur.__class__.__bases__  # just access to trigger any error
-        except Exception:
-            pass
-        try:
-            conn.commit()
         except Exception:
             pass
 
@@ -816,11 +818,10 @@ def init_db():
         alt_text TEXT DEFAULT '',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
-    # Commit all CREATE TABLE statements first so tables exist before querying
-    conn.commit()
-
     # Seed default menu items if empty
-    count = (c.execute("SELECT COUNT(*) as cnt FROM menu_items").fetchone() or {}).get('cnt', 0)
+    c.execute("SELECT COUNT(*) as cnt FROM menu_items")
+    row = c.fetchone()
+    count = row[0] if row else 0
     if count == 0:
         default_items = [
             ('Property Laws', '/property-laws', '⚖️', 'resources', 1, 1, 0),
@@ -830,21 +831,22 @@ def init_db():
             ('Blog', '/blog', '📰', 'resources', 5, 1, 0),
             ('Contact Us', '/contact', '📞', 'resources', 6, 1, 0),
         ]
-        c.executemany(
-            "INSERT INTO menu_items (title, url, icon, category, display_order, is_active, open_new_tab) VALUES (?,?,?,?,?,?,?)",
-            default_items
-        )
+        for item in default_items:
+            c.execute(
+                "INSERT INTO menu_items (title, url, icon, category, display_order, is_active, open_new_tab) VALUES (%s,%s,%s,%s,%s,%s,%s)",
+                item
+            )
 
     # Admin user
     c.execute("SELECT COUNT(*) as cnt FROM users WHERE is_admin=1")
     row = c.fetchone()
-    cnt = row['cnt'] if row else 0
+    cnt = row[0] if row else 0
     if cnt == 0:
         pw = generate_password_hash('apnaghar6873')
-        c.execute("INSERT INTO users (name,email,password,is_admin) VALUES (?,?,?,1)",
-                  ('Admin','apnagharkarachi.pk@gmail.com', pw))
+        c.execute("INSERT INTO users (name,email,password,is_admin) VALUES (%s,%s,%s,1)",
+                  ('Admin', 'apnagharkarachi.pk@gmail.com', pw))
 
-    conn.commit()
+    raw_conn.close()
     conn.close()
 
 # ─── UPLOADS ──────────────────────────────────────────────────────────────────
