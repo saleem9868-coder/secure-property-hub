@@ -1702,23 +1702,6 @@ def blog_detail(slug):
         return redirect(url_for('blog'))
     return render_template('blog_detail.html', post=post)
 
-# ─── SHORTCUT ROUTES FOR NAV LINKS ──────────────────────────────────────────
-
-@app.route('/property-laws')
-def property_laws(): return redirect(url_for('cms_page', slug='property-laws'))
-
-@app.route('/calculators')
-def calculators(): return redirect(url_for('cms_page', slug='calculators'))
-
-@app.route('/area-guide')
-def area_guide(): return redirect(url_for('cms_page', slug='area-guide'))
-
-@app.route('/about')
-def about(): return redirect(url_for('cms_page', slug='about-us'))
-
-@app.route('/contact')
-def contact(): return redirect(url_for('cms_page', slug='contact-us'))
-
 # ─── DYNAMIC CMS PAGE ROUTE ──────────────────────────────────────────────────
 
 @app.route('/page/<slug>')
