@@ -24,160 +24,148 @@
 
 {% block content %}
 
-<!-- ═══════════════════════════════════════
-     HERO + SEARCH BAR
-════════════════════════════════════════ -->
-<section class="search-hero">
+<!-- ══ HERO ══ -->
+<section style="background:linear-gradient(135deg,#1a3c5e 0%,#0f2340 100%);color:#fff;padding:80px 0 60px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(200,151,58,.07);pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none;"></div>
+
     <div class="container">
-        <div class="row justify-content-center text-center mb-4">
-            <div class="col-lg-8">
-                <h1 style="color:#fff;font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:12px;">
-                    🏡 {% if lang=='ur' %}اپنا گھر تلاش کریں{% else %}Find Your Dream Property in Karachi{% endif %}
-                </h1>
-                <p style="color:rgba(255,255,255,.8);font-size:1.05rem;">
-                    {% if lang=='ur' %}کرایہ، خریداری، فروخت — سب کچھ ایک جگہ{% else %}Rent · Buy · Sell — All in one place. Trusted since 2018.{% endif %}
+        <div class="row align-items-center g-4">
+
+            <!-- LEFT: Brand + Search -->
+            <div class="col-lg-6">
+                <p style="color:var(--accent-light);font-weight:600;font-size:.85rem;letter-spacing:2px;text-transform:uppercase;" class="mb-3">
+                    {{ T.hero_tag }}
                 </p>
-            </div>
-        </div>
 
-        <!-- SEARCH BOX -->
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="search-box">
-                    <!-- Tabs: Rent / Buy -->
-                    <ul class="nav search-tabs mb-3" id="searchTabs">
-                        <li class="nav-item">
-                            <button class="nav-link active" data-tab="rent" onclick="setSearchType('rent',this)">
-                                🔑 {% if lang=='ur' %}کرایہ{% else %}Rent{% endif %}
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="nav-link" data-tab="buy" onclick="setSearchType('buy',this)">
-                                🏡 {% if lang=='ur' %}خریدیں{% else %}Buy{% endif %}
-                            </button>
-                        </li>
-                    </ul>
 
-                    <form action="{{ url_for('search') }}" method="GET" id="mainSearchForm">
-                        <input type="hidden" name="purpose" id="searchPurpose" value="rent">
-                        <div class="row g-3">
-                            <!-- Location -->
-                            <div class="col-md-3 col-sm-6">
-                                <label class="form-label small fw-semibold text-muted">
-                                    <i class="bi bi-geo-alt me-1"></i>{% if lang=='ur' %}علاقہ{% else %}Area / Location{% endif %}
-                                </label>
-                                <select name="location" class="form-select">
-                                    <option value="">{% if lang=='ur' %}تمام علاقے{% else %}All Areas{% endif %}</option>
-                                    <option>DHA</option>
-                                    <option>Gulshan-e-Iqbal</option>
-                                    <option>Clifton</option>
-                                    <option>PECHS</option>
-                                    <option>Gulistan-e-Johar</option>
-                                    <option>Bahria Town</option>
-                                    <option>North Nazimabad</option>
-                                    <option>Federal B Area</option>
-                                    <option>Saddar</option>
-                                    <option>Nazimabad</option>
-                                    <option>Akhtar Colony</option>
-                                    <option>Korangi</option>
-                                    <option>Malir</option>
-                                    <option>Landhi</option>
-                                    <option>Shah Faisal Colony</option>
-                                </select>
-                            </div>
-                            <!-- Property Type -->
-                            <div class="col-md-3 col-sm-6">
-                                <label class="form-label small fw-semibold text-muted">
-                                    <i class="bi bi-building me-1"></i>{% if lang=='ur' %}پراپرٹی کی قسم{% else %}Property Type{% endif %}
-                                </label>
-                                <select name="type" class="form-select">
-                                    <option value="">{% if lang=='ur' %}تمام اقسام{% else %}All Types{% endif %}</option>
-                                    <option value="flat">{% if lang=='ur' %}فلیٹ{% else %}Flat / Apartment{% endif %}</option>
-                                    <option value="house">{% if lang=='ur' %}گھر{% else %}House{% endif %}</option>
-                                    <option value="room">{% if lang=='ur' %}کمرہ{% else %}Room{% endif %}</option>
-                                    <option value="shop">{% if lang=='ur' %}دکان{% else %}Shop / Office{% endif %}</option>
-                                    <option value="plot">{% if lang=='ur' %}پلاٹ{% else %}Plot / Land{% endif %}</option>
-                                    <option value="upper_portion">{% if lang=='ur' %}اوپری حصہ{% else %}Upper Portion{% endif %}</option>
-                                    <option value="lower_portion">{% if lang=='ur' %}نچلا حصہ{% else %}Lower Portion{% endif %}</option>
-                                </select>
-                            </div>
-                            <!-- Budget -->
-                            <div class="col-md-3 col-sm-6">
-                                <label class="form-label small fw-semibold text-muted">
-                                    <i class="bi bi-cash me-1"></i>{% if lang=='ur' %}بجٹ{% else %}Budget{% endif %}
-                                </label>
-                                <select name="budget" class="form-select" id="budgetSelect">
-                                    <option value="">{% if lang=='ur' %}کوئی بھی{% else %}Any Budget{% endif %}</option>
-                                    <!-- Options set by JS based on rent/buy tab -->
-                                </select>
-                            </div>
-                            <!-- Bedrooms -->
-                            <div class="col-md-3 col-sm-6">
-                                <label class="form-label small fw-semibold text-muted">
-                                    <i class="bi bi-door-open me-1"></i>{% if lang=='ur' %}کمرے{% else %}Bedrooms{% endif %}
-                                </label>
-                                <select name="beds" class="form-select">
-                                    <option value="">{% if lang=='ur' %}کوئی بھی{% else %}Any{% endif %}</option>
-                                    <option value="1">1 BHK</option>
-                                    <option value="2">2 BHK</option>
-                                    <option value="3">3 BHK</option>
-                                    <option value="4">4+ BHK</option>
-                                </select>
-                            </div>
+
+                <!-- Tagline -->
+                <p style="color:rgba(255,255,255,.88);font-size:1rem;line-height:1.8;margin-bottom:10px;">
+                    {% if lang == 'ur' %}
+                        محفوظ ڈیل، آسان اقدام —
+                        <strong style="color:var(--accent-light);">ڈیل بھی، ڈاکومنٹس بھی — سب ایک جگہ۔</strong>
+                    {% else %}
+                        Secure Deals, Easy Steps —
+                        <strong style="color:var(--accent-light);">Deals &amp; Documents, All in One Place.</strong>
+                    {% endif %}
+                </p>
+
+                <!-- ✅ TRUST SIGNALS -->
+                <p style="color:rgba(255,255,255,.7);font-size:.88rem;margin-bottom:20px;">
+                    ✔ 100+ Properties &nbsp;&nbsp;
+                    ✔ Verified Listings &nbsp;&nbsp;
+                    ✔ Trusted Service
+                </p>
+
+                <!-- ✅ PREMIUM WHITE SEARCH BOX -->
+                <form action="{{ url_for('rent_lena') }}" method="GET"
+                      style="background:#fff;border-radius:16px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:520px;">
+
+                    <p style="color:var(--primary);font-weight:700;font-size:.9rem;margin-bottom:12px;">
+                        🔍 {% if lang=='ur' %}پراپرٹی تلاش کریں{% else %}Search Property{% endif %}
+                    </p>
+
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <select name="purpose" class="form-select rounded-pill"
+                                    style="font-weight:500;border-color:#e0e0e0;font-size:.88rem;"
+                                    onchange="this.form.action=this.value=='Buy'?'{{ url_for('purchase_lena') }}':'{{ url_for('rent_lena') }}'">
+                                <option value="Rent">🔑 {% if lang=='ur' %}کرایہ{% else %}Rent{% endif %}</option>
+                                <option value="Buy">🏡 {% if lang=='ur' %}خریدیں{% else %}Buy{% endif %}</option>
+                            </select>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-12 d-flex gap-2 flex-wrap">
-                                <button type="submit" class="btn btn-primary px-4 py-2 flex-grow-1 flex-sm-grow-0">
-                                    <i class="bi bi-search me-2"></i>{% if lang=='ur' %}تلاش کریں{% else %}Search Properties{% endif %}
-                                </button>
-                                <a href="https://wa.me/923111820660?text=I%20need%20help%20finding%20a%20property%20in%20Karachi." 
-                                   target="_blank" class="btn btn-whatsapp px-4 py-2">
-                                    <i class="bi bi-whatsapp me-2"></i>{% if lang=='ur' %}واٹس ایپ پر پوچھیں{% else %}Ask on WhatsApp{% endif %}
-                                </a>
-                            </div>
+                        <div class="col-md-4">
+                            <select name="type" class="form-select rounded-pill"
+                                    style="font-weight:500;border-color:#e0e0e0;font-size:.88rem;">
+                                <option value="">{% if lang=='ur' %}تمام اقسام{% else %}All Types{% endif %}</option>
+                                <option>House</option>
+                                <option>Flat</option>
+                                <option>Portion</option>
+                                <option>Shop</option>
+                                <option>Plot</option>
+                            </select>
                         </div>
-                    </form>
-                </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn w-100 rounded-pill fw-bold"
+                                    style="background:#c8973a;color:#fff;font-size:.88rem;">
+                                🔍 {% if lang=='ur' %}تلاش{% else %}Search{% endif %}
+                            </button>
+                        </div>
+                        <div class="col-12">
+                            <input type="text" name="location" class="form-control rounded-pill"
+                                   placeholder="{% if lang=='ur' %}علاقہ لکھیں... مثلاً گلشن، ڈی ایچ اے، کلفٹن{% else %}Enter location... e.g. Gulshan, DHA, Clifton{% endif %}"
+                                   style="border-color:#e0e0e0;font-size:.9rem;padding:10px 16px;">
+                        </div>
+                    </div>
+
+                    <!-- Popular searches -->
+                    <div class="mt-2 d-flex flex-wrap gap-1">
+                        <small style="color:#888;">Popular:</small>
+                        {% for area in ['Gulshan', 'DHA', 'Clifton', 'North Nazimabad', 'Akhtar Colony'] %}
+                        <a href="{{ url_for('rent_lena') }}?location={{ area }}"
+                           style="background:#f5f5f5;color:#555;border-radius:20px;padding:2px 10px;font-size:.75rem;text-decoration:none;">
+                            {{ area }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </form>
 
                 <!-- Quick Links -->
-                <div class="mt-3 d-flex flex-wrap gap-2 justify-content-center">
-                    <span style="color:rgba(255,255,255,.7);font-size:.82rem;align-self:center;">🔥 Popular:</span>
-                    <a href="{{ url_for('search') }}?location=DHA&purpose=rent" class="area-chip" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);">DHA Rent</a>
-                    <a href="{{ url_for('search') }}?location=Gulshan-e-Iqbal&purpose=rent" class="area-chip" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);">Gulshan Rent</a>
-                    <a href="{{ url_for('search') }}?location=Clifton&purpose=buy" class="area-chip" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);">Clifton Buy</a>
-                    <a href="{{ url_for('search') }}?location=Bahria+Town&purpose=buy" class="area-chip" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);">Bahria Town</a>
-                    <a href="{{ url_for('search') }}?type=flat&purpose=rent" class="area-chip" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);">Flat for Rent</a>
+                <div class="mt-3 d-flex flex-wrap gap-2">
+                    <a href="{{ url_for('document_services') }}" class="btn btn-sm rounded-pill" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);">
+                        📄 {% if lang=='ur' %}دستاویزات{% else %}Documents{% endif %}
+                    </a>
+                    <a href="{{ url_for('tenant_verification') }}" class="btn btn-sm rounded-pill" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);">
+                        ✅ {% if lang=='ur' %}کرایہ دار تصدیق{% else %}Tenant Verify{% endif %}
+                    </a>
+                    <a href="https://wa.me/923111820660" target="_blank" class="btn btn-sm btn-whatsapp rounded-pill">
+                        <i class="bi bi-whatsapp me-1"></i>WhatsApp
+                    </a>
                 </div>
             </div>
+
+            <!-- ✅ RIGHT SIDE — Muhammad Saleem Photo + AG watermark -->
+            <div class="col-lg-6 d-none d-lg-flex flex-column align-items-center justify-content-center" style="position:relative;">
+
+                <!-- Big AG watermark background -->
+                <div style="position:absolute;color:rgba(255,255,255,.06);font-size:180px;font-weight:800;font-family:'Playfair Display',serif;line-height:1;user-select:none;pointer-events:none;z-index:0;">
+                    AG
+                </div>
+
+                <!-- Photo on top -->
+                <div style="position:relative;z-index:1;">
+                    <div style="position:absolute;inset:-8px;border-radius:20px;border:2px solid rgba(200,151,58,.5);z-index:0;"></div>
+                    <img src="/static/MUHAMMAD_SALEEM.png"
+                         alt="Muhammad Saleem"
+                         style="position:relative;z-index:1;width:100%;max-width:480px;height:340px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5);object-fit:cover;object-position:center top;display:block;">
+                </div>
+
+                <!-- Name card -->
+                <div class="mt-3 px-4 py-2 rounded-pill text-center" style="background:rgba(200,151,58,.25);border:1px solid rgba(200,151,58,.5);position:relative;z-index:1;">
+                    <div style="color:var(--accent-light);font-weight:700;font-size:.92rem;">Muhammad Saleem</div>
+                    <div style="color:rgba(255,255,255,.7);font-size:.78rem;">Founder — ApnaGhar | اپنا گھر</div>
+                </div>
+
+                <!-- Stats cards -->
+                <div class="row g-2 mt-3 w-100" style="max-width:480px;position:relative;z-index:1;">
+                    {% for num, label in [('100+','Properties'),('24hr','Response'),('5★','Service')] %}
+                    <div class="col-4">
+                        <div class="text-center rounded-3 py-2" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);">
+                            <div style="color:var(--accent-light);font-weight:700;font-size:1.1rem;">{{ num }}</div>
+                            <div style="color:rgba(255,255,255,.7);font-size:.7rem;">{{ label }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
         </div>
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     TRUST STATS STRIP
-════════════════════════════════════════ -->
-<section class="stats-strip">
-    <div class="container">
-        <div class="row text-center g-3">
-            <div class="col-6 col-md-3">
-                <div class="stat-num">500+</div>
-                <div style="font-size:.82rem;opacity:.85;">{% if lang=='ur' %}تصدیق شدہ فہرستیں{% else %}Verified Listings{% endif %}</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-num">1200+</div>
-                <div style="font-size:.82rem;opacity:.85;">{% if lang=='ur' %}خوش گراہک{% else %}Happy Clients{% endif %}</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-num">7+</div>
-                <div style="font-size:.82rem;opacity:.85;">{% if lang=='ur' %}سال کا تجربہ{% else %}Years Experience{% endif %}</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-num">20+</div>
-                <div style="font-size:.82rem;opacity:.85;">{% if lang=='ur' %}کراچی کے علاقے{% else %}Karachi Areas{% endif %}</div>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 <!-- ═══════════════════════════════════════
      FEATURED LISTINGS — 10 SAMPLE PROPERTIES
