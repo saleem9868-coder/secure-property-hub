@@ -54,7 +54,11 @@
             <p class="text-muted small">
                 <i class="bi bi-clock me-1"></i>
                 {% if lang=='ur' %}آخری تازہ کاری{% else %}Last updated{% endif %}:
-                {{ page.updated_at[:10] if page.updated_at else page.created_at[:10] }}
+                {% if page.updated_at %}
+                    {% if page.updated_at is string %}{{ page.updated_at[:10] }}{% else %}{{ page.updated_at.strftime('%Y-%m-%d') }}{% endif %}
+                {% else %}
+                    {% if page.created_at is string %}{{ page.created_at[:10] }}{% else %}{{ page.created_at.strftime('%Y-%m-%d') }}{% endif %}
+                {% endif %}
             </p>
         </div>
     </div>
