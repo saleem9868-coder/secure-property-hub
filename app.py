@@ -1210,7 +1210,15 @@ def register():
         conn.commit(); conn.close()
         flash('Account ban gaya! Login karein.', 'success')
         return redirect(url_for('login'))
-    return render_template('register.html')
+    conn = get_db()
+    stats = {
+        'rent': conn.execute("SELECT COUNT(*) as cnt FROM rent_properties WHERE is_approved=1").fetchone()['cnt'],
+        'sale': conn.execute("SELECT COUNT(*) as cnt FROM sale_properties WHERE is_approved=1").fetchone()['cnt'],
+        'verified': conn.execute("SELECT COUNT(*) as cnt FROM tenant_verification WHERE status='Approved'").fetchone()['cnt'],
+        'clients': conn.execute("SELECT COUNT(*) as cnt FROM users WHERE is_admin=0").fetchone()['cnt'],
+    }
+    conn.close()
+    return render_template('register.html', stats=stats)
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -1225,7 +1233,15 @@ def login():
                             'user_email': user['email'], 'is_admin': bool(user['is_admin'])})
             return redirect(url_for('admin_panel') if user['is_admin'] else url_for('dashboard'))
         flash('Email ya password galat hai.', 'danger')
-    return render_template('login.html')
+    conn = get_db()
+    stats = {
+        'rent': conn.execute("SELECT COUNT(*) as cnt FROM rent_properties WHERE is_approved=1").fetchone()['cnt'],
+        'sale': conn.execute("SELECT COUNT(*) as cnt FROM sale_properties WHERE is_approved=1").fetchone()['cnt'],
+        'verified': conn.execute("SELECT COUNT(*) as cnt FROM tenant_verification WHERE status='Approved'").fetchone()['cnt'],
+        'clients': conn.execute("SELECT COUNT(*) as cnt FROM users WHERE is_admin=0").fetchone()['cnt'],
+    }
+    conn.close()
+    return render_template('login.html', stats=stats)
 
 @app.route('/logout')
 def logout():
@@ -1685,6 +1701,23 @@ def blog_detail(slug):
         flash('Blog post nahi mili.', 'warning')
         return redirect(url_for('blog'))
     return render_template('blog_detail.html', post=post)
+
+# ─── SHORTCUT ROUTES FOR NAV LINKS ──────────────────────────────────────────
+
+@app.route('/property-laws')
+def property_laws(): return redirect(url_for('cms_page', slug='property-laws'))
+
+@app.route('/calculators')
+def calculators(): return redirect(url_for('cms_page', slug='calculators'))
+
+@app.route('/area-guide')
+def area_guide(): return redirect(url_for('cms_page', slug='area-guide'))
+
+@app.route('/about')
+def about(): return redirect(url_for('cms_page', slug='about-us'))
+
+@app.route('/contact')
+def contact(): return redirect(url_for('cms_page', slug='contact-us'))
 
 # ─── DYNAMIC CMS PAGE ROUTE ──────────────────────────────────────────────────
 
