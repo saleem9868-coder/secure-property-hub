@@ -37,7 +37,7 @@
                     <h5 class="fw-bold mb-2" style="color:var(--primary);">{{ post.title }}</h5>
                     <p class="text-muted small mb-3 flex-grow-1">{{ post.excerpt or (post.content | striptags)[:120] }}...</p>
                     <div class="d-flex justify-content-between align-items-center mt-auto">
-                        <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>{{ post.created_at[:10] }}</small>
+                        <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>{% if post.created_at is string %}{{ post.created_at[:10] }}{% else %}{{ post.created_at.strftime("%Y-%m-%d") }}{% endif %}</small>
                         <a href="{{ url_for('blog_detail', slug=post.slug) }}" class="btn btn-sm btn-outline-primary rounded-pill">
                             {% if lang=='ur' %}مزید پڑھیں{% else %}Read More{% endif %}
                         </a>
