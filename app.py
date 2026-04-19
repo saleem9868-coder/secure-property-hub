@@ -22,7 +22,7 @@ except Exception:
     def _get_geo(ip): return '', ''
 
 app = Flask(__name__)
-app.secret_key = 'sph-v2-secret-2024'
+app.secret_key = os.environ.get('SECRET_KEY', 'fallback-dev-key-change-in-production')
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'pdf'}
@@ -842,7 +842,8 @@ def init_db():
     row = c.fetchone()
     cnt = row[0] if row else 0
     if cnt == 0:
-        pw = generate_password_hash('apnaghar6873')
+        admin_pw = os.environ.get('ADMIN_PASSWORD', 'apnaghar6873')
+        pw = generate_password_hash(admin_pw)
         c.execute("INSERT INTO users (name,email,password,is_admin) VALUES (%s,%s,%s,1)",
                   ('Admin', 'apnagharkarachi.pk@gmail.com', pw))
 
@@ -1944,7 +1945,7 @@ if __name__ == '__main__':
     print("  🌐  Website: http://localhost:5000")
     print("  🔐  Admin:   http://localhost:5000/admin")
     print("      Email:   apnagharkarachi.pk@gmail.com")
-    print("      Password: apnaghar6873")
+    print("      Password: (set via ADMIN_PASSWORD env variable)")
     print("="*55 + "\n")
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=False, host='0.0.0.0', port=port)
