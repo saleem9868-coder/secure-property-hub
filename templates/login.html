@@ -1,332 +1,125 @@
 {% extends 'base.html' %}
-{% block title %}{{ T.nav_home }} - ApnaGhar | اپنا گھر{% endblock %}
+{% block title %}Login — ApnaGhar | اپنا گھر{% endblock %}
+
 {% block content %}
 
-<!-- ══ HERO ══ -->
-<section style="background:linear-gradient(135deg,#1a3c5e 0%,#0f2340 100%);color:#fff;padding:80px 0 60px;position:relative;overflow:hidden;">
+<section style="background:linear-gradient(135deg,#1a3c5e 0%,#0f2340 100%);min-height:100vh;padding:60px 0;position:relative;overflow:hidden;">
+
+    <!-- Background decorations -->
     <div style="position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(200,151,58,.07);pointer-events:none;"></div>
     <div style="position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none;"></div>
 
     <div class="container">
-        <div class="row align-items-center g-4">
+        <div class="row align-items-center justify-content-center g-5">
 
-            <!-- LEFT: Brand + Search -->
-            <div class="col-lg-6">
-                <p style="color:var(--accent-light);font-weight:600;font-size:.85rem;letter-spacing:2px;text-transform:uppercase;" class="mb-3">
-                    {{ T.hero_tag }}
-                </p>
-
-
-
-                <!-- Tagline -->
-                <p style="color:rgba(255,255,255,.88);font-size:1rem;line-height:1.8;margin-bottom:10px;">
-                    {% if lang == 'ur' %}
-                        محفوظ ڈیل، آسان اقدام —
-                        <strong style="color:var(--accent-light);">ڈیل بھی، ڈاکومنٹس بھی — سب ایک جگہ۔</strong>
-                    {% else %}
-                        Secure Deals, Easy Steps —
-                        <strong style="color:var(--accent-light);">Deals &amp; Documents, All in One Place.</strong>
-                    {% endif %}
-                </p>
-
-                <!-- ✅ TRUST SIGNALS -->
-                <p style="color:rgba(255,255,255,.7);font-size:.88rem;margin-bottom:20px;">
-                    ✔ 100+ Properties &nbsp;&nbsp;
-                    ✔ Verified Listings &nbsp;&nbsp;
-                    ✔ Trusted Service
-                </p>
-
-                <!-- ✅ PREMIUM WHITE SEARCH BOX -->
-                <form action="{{ url_for('rent_lena') }}" method="GET"
-                      style="background:#fff;border-radius:16px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:520px;">
-
-                    <p style="color:var(--primary);font-weight:700;font-size:.9rem;margin-bottom:12px;">
-                        🔍 {% if lang=='ur' %}پراپرٹی تلاش کریں{% else %}Search Property{% endif %}
-                    </p>
-
-                    <div class="row g-2">
-                        <div class="col-md-4">
-                            <select name="purpose" class="form-select rounded-pill"
-                                    style="font-weight:500;border-color:#e0e0e0;font-size:.88rem;"
-                                    onchange="this.form.action=this.value=='Buy'?'{{ url_for('purchase_lena') }}':'{{ url_for('rent_lena') }}'">
-                                <option value="Rent">🔑 {% if lang=='ur' %}کرایہ{% else %}Rent{% endif %}</option>
-                                <option value="Buy">🏡 {% if lang=='ur' %}خریدیں{% else %}Buy{% endif %}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <select name="type" class="form-select rounded-pill"
-                                    style="font-weight:500;border-color:#e0e0e0;font-size:.88rem;">
-                                <option value="">{% if lang=='ur' %}تمام اقسام{% else %}All Types{% endif %}</option>
-                                <option>House</option>
-                                <option>Flat</option>
-                                <option>Portion</option>
-                                <option>Shop</option>
-                                <option>Plot</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <button type="submit" class="btn w-100 rounded-pill fw-bold"
-                                    style="background:#c8973a;color:#fff;font-size:.88rem;">
-                                🔍 {% if lang=='ur' %}تلاش{% else %}Search{% endif %}
-                            </button>
-                        </div>
-                        <div class="col-12">
-                            <input type="text" name="location" class="form-control rounded-pill"
-                                   placeholder="{% if lang=='ur' %}علاقہ لکھیں... مثلاً گلشن، ڈی ایچ اے، کلفٹن{% else %}Enter location... e.g. Gulshan, DHA, Clifton{% endif %}"
-                                   style="border-color:#e0e0e0;font-size:.9rem;padding:10px 16px;">
-                        </div>
-                    </div>
-
-                    <!-- Popular searches -->
-                    <div class="mt-2 d-flex flex-wrap gap-1">
-                        <small style="color:#888;">Popular:</small>
-                        {% for area in ['Gulshan', 'DHA', 'Clifton', 'North Nazimabad', 'Akhtar Colony'] %}
-                        <a href="{{ url_for('rent_lena') }}?location={{ area }}"
-                           style="background:#f5f5f5;color:#555;border-radius:20px;padding:2px 10px;font-size:.75rem;text-decoration:none;">
-                            {{ area }}
-                        </a>
-                        {% endfor %}
-                    </div>
-                </form>
-
-                <!-- Quick Links -->
-                <div class="mt-3 d-flex flex-wrap gap-2">
-                    <a href="{{ url_for('document_services') }}" class="btn btn-sm rounded-pill" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);">
-                        📄 {% if lang=='ur' %}دستاویزات{% else %}Documents{% endif %}
-                    </a>
-                    <a href="{{ url_for('tenant_verification') }}" class="btn btn-sm rounded-pill" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);">
-                        ✅ {% if lang=='ur' %}کرایہ دار تصدیق{% else %}Tenant Verify{% endif %}
-                    </a>
-                    <a href="https://wa.me/923111820660" target="_blank" class="btn btn-sm btn-whatsapp rounded-pill">
-                        <i class="bi bi-whatsapp me-1"></i>WhatsApp
-                    </a>
-                </div>
-            </div>
-
-            <!-- ✅ RIGHT SIDE — Muhammad Saleem Photo + AG watermark -->
-            <div class="col-lg-6 d-none d-lg-flex flex-column align-items-center justify-content-center" style="position:relative;">
-
-                <!-- Big AG watermark background -->
-                <div style="position:absolute;color:rgba(255,255,255,.06);font-size:180px;font-weight:800;font-family:'Playfair Display',serif;line-height:1;user-select:none;pointer-events:none;z-index:0;">
-                    AG
-                </div>
-
-                <!-- Photo on top -->
+            <!-- LEFT: Founder photo (hidden on mobile) -->
+            <div class="col-lg-5 d-none d-lg-flex flex-column align-items-center justify-content-center" style="position:relative;">
+                <div style="position:absolute;color:rgba(255,255,255,.06);font-size:180px;font-weight:800;font-family:'Playfair Display',serif;line-height:1;user-select:none;pointer-events:none;z-index:0;">AG</div>
                 <div style="position:relative;z-index:1;">
                     <div style="position:absolute;inset:-8px;border-radius:20px;border:2px solid rgba(200,151,58,.5);z-index:0;"></div>
                     <img src="/static/MUHAMMAD_SALEEM.png"
-                         alt="Muhammad Saleem"
-                         style="position:relative;z-index:1;width:100%;max-width:480px;height:340px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5);object-fit:cover;object-position:center top;display:block;">
+                         alt="Muhammad Saleem — Founder ApnaGhar"
+                         style="position:relative;z-index:1;width:100%;max-width:380px;height:300px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5);object-fit:cover;object-position:center top;display:block;">
                 </div>
-
-                <!-- Name card -->
                 <div class="mt-3 px-4 py-2 rounded-pill text-center" style="background:rgba(200,151,58,.25);border:1px solid rgba(200,151,58,.5);position:relative;z-index:1;">
                     <div style="color:var(--accent-light);font-weight:700;font-size:.92rem;">Muhammad Saleem</div>
                     <div style="color:rgba(255,255,255,.7);font-size:.78rem;">Founder — ApnaGhar | اپنا گھر</div>
                 </div>
+                <p class="mt-4 text-center" style="color:rgba(255,255,255,.7);font-size:.9rem;max-width:320px;line-height:1.8;">
+                    {% if lang=='ur' %}
+                        کراچی کا سب سے بھروسہ مند پراپرٹی پورٹل
+                    {% else %}
+                        Karachi's most trusted property portal — helping families find their dream home since 2018.
+                    {% endif %}
+                </p>
+            </div>
 
-                <!-- Stats cards -->
-                <div class="row g-2 mt-3 w-100" style="max-width:480px;position:relative;z-index:1;">
-                    {% for num, label in [('100+','Properties'),('24hr','Response'),('5★','Service')] %}
+            <!-- RIGHT: Login Form -->
+            <div class="col-lg-5 col-md-8 col-sm-10">
+                <div style="background:#fff;border-radius:20px;padding:40px;box-shadow:0 30px 80px rgba(0,0,0,.3);">
+
+                    <!-- Logo + Title -->
+                    <div class="text-center mb-4">
+                        <img src="/static/logo.png" alt="ApnaGhar" style="height:56px;width:auto;margin-bottom:12px;">
+                        <h2 style="color:var(--primary);font-size:1.5rem;margin-bottom:4px;">
+                            {% if lang=='ur' %}لاگ ان کریں{% else %}Welcome Back{% endif %}
+                        </h2>
+                        <p style="color:#888;font-size:.88rem;">
+                            {% if lang=='ur' %}اپنے اکاؤنٹ میں داخل ہوں{% else %}Login to your ApnaGhar account{% endif %}
+                        </p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form method="POST" action="{{ url_for('login') }}">
+                        <div class="mb-3">
+                            <label style="font-size:.85rem;font-weight:600;color:#444;margin-bottom:6px;display:block;">
+                                <i class="bi bi-envelope me-1"></i>
+                                {% if lang=='ur' %}ای میل{% else %}Email Address{% endif %}
+                            </label>
+                            <input type="email" name="email" required
+                                   class="form-control"
+                                   style="border-radius:10px;padding:11px 14px;border-color:#ddd;font-size:.9rem;"
+                                   placeholder="{% if lang=='ur' %}آپ کی ای میل{% else %}Enter your email{% endif %}">
+                        </div>
+
+                        <div class="mb-4">
+                            <label style="font-size:.85rem;font-weight:600;color:#444;margin-bottom:6px;display:block;">
+                                <i class="bi bi-lock me-1"></i>
+                                {% if lang=='ur' %}پاس ورڈ{% else %}Password{% endif %}
+                            </label>
+                            <input type="password" name="password" required
+                                   class="form-control"
+                                   style="border-radius:10px;padding:11px 14px;border-color:#ddd;font-size:.9rem;"
+                                   placeholder="{% if lang=='ur' %}آپ کا پاس ورڈ{% else %}Enter your password{% endif %}">
+                        </div>
+
+                        <button type="submit" class="btn w-100 py-2 fw-bold"
+                                style="background:var(--primary);color:#fff;border-radius:10px;font-size:.95rem;">
+                            {% if lang=='ur' %}لاگ ان{% else %}Login{% endif %}
+                        </button>
+                    </form>
+
+                    <!-- Divider -->
+                    <div class="d-flex align-items-center my-3">
+                        <hr style="flex:1;border-color:#eee;">
+                        <span style="color:#aaa;font-size:.8rem;padding:0 10px;">OR</span>
+                        <hr style="flex:1;border-color:#eee;">
+                    </div>
+
+                    <!-- WhatsApp alternative -->
+                    <a href="https://wa.me/923111820660?text=Hello%20ApnaGhar%2C%20I%20need%20help%20with%20my%20account."
+                       target="_blank"
+                       class="btn w-100 py-2 fw-bold btn-whatsapp"
+                       style="border-radius:10px;font-size:.9rem;">
+                        <i class="bi bi-whatsapp me-2"></i>
+                        {% if lang=='ur' %}واٹس ایپ پر مدد لیں{% else %}Get Help on WhatsApp{% endif %}
+                    </a>
+
+                    <!-- Register link -->
+                    <p class="text-center mt-3 mb-0" style="font-size:.88rem;color:#666;">
+                        {% if lang=='ur' %}
+                            اکاؤنٹ نہیں ہے؟
+                            <a href="{{ url_for('register') }}" style="color:var(--accent);font-weight:600;">رجسٹر کریں</a>
+                        {% else %}
+                            Don't have an account?
+                            <a href="{{ url_for('register') }}" style="color:var(--accent);font-weight:600;">Register here</a>
+                        {% endif %}
+                    </p>
+
+                </div>
+
+                <!-- Trust signals below form -->
+                <div class="row g-2 mt-3">
+                    {% for icon, label in [('bi-shield-check','Secure Login'),('bi-lock-fill','Data Protected'),('bi-person-check','Verified Accounts')] %}
                     <div class="col-4">
                         <div class="text-center rounded-3 py-2" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);">
-                            <div style="color:var(--accent-light);font-weight:700;font-size:1.1rem;">{{ num }}</div>
-                            <div style="color:rgba(255,255,255,.7);font-size:.7rem;">{{ label }}</div>
+                            <i class="bi {{ icon }}" style="color:var(--accent-light);font-size:1.1rem;"></i>
+                            <div style="color:rgba(255,255,255,.7);font-size:.68rem;margin-top:3px;">{{ label }}</div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
 
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- ══ STATS STRIP ══ -->
-<div class="stats-strip">
-    <div class="container">
-        <div class="row g-2 text-center">
-            <div class="col-3"><div class="stat-num">{{ stats.rent }}+</div><div style="font-size:.8rem;">{{ T.rent_props_title }}</div></div>
-            <div class="col-3"><div class="stat-num">{{ stats.sale }}+</div><div style="font-size:.8rem;">{{ T.sale_props_title }}</div></div>
-            <div class="col-3"><div class="stat-num">{{ stats.verified }}+</div><div style="font-size:.8rem;">{{ T.nav_verify }}</div></div>
-            <div class="col-3"><div class="stat-num">{{ stats.clients }}+</div><div style="font-size:.8rem;">{{ T.nav_home }}</div></div>
-        </div>
-    </div>
-</div>
-
-<!-- ══ 4 ACTION CARDS ══ -->
-<div class="container py-5">
-    <div class="text-center mb-4">
-        <h2 class="sec-title mx-auto">{{ T.choose_title }}</h2>
-        <p class="text-muted mt-2">{{ T.choose_sub }}</p>
-    </div>
-    <div class="row g-4">
-        <div class="col-md-6 col-lg-3">
-            <a href="{{ url_for('rent_lena') }}" class="action-card card-rl">
-                <span class="c-icon">🔑</span>
-                <div class="c-title">{{ T.card_rent_lena_title }}</div>
-                <div class="c-sub">{{ T.card_rent_lena_sub }}</div>
-                <span class="c-btn">{{ T.card_rent_lena_btn }}</span>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <a href="{{ url_for('rent_dena') }}" class="action-card card-rd">
-                <span class="c-icon">🏠</span>
-                <div class="c-title">{{ T.card_rent_dena_title }}</div>
-                <div class="c-sub">{{ T.card_rent_dena_sub }}</div>
-                <span class="c-btn">{{ T.card_rent_dena_btn }}</span>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <a href="{{ url_for('purchase_lena') }}" class="action-card card-buy">
-                <span class="c-icon">🏡</span>
-                <div class="c-title">{{ T.card_buy_title }}</div>
-                <div class="c-sub">{{ T.card_buy_sub }}</div>
-                <span class="c-btn">{{ T.card_buy_btn }}</span>
-            </a>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <a href="{{ url_for('sale_dena') }}" class="action-card card-sell">
-                <span class="c-icon">🏷️</span>
-                <div class="c-title">{{ T.card_sell_title }}</div>
-                <div class="c-sub">{{ T.card_sell_sub }}</div>
-                <span class="c-btn">{{ T.card_sell_btn }}</span>
-            </a>
-        </div>
-    </div>
-    <div class="row g-3 mt-2">
-        <div class="col-md-6">
-            <div class="card border-0 rounded-4 p-3" style="background:#e3f0ff;">
-                <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <i class="bi bi-clipboard-check-fill" style="font-size:2rem;color:#1565c0;flex-shrink:0;"></i>
-                    <div class="flex-grow-1">
-                        <strong style="color:#1565c0;display:block;">{{ T.rent_req_title }}</strong>
-                        <small class="text-muted">{{ T.rent_req_sub }}</small>
-                    </div>
-                    <a href="{{ url_for('rent_chahiye') }}" class="btn btn-sm rounded-pill flex-shrink-0" style="background:#1565c0;color:#fff;">{{ T.rent_req_btn }}</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card border-0 rounded-4 p-3" style="background:#e8f5e9;">
-                <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <i class="bi bi-clipboard-check-fill" style="font-size:2rem;color:#2e7d32;flex-shrink:0;"></i>
-                    <div class="flex-grow-1">
-                        <strong style="color:#2e7d32;display:block;">{{ T.buy_req_title }}</strong>
-                        <small class="text-muted">{{ T.buy_req_sub }}</small>
-                    </div>
-                    <a href="{{ url_for('purchase_chahiye') }}" class="btn btn-sm rounded-pill flex-shrink-0" style="background:#2e7d32;color:#fff;">{{ T.buy_req_btn }}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ══ FEATURED RENT ══ -->
-{% if featured_rent %}
-<section class="py-4" style="background:var(--light-bg);">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-end mb-3">
-            <div><h2 class="sec-title mb-0" style="font-size:1.4rem;">{{ T.rent_props_title }}</h2><p class="text-muted small mt-1 mb-0">{{ T.rent_props_sub }}</p></div>
-            <a href="{{ url_for('rent_lena') }}" class="btn btn-sm rounded-pill" style="background:#e3f0ff;color:#1565c0;font-weight:600;">{{ T.view_all }}</a>
-        </div>
-        <div class="row g-3">
-            {% for p in featured_rent %}
-            <div class="col-md-4"><div class="prop-card">
-                {% if p.filename %}<img src="/uploads/{{ p.filename }}" alt="{{ p.title }}">
-                {% else %}<div class="img-ph"><i class="bi bi-building" style="font-size:2.5rem;"></i></div>{% endif %}
-                <div class="p-3">
-                    <div class="d-flex gap-2 mb-2"><span class="badge-rent">{{ T.footer_rent }}</span><span class="badge-type">{{ p.property_type }}</span></div>
-                    <h6 class="fw-bold mb-1">{{ p.title }}</h6>
-                    <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>{{ p.location }}</p>
-                    <div class="mb-2"><span class="prop-price">Rs. {{ p.price }}{{ T.per_month }}</span></div>
-                    <a href="{{ url_for('rent_detail', pid=p.id) }}" class="btn w-100 rounded-pill btn-sm" style="background:#1565c0;color:#fff;">{{ T.view_details }}</a>
-                </div>
-            </div></div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
-
-<!-- ══ FEATURED SALE ══ -->
-{% if featured_sale %}
-<section class="py-4">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-end mb-3">
-            <div><h2 class="sec-title mb-0" style="font-size:1.4rem;">{{ T.sale_props_title }}</h2><p class="text-muted small mt-1 mb-0">{{ T.sale_props_sub }}</p></div>
-            <a href="{{ url_for('purchase_lena') }}" class="btn btn-sm rounded-pill" style="background:#e8f5e9;color:#2e7d32;font-weight:600;">{{ T.view_all }}</a>
-        </div>
-        <div class="row g-3">
-            {% for p in featured_sale %}
-            <div class="col-md-4"><div class="prop-card">
-                {% if p.filename %}<img src="/uploads/{{ p.filename }}" alt="{{ p.title }}">
-                {% else %}<div class="img-ph"><i class="bi bi-building" style="font-size:2.5rem;"></i></div>{% endif %}
-                <div class="p-3">
-                    <div class="d-flex gap-2 mb-2"><span class="badge-sale">Sale</span><span class="badge-type">{{ p.property_type }}</span></div>
-                    <h6 class="fw-bold mb-1">{{ p.title }}</h6>
-                    <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>{{ p.location }}</p>
-                    <div class="mb-2"><span class="prop-price">Rs. {{ p.price }}</span></div>
-                    <a href="{{ url_for('sale_detail', pid=p.id) }}" class="btn w-100 rounded-pill btn-sm" style="background:#2e7d32;color:#fff;">{{ T.view_details }}</a>
-                </div>
-            </div></div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
-
-<!-- ══ SERVICES ══ -->
-<section class="py-4" style="background:var(--light-bg);">
-    <div class="container">
-        <h2 class="sec-title mb-4" style="font-size:1.4rem;">{{ T.services_title }}</h2>
-        <div class="row g-3">
-            <div class="col-md-4"><div class="card border-0 rounded-4 p-4 text-center h-100">
-                <i class="bi bi-person-check-fill" style="font-size:2.5rem;color:#1565c0;"></i>
-                <h6 class="fw-bold mt-2">{{ T.nav_verify }}</h6>
-                <p class="text-muted small">{{ T.verif_sub }}</p>
-                <a href="{{ url_for('tenant_verification') }}" class="btn btn-sm btn-outline-primary rounded-pill">{{ T.verif_btn }}</a>
-            </div></div>
-            <div class="col-md-4"><div class="card border-0 rounded-4 p-4 text-center h-100">
-                <i class="bi bi-file-earmark-text-fill" style="font-size:2.5rem;color:var(--accent);"></i>
-                <h6 class="fw-bold mt-2">{{ T.nav_docs }}</h6>
-                <p class="text-muted small">{{ T.doc_sub }}</p>
-                <a href="{{ url_for('document_services') }}" class="btn btn-sm btn-outline-primary rounded-pill">{% if lang=='ur' %}دیکھیں{% else %}View All{% endif %}</a>
-            </div></div>
-            <div class="col-md-4"><div class="card border-0 rounded-4 p-4 text-center h-100">
-                <i class="bi bi-whatsapp" style="font-size:2.5rem;color:#25d366;"></i>
-                <h6 class="fw-bold mt-2">WhatsApp Support</h6>
-                <p class="text-muted small">0311-1820660</p>
-                <a href="https://wa.me/923111820660" target="_blank" class="btn btn-sm btn-whatsapp rounded-pill">{% if lang=='ur' %}چیٹ کریں{% else %}Chat Now{% endif %}</a>
-            </div></div>
-        </div>
-    </div>
-</section>
-
-<!-- ══ OFFER BOX ══ -->
-<section class="py-4">
-    <div class="container">
-        <div class="offer-box">
-            <div class="row align-items-center">
-                <div class="col-lg-7">
-                    <h3 style="color:#fff;">⭐ {{ T.offer_title }}</h3>
-                    <div class="row g-2 mt-2">
-                        {% for o in [T.offer_1, T.offer_2, T.offer_3] %}
-                        <div class="col-sm-4">
-                            <div style="background:rgba(255,255,255,.2);border-radius:10px;padding:12px;text-align:center;font-size:.85rem;font-weight:600;">✓ {{ o }}</div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="col-lg-5 mt-3 mt-lg-0 text-center">
-                    <a href="https://wa.me/923111820660?text=Hello%2C%20ApnaGhar%20se%20rabta%20karna%20chahta%20hoon." target="_blank" class="btn btn-light rounded-pill px-4 fw-bold" style="color:var(--accent);">
-                        <i class="bi bi-whatsapp me-2"></i>{{ T.offer_btn }}
-                    </a><br>
-                    <a href="tel:03111820660" class="btn btn-outline-light rounded-pill px-4 mt-2">
-                        <i class="bi bi-telephone me-2"></i>0311-1820660
-                    </a>
-                </div>
             </div>
         </div>
     </div>
