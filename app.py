@@ -9,12 +9,22 @@ from functools import wraps
 import cloudinary
 import cloudinary.uploader
 
-cloudinary.config(
-    cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    api_key    = os.environ.get('CLOUDINARY_API_KEY'),
-    api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
-    secure     = True
-)
+# Supports both CLOUDINARY_URL (e.g. Railway) and separate env vars
+if os.environ.get('CLOUDINARY_URL'):
+    # cloudinary.config() auto-reads CLOUDINARY_URL — no manual setup needed
+    cloudinary.config(secure=True)
+else:
+    cloudinary.config(
+        cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
+        api_key    = os.environ.get('CLOUDINARY_API_KEY'),
+        api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
+        secure     = True
+    )
+
+def _cloudinary_ready():
+    """Return True if Cloudinary is configured (either via URL or separate vars)."""
+    cfg = cloudinary.config()
+    return bool(cfg.cloud_name and cfg.api_key and cfg.api_secret)
 
 def upload_to_cloudinary(file_obj, prefix=''):
     """Upload a file to Cloudinary and return the secure URL."""
@@ -931,7 +941,7 @@ def save_uploaded_file(file_obj, subfolder, prefix=''):
     if not file_obj or not allowed_file(file_obj.filename):
         return None
     # Try Cloudinary first
-    if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+    if _cloudinary_ready():
         return upload_to_cloudinary(file_obj, prefix=prefix)
     # Fallback: local disk
     os.makedirs(subfolder, exist_ok=True)
@@ -1049,7 +1059,7 @@ def rent_dena():
         pid = cur.lastrowid
         for f in request.files.getlist('images'):
             if f and allowed_file(f.filename):
-                if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+                if _cloudinary_ready():
                     url = upload_to_cloudinary(f, prefix=f"rent_{pid}_")
                 else:
                     os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
@@ -1157,7 +1167,7 @@ def sale_dena():
         pid = cur.lastrowid
         for f in request.files.getlist('images'):
             if f and allowed_file(f.filename):
-                if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+                if _cloudinary_ready():
                     url = upload_to_cloudinary(f, prefix=f"sale_{pid}_")
                 else:
                     os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
@@ -1485,7 +1495,7 @@ def admin_add_property():
             pid = cur.lastrowid
             for f in request.files.getlist('images'):
                 if f and allowed_file(f.filename):
-                    if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+                    if _cloudinary_ready():
                         url = upload_to_cloudinary(f, prefix=f"rent_{pid}_")
                     else:
                         os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
@@ -1520,7 +1530,7 @@ def admin_add_property():
             pid = cur.lastrowid
             for f in request.files.getlist('images'):
                 if f and allowed_file(f.filename):
-                    if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+                    if _cloudinary_ready():
                         url = upload_to_cloudinary(f, prefix=f"sale_{pid}_")
                     else:
                         os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
