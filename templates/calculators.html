@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}Calculators - Secure Property Hub{% endblock %}
+{% block title %}Property Calculators — ApnaGhar | اپنا گھر{% endblock %}
+{% block meta_desc %}Free property calculators for Karachi — EMI, Stamp Duty, Rent, Affordability. Calculate before you decide.{% endblock %}
 {% block content %}
 
 <div class="page-hdr hdr-verif">
@@ -223,6 +224,8 @@
 
 </div>
 
+{% endblock %}
+
 {% block extra_js %}
 <script>
 function formatRs(num) {
@@ -291,5 +294,4 @@ function calcRvB() {
     document.getElementById('rvbResult').style.display = 'block';
 }
 </script>
-{% endblock %}
 {% endblock %}
