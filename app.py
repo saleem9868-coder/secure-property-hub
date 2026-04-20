@@ -1361,35 +1361,6 @@ def update_verification(vid):
     flash('Status update ho gaya.', 'success')
     return redirect(url_for('admin_panel'))
 
-@app.route('/admin/generate-pdf/<int:vid>')
-@admin_required
-def generate_pdf(vid):
-    """Stub: generate a simple text-based verification PDF."""
-    conn = get_db()
-    v = conn.execute("SELECT * FROM tenant_verification WHERE id=?", (vid,)).fetchone()
-    conn.close()
-    if not v:
-        flash('Verification record nahi mili.', 'danger')
-        return redirect(url_for('admin_panel'))
-    lines = [
-        "APNAGHAR — TENANT VERIFICATION REPORT",
-        "=" * 40,
-        f"Tenant Name : {v.get('tenant_name','')}",
-        f"CNIC        : {v.get('cnic','')}",
-        f"Mobile      : {v.get('mobile','')}",
-        f"Address     : {v.get('address','')}",
-        f"Occupation  : {v.get('occupation','')}",
-        f"Status      : {v.get('status','')}",
-        f"Notes       : {v.get('notes','')}",
-        "=" * 40,
-        "ApnaGhar | apnagharkarachi.com | 0311-1820660",
-    ]
-    content = "\n".join(lines)
-    resp = make_response(content)
-    resp.headers['Content-Type'] = 'text/plain; charset=utf-8'
-    resp.headers['Content-Disposition'] = f'attachment; filename="verification_{vid}.txt"'
-    return resp
-
 # ─── ADMIN: QUICK ADD PROPERTY ───────────────────────────────────────────────
 
 @app.route('/admin/add-property', methods=['GET','POST'])
