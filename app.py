@@ -10,9 +10,21 @@ import cloudinary
 import cloudinary.uploader
 
 # Supports both CLOUDINARY_URL (e.g. Railway) and separate env vars
-if os.environ.get('CLOUDINARY_URL'):
-    # cloudinary.config() auto-reads CLOUDINARY_URL — no manual setup needed
-    cloudinary.config(secure=True)
+_cld_url = os.environ.get('CLOUDINARY_URL', '')
+if _cld_url.startswith('cloudinary://'):
+    # Parse cloudinary://api_key:api_secret@cloud_name manually
+    try:
+        _cld_rest = _cld_url[len('cloudinary://'):]
+        _cld_auth, _cld_cloud = _cld_rest.rsplit('@', 1)
+        _cld_key, _cld_secret = _cld_auth.split(':', 1)
+        cloudinary.config(
+            cloud_name = _cld_cloud.strip(),
+            api_key    = _cld_key.strip(),
+            api_secret = _cld_secret.strip(),
+            secure     = True
+        )
+    except Exception as _e:
+        print(f"Failed to parse CLOUDINARY_URL: {_e}")
 else:
     cloudinary.config(
         cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
@@ -952,6 +964,13 @@ def save_uploaded_file(file_obj, subfolder, prefix=''):
     return fname
 
 # ─── HOME ─────────────────────────────────────────────────────────────────────
+
+# ─── DEBUG (remove after confirming Cloudinary works) ────────────────────────
+@app.route("/debug-cloudinary")
+def debug_cloudinary():
+    cfg = cloudinary.config()
+    return {"cloud_name": cfg.cloud_name, "api_key": cfg.api_key, "has_secret": bool(cfg.api_secret)}
+
 
 @app.route('/')
 def index():
