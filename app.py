@@ -2022,6 +2022,19 @@ os.makedirs(UPLOAD_BLOG, exist_ok=True)
 os.makedirs(UPLOAD_PAGES, exist_ok=True)
 os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
 os.makedirs(UPLOAD_MEDIA, exist_ok=True)
+
+# ─── MIGRATE OLD IMAGES TO CORRECT FOLDER ────────────────────────────────────
+import glob, shutil
+for old_file in glob.glob('uploads/rent_*') + glob.glob('uploads/sale_*'):
+    fname = os.path.basename(old_file)
+    new_path = os.path.join(UPLOAD_PROPERTIES, fname)
+    if not os.path.exists(new_path):
+        try:
+            shutil.copy2(old_file, new_path)
+            print(f"Migrated: {fname} -> {new_path}")
+        except Exception as e:
+            print(f"Migration failed for {fname}: {e}")
+
 init_db()
 
 # ─── RUN ──────────────────────────────────────────────────────────────────────
