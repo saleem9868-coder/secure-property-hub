@@ -23,6 +23,13 @@ except Exception:
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'fallback-dev-key-change-in-production')
+
+# ─── CACHE HEADERS ────────────────────────────────────────────────────────────
+@app.after_request
+def add_cache_headers(response):
+    if request.path.startswith('/static/'):
+        response.headers['Cache-Control'] = 'public, max-age=31536000'
+    return response
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'pdf'}
@@ -1732,7 +1739,8 @@ def property_laws():
 
 @app.route('/calculators')
 def calculators():
-    return redirect(url_for('cms_page', slug='calculators'), 301)
+    t = T()
+    return render_template('calculators.html', t=t, lang=get_lang())
 
 @app.route('/area-guide')
 def area_guide():
@@ -1998,6 +2006,88 @@ def admin_seed_blog():
     conn.close()
     flash(f"Done! {inserted} blog posts created, {updated} updated.", "success")
     return redirect(url_for("admin_panel"))
+
+
+# ─── SITEMAP ──────────────────────────────────────────────────────────────────
+
+@app.route('/sitemap.xml')
+def sitemap():
+    from flask import Response
+    import datetime as dt
+    pages = []
+    base = 'https://apnagharkarachi.com'
+
+    # Static pages
+    for path, freq, pri in [
+        ('/', 'daily', '1.0'),
+        ('/kiraya-par-lena', 'weekly', '0.9'),
+        ('/khareedna-chahta-hoon', 'weekly', '0.9'),
+        ('/blog', 'weekly', '0.8'),
+        ('/calculators', 'monthly', '0.7'),
+        ('/kiraya-dena', 'monthly', '0.7'),
+        ('/bechna', 'monthly', '0.7'),
+        ('/tenant-verify', 'monthly', '0.6'),
+        ('/documents', 'monthly', '0.6'),
+    ]:
+        pages.append(f'  <url><loc>{base}{path}</loc><changefreq>{freq}</changefreq><priority>{pri}</priority></url>')
+
+    try:
+        conn = get_db()
+        # Rent properties
+        rent_props = conn.execute(
+            "SELECT id, created_at FROM rent_properties WHERE is_approved=1"
+        ).fetchall()
+        for p in rent_props:
+            lastmod = p['created_at'].strftime('%Y-%m-%d') if p['created_at'] else dt.date.today().isoformat()
+            pages.append(f'  <url><loc>{base}/property/rent/{p["id"]}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>')
+
+        # Sale properties
+        sale_props = conn.execute(
+            "SELECT id, created_at FROM sale_properties WHERE is_approved=1"
+        ).fetchall()
+        for p in sale_props:
+            lastmod = p['created_at'].strftime('%Y-%m-%d') if p['created_at'] else dt.date.today().isoformat()
+            pages.append(f'  <url><loc>{base}/property/sale/{p["id"]}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>')
+
+        # Blog posts
+        posts = conn.execute(
+            "SELECT slug, updated_at FROM blog_posts WHERE is_published=1"
+        ).fetchall()
+        for post in posts:
+            lastmod = post['updated_at'].strftime('%Y-%m-%d') if post['updated_at'] else dt.date.today().isoformat()
+            pages.append(f'  <url><loc>{base}/blog/{post["slug"]}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>')
+
+        # CMS pages
+        cms = conn.execute(
+            "SELECT slug, updated_at FROM cms_pages WHERE is_published=1"
+        ).fetchall()
+        for page in cms:
+            lastmod = page['updated_at'].strftime('%Y-%m-%d') if page['updated_at'] else dt.date.today().isoformat()
+            pages.append(f'  <url><loc>{base}/{page["slug"]}</loc><lastmod>{lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>')
+
+        conn.close()
+    except Exception:
+        pass
+
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    xml += '\n'.join(pages)
+    xml += '\n</urlset>'
+    return Response(xml, mimetype='application/xml')
+
+
+@app.route('/robots.txt')
+def robots():
+    from flask import Response
+    content = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Disallow: /admin\n"
+        "Disallow: /admin/\n"
+        "\n"
+        "Sitemap: https://apnagharkarachi.com/sitemap.xml\n"
+    )
+    return Response(content, mimetype='text/plain')
 
 
 # ─── STARTUP ──────────────────────────────────────────────────────────────────
