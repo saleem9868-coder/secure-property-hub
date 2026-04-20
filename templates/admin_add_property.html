@@ -1,0 +1,130 @@
+{% extends 'base.html' %}{% block title %}Add Property — Admin{% endblock %}
+{% block content %}
+<div style="background:var(--primary);color:#fff;padding:18px 0;">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h4 class="mb-0" style="color:#fff;"><i class="bi bi-plus-circle me-2"></i>Add Property (Admin)</h4>
+            <small style="color:rgba(255,255,255,.7);">Property immediately approved &amp; optionally featured</small>
+        </div>
+        <a href="{{ url_for('admin_panel') }}#aRent" class="btn btn-sm btn-outline-light rounded-pill">← Back to Panel</a>
+    </div>
+</div>
+<div class="container py-4" style="max-width:700px;">
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+        <form method="POST" action="{{ url_for('admin_add_property') }}" enctype="multipart/form-data">
+
+            <!-- Category -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Listing Type *</label>
+                <div class="d-flex gap-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="cat" id="catRent" value="rent" checked>
+                        <label class="form-check-label" for="catRent">🔑 For Rent</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="cat" id="catSale" value="sale">
+                        <label class="form-check-label" for="catSale">🏡 For Sale</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Title *</label>
+                    <input type="text" name="title" class="form-control rounded-3" required placeholder="e.g. 2-Bed Flat — Akhtar Colony">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Property Type</label>
+                    <select name="property_type" class="form-select rounded-3">
+                        <option>House</option>
+                        <option>Flat</option>
+                        <option>Apartment</option>
+                        <option>Upper Portion</option>
+                        <option>Lower Portion</option>
+                        <option>Shop</option>
+                        <option>Plot</option>
+                        <option>Room</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Area / Neighbourhood</label>
+                    <input type="text" name="location" class="form-control rounded-3" placeholder="e.g. Akhtar Colony">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">City Area</label>
+                    <input type="text" name="area" class="form-control rounded-3" placeholder="e.g. Karachi East">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Price (Rs.)</label>
+                    <input type="text" name="price" class="form-control rounded-3" placeholder="e.g. 25000">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Bedrooms</label>
+                    <select name="bedrooms" class="form-select rounded-3">
+                        <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6+</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Bathrooms</label>
+                    <select name="bathrooms" class="form-select rounded-3">
+                        <option>1</option><option>2</option><option>3</option><option>4+</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Furnished?</label>
+                    <select name="furnished" class="form-select rounded-3">
+                        <option>Unfurnished</option>
+                        <option>Semi-Furnished</option>
+                        <option>Fully Furnished</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Tenant Preference</label>
+                    <select name="tenant_preference" class="form-select rounded-3">
+                        <option>Family</option>
+                        <option>Bachelor</option>
+                        <option>Any</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Total Area (sale)</label>
+                    <input type="text" name="total_area" class="form-control rounded-3" placeholder="e.g. 120 Sq Yd">
+                </div>
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Owner Name</label>
+                    <input type="text" name="owner_name" class="form-control rounded-3" value="Muhammad Saleem" placeholder="Owner Name">
+                </div>
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Owner Phone</label>
+                    <input type="text" name="owner_phone" class="form-control rounded-3" value="0311-1820660">
+                </div>
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Description</label>
+                    <textarea name="description" class="form-control rounded-3" rows="4" placeholder="Property details, features, nearby landmarks..."></textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Property Images</label>
+                    <input type="file" name="images" multiple class="form-control rounded-3" accept="image/*">
+                    <div class="form-text">Upload property photos (JPG, PNG, WebP). First image will be the main photo.</div>
+                </div>
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="is_featured" id="isFeatured" checked>
+                        <label class="form-check-label fw-semibold" for="isFeatured">
+                            ⭐ Feature on Homepage — this property will appear on the home page
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-success small mt-3 mb-3 rounded-3">
+                ✅ Properties added from here are <strong>auto-approved</strong> and go live immediately.
+            </div>
+
+            <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold w-100">
+                <i class="bi bi-plus-circle me-2"></i>Add Property & Publish
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
