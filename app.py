@@ -965,11 +965,19 @@ def save_uploaded_file(file_obj, subfolder, prefix=''):
 
 # ─── HOME ─────────────────────────────────────────────────────────────────────
 
-# ─── DEBUG (remove after confirming Cloudinary works) ────────────────────────
-@app.route("/debug-cloudinary")
-def debug_cloudinary():
-    cfg = cloudinary.config()
-    return {"cloud_name": cfg.cloud_name, "api_key": cfg.api_key, "has_secret": bool(cfg.api_secret)}
+# ─── DEBUG UPLOAD (remove after confirming images work) ──────────────────────
+@app.route("/debug-upload", methods=["GET","POST"])
+def debug_upload():
+    if request.method == "POST":
+        f = request.files.get("image")
+        if not f:
+            return "No file received"
+        url = upload_to_cloudinary(f, prefix="test_")
+        return f"Upload result: {url}"
+    return """<form method="post" enctype="multipart/form-data">
+        <input type="file" name="image">
+        <button type="submit">Test Upload</button>
+    </form>"""
 
 
 @app.route('/')
@@ -1076,17 +1084,14 @@ def rent_dena():
             request.form.get('tenant_preference','Family'),
             request.form['description'], auto_approve))
         pid = cur.lastrowid
+        print(f"DEBUG rent_dena: pid={pid}")
         for f in request.files.getlist('images'):
-            if f and allowed_file(f.filename):
-                if _cloudinary_ready():
-                    url = upload_to_cloudinary(f, prefix=f"rent_{pid}_")
-                else:
-                    os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
-                    fname = f"rent_{pid}_{secure_filename(f.filename)}"
-                    f.save(os.path.join(UPLOAD_PROPERTIES, fname))
-                    url = fname
+            if f and f.filename:
+                print(f"DEBUG: uploading file {f.filename}")
+                url = upload_to_cloudinary(f, prefix=f"rent_{pid}_") if _cloudinary_ready() else None
+                print(f"DEBUG: upload url={url}")
                 if url:
-                    conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'rent',url))
+                    cur.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'rent',url))
         conn.commit(); conn.close()
         # WhatsApp notification for admin
         msg = (
@@ -1184,17 +1189,14 @@ def sale_dena():
             request.form.get('total_area',''), request.form.get('possession','Immediate'),
             request.form['description'], auto_approve))
         pid = cur.lastrowid
+        print(f"DEBUG sale_dena: pid={pid}")
         for f in request.files.getlist('images'):
-            if f and allowed_file(f.filename):
-                if _cloudinary_ready():
-                    url = upload_to_cloudinary(f, prefix=f"sale_{pid}_")
-                else:
-                    os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
-                    fname = f"sale_{pid}_{secure_filename(f.filename)}"
-                    f.save(os.path.join(UPLOAD_PROPERTIES, fname))
-                    url = fname
+            if f and f.filename:
+                print(f"DEBUG: uploading file {f.filename}")
+                url = upload_to_cloudinary(f, prefix=f"sale_{pid}_") if _cloudinary_ready() else None
+                print(f"DEBUG: upload url={url}")
                 if url:
-                    conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'sale',url))
+                    cur.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'sale',url))
         conn.commit(); conn.close()
         # WhatsApp notification for admin
         msg = (
@@ -1512,17 +1514,13 @@ def admin_add_property():
                 1 if request.form.get('is_featured') else 0,
             ))
             pid = cur.lastrowid
+            print(f"DEBUG admin rent: pid={pid}")
             for f in request.files.getlist('images'):
-                if f and allowed_file(f.filename):
-                    if _cloudinary_ready():
-                        url = upload_to_cloudinary(f, prefix=f"rent_{pid}_")
-                    else:
-                        os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
-                        fname = f"rent_{pid}_{secure_filename(f.filename)}"
-                        f.save(os.path.join(UPLOAD_PROPERTIES, fname))
-                        url = fname
+                if f and f.filename:
+                    url = upload_to_cloudinary(f, prefix=f"rent_{pid}_") if _cloudinary_ready() else None
+                    print(f"DEBUG admin rent upload url={url}")
                     if url:
-                        conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'rent',url))
+                        cur.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'rent',url))
             conn.commit(); conn.close()
             flash(f'Rent property "{request.form["title"]}" add aur approve ho gayi!', 'success')
         else:
@@ -1547,17 +1545,13 @@ def admin_add_property():
                 1 if request.form.get('is_featured') else 0,
             ))
             pid = cur.lastrowid
+            print(f"DEBUG admin sale: pid={pid}")
             for f in request.files.getlist('images'):
-                if f and allowed_file(f.filename):
-                    if _cloudinary_ready():
-                        url = upload_to_cloudinary(f, prefix=f"sale_{pid}_")
-                    else:
-                        os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
-                        fname = f"sale_{pid}_{secure_filename(f.filename)}"
-                        f.save(os.path.join(UPLOAD_PROPERTIES, fname))
-                        url = fname
+                if f and f.filename:
+                    url = upload_to_cloudinary(f, prefix=f"sale_{pid}_") if _cloudinary_ready() else None
+                    print(f"DEBUG admin sale upload url={url}")
                     if url:
-                        conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'sale',url))
+                        cur.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'sale',url))
             conn.commit(); conn.close()
             flash(f'Sale property "{request.form["title"]}" add aur approve ho gayi!', 'success')
         return redirect(url_for('admin_panel') + '#aRent')
