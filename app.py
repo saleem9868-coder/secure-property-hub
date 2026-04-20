@@ -23,7 +23,7 @@ except Exception:
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'fallback-dev-key-change-in-production')
-app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads', 'media')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'pdf'}
 
@@ -854,7 +854,7 @@ def init_db():
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    return send_from_directory(UPLOAD_PROPERTIES, filename)
 
 def save_uploaded_file(file_obj, subfolder, prefix=''):
     """Save a file to a subfolder under static/uploads/ and return filename."""
@@ -973,10 +973,13 @@ def rent_dena():
             request.form.get('tenant_preference','Family'),
             request.form['description'], auto_approve))
         pid = cur.lastrowid
+        os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
         for f in request.files.getlist('images'):
             if f and allowed_file(f.filename):
                 fname = f"rent_{pid}_{secure_filename(f.filename)}"
-                f.save(os.path.join(UPLOAD_PROPERTIES, fname))
+                upload_path = os.path.join(UPLOAD_PROPERTIES, fname)
+                print("Saving image to:", upload_path)
+                f.save(upload_path)
                 conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'rent',fname))
         conn.commit(); conn.close()
         # WhatsApp notification for admin
@@ -1075,10 +1078,13 @@ def sale_dena():
             request.form.get('total_area',''), request.form.get('possession','Immediate'),
             request.form['description'], auto_approve))
         pid = cur.lastrowid
+        os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
         for f in request.files.getlist('images'):
             if f and allowed_file(f.filename):
                 fname = f"sale_{pid}_{secure_filename(f.filename)}"
-                f.save(os.path.join(UPLOAD_PROPERTIES, fname))
+                upload_path = os.path.join(UPLOAD_PROPERTIES, fname)
+                print("Saving image to:", upload_path)
+                f.save(upload_path)
                 conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'sale',fname))
         conn.commit(); conn.close()
         # WhatsApp notification for admin
@@ -1171,8 +1177,11 @@ def tenant_verification():
         for field, prefix in [('cnic_file','cnic'),('photo_file','photo')]:
             f = request.files.get(field)
             if f and allowed_file(f.filename):
+                os.makedirs(UPLOAD_MEDIA, exist_ok=True)
                 fname = f"{prefix}_{session['user_id']}_{secure_filename(f.filename)}"
-                f.save(os.path.join(app.config['UPLOAD_FOLDER'], fname))
+                upload_path = os.path.join(UPLOAD_MEDIA, fname)
+                print("Saving verification file to:", upload_path)
+                f.save(upload_path)
                 if field == 'cnic_file': cnic_file = fname
                 else: photo_file = fname
         conn.execute('''INSERT INTO tenant_verification (user_id,tenant_name,cnic,mobile,address,occupation,cnic_file,photo_file)
@@ -1394,10 +1403,13 @@ def admin_add_property():
                 1 if request.form.get('is_featured') else 0,
             ))
             pid = cur.lastrowid
+            os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
             for f in request.files.getlist('images'):
                 if f and allowed_file(f.filename):
                     fname = f"rent_{pid}_{secure_filename(f.filename)}"
-                    f.save(os.path.join(UPLOAD_PROPERTIES, fname))
+                    upload_path = os.path.join(UPLOAD_PROPERTIES, fname)
+                    print("Saving image to:", upload_path)
+                    f.save(upload_path)
                     conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'rent',fname))
             conn.commit(); conn.close()
             flash(f'Rent property "{request.form["title"]}" add aur approve ho gayi!', 'success')
@@ -1423,10 +1435,13 @@ def admin_add_property():
                 1 if request.form.get('is_featured') else 0,
             ))
             pid = cur.lastrowid
+            os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
             for f in request.files.getlist('images'):
                 if f and allowed_file(f.filename):
                     fname = f"sale_{pid}_{secure_filename(f.filename)}"
-                    f.save(os.path.join(UPLOAD_PROPERTIES, fname))
+                    upload_path = os.path.join(UPLOAD_PROPERTIES, fname)
+                    print("Saving image to:", upload_path)
+                    f.save(upload_path)
                     conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'sale',fname))
             conn.commit(); conn.close()
             flash(f'Sale property "{request.form["title"]}" add aur approve ho gayi!', 'success')
