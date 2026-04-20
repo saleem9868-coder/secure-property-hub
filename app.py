@@ -1361,6 +1361,107 @@ def update_verification(vid):
     flash('Status update ho gaya.', 'success')
     return redirect(url_for('admin_panel'))
 
+@app.route('/admin/generate-pdf/<int:vid>')
+@admin_required
+def generate_pdf(vid):
+    """Stub: generate a simple text-based verification PDF."""
+    conn = get_db()
+    v = conn.execute("SELECT * FROM tenant_verification WHERE id=?", (vid,)).fetchone()
+    conn.close()
+    if not v:
+        flash('Verification record nahi mili.', 'danger')
+        return redirect(url_for('admin_panel'))
+    lines = [
+        "APNAGHAR — TENANT VERIFICATION REPORT",
+        "=" * 40,
+        f"Tenant Name : {v.get('tenant_name','')}",
+        f"CNIC        : {v.get('cnic','')}",
+        f"Mobile      : {v.get('mobile','')}",
+        f"Address     : {v.get('address','')}",
+        f"Occupation  : {v.get('occupation','')}",
+        f"Status      : {v.get('status','')}",
+        f"Notes       : {v.get('notes','')}",
+        "=" * 40,
+        "ApnaGhar | apnagharkarachi.com | 0311-1820660",
+    ]
+    content = "\n".join(lines)
+    resp = make_response(content)
+    resp.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    resp.headers['Content-Disposition'] = f'attachment; filename="verification_{vid}.txt"'
+    return resp
+
+# ─── ADMIN: QUICK ADD PROPERTY ───────────────────────────────────────────────
+
+@app.route('/admin/add-property', methods=['GET','POST'])
+@admin_required
+def admin_add_property():
+    """Admin can directly add and auto-approve+feature a property."""
+    if request.method == 'POST':
+        cat = request.form.get('cat', 'rent')
+        conn = get_db()
+        cur = conn.cursor()
+        if cat == 'rent':
+            cur.execute('''INSERT INTO rent_properties
+                (user_id,owner_name,owner_phone,title,location,area,
+                 property_type,price,bedrooms,bathrooms,floor,furnished,
+                 tenant_preference,description,is_approved,is_featured)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1,?)''', (
+                session['user_id'],
+                request.form.get('owner_name','Admin'),
+                request.form.get('owner_phone','0311-1820660'),
+                request.form['title'],
+                request.form.get('location',''),
+                request.form.get('area',''),
+                request.form.get('property_type','House'),
+                request.form.get('price',''),
+                request.form.get('bedrooms','2'),
+                request.form.get('bathrooms','1'),
+                request.form.get('floor',''),
+                request.form.get('furnished','Unfurnished'),
+                request.form.get('tenant_preference','Family'),
+                request.form.get('description',''),
+                1 if request.form.get('is_featured') else 0,
+            ))
+            pid = cur.lastrowid
+            for f in request.files.getlist('images'):
+                if f and allowed_file(f.filename):
+                    fname = f"rent_{pid}_{secure_filename(f.filename)}"
+                    f.save(os.path.join(UPLOAD_PROPERTIES, fname))
+                    conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'rent',fname))
+            conn.commit(); conn.close()
+            flash(f'Rent property "{request.form["title"]}" add aur approve ho gayi!', 'success')
+        else:
+            cur.execute('''INSERT INTO sale_properties
+                (user_id,owner_name,owner_phone,title,location,area,
+                 property_type,price,bedrooms,bathrooms,total_area,
+                 possession,description,is_approved,is_featured)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,1,?)''', (
+                session['user_id'],
+                request.form.get('owner_name','Admin'),
+                request.form.get('owner_phone','0311-1820660'),
+                request.form['title'],
+                request.form.get('location',''),
+                request.form.get('area',''),
+                request.form.get('property_type','House'),
+                request.form.get('price',''),
+                request.form.get('bedrooms','2'),
+                request.form.get('bathrooms','1'),
+                request.form.get('total_area',''),
+                request.form.get('possession','Immediate'),
+                request.form.get('description',''),
+                1 if request.form.get('is_featured') else 0,
+            ))
+            pid = cur.lastrowid
+            for f in request.files.getlist('images'):
+                if f and allowed_file(f.filename):
+                    fname = f"sale_{pid}_{secure_filename(f.filename)}"
+                    f.save(os.path.join(UPLOAD_PROPERTIES, fname))
+                    conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'sale',fname))
+            conn.commit(); conn.close()
+            flash(f'Sale property "{request.form["title"]}" add aur approve ho gayi!', 'success')
+        return redirect(url_for('admin_panel') + '#aRent')
+    return render_template('admin_add_property.html')
+
 @app.route('/admin/toggle/<table>/<field>/<int:pid>')
 @admin_required
 def admin_toggle(table, field, pid):
