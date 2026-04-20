@@ -1,76 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3-Bed Flat Gulshan Block 13D — ApnaGhar</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+{% extends 'base.html' %}
+{% block title %}{{ prop.title }} — ApnaGhar | اپنا گھر{% endblock %}
+{% block meta_desc %}{{ prop.description[:150] if prop.description else prop.title }} — ApnaGhar Karachi{% endblock %}
+{% block og_title %}{{ prop.title }} — ApnaGhar{% endblock %}
+{% block og_desc %}{{ prop.location }}{% if prop.area %}, {{ prop.area }}{% endif %} · Rs. {{ prop.price }}{% if cat=='rent' %}/month{% endif %}{% endblock %}
+
+{% block extra_css %}
 <style>
 :root{
   --green:#1a6b45;--green-mid:#2d8a5a;--green-light:#e8f5ee;--green-xlight:#f2faf6;
   --accent:#f4a623;--accent-light:#fff8ec;
   --gray-50:#f9f9f7;--gray-100:#f0efe9;--gray-200:#e0dfd7;--gray-400:#a0a097;
-  --gray-600:#5a5a54;--gray-800:#2c2c28;--white:#fff;
+  --gray-600:#5a5a54;--gray-800:#2c2c28;
   --radius:10px;--radius-lg:16px;--radius-xl:22px;
   --shadow-sm:0 1px 4px rgba(0,0,0,.07);--shadow-md:0 4px 20px rgba(0,0,0,.09);--shadow-lg:0 12px 40px rgba(0,0,0,.13);
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--gray-800);line-height:1.6;}
-
-/* NAV */
-nav{background:var(--white);border-bottom:1px solid var(--gray-200);padding:0 24px;display:flex;align-items:center;gap:14px;height:58px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);}
-.logo{font-family:'Playfair Display',serif;font-size:21px;color:var(--green);text-decoration:none;}
-.logo span{color:var(--accent);}
-.breadcrumb{font-size:12px;color:var(--gray-400);display:flex;align-items:center;gap:6px;}
-.breadcrumb a{color:var(--gray-400);text-decoration:none;transition:color .15s;}
-.breadcrumb a:hover{color:var(--green);}
-.nav-spacer{flex:1;}
-.nav-btn{font-size:13px;font-weight:500;padding:7px 16px;border-radius:8px;border:1.5px solid var(--green);background:transparent;color:var(--green);cursor:pointer;transition:all .15s;}
-.nav-btn:hover{background:var(--green);color:#fff;}
-.nav-btn.filled{background:var(--green);color:#fff;}
-
+/* DETAIL NAV */
+.det-nav{background:#fff;border-bottom:1px solid var(--gray-200);padding:0 24px;display:flex;align-items:center;gap:14px;height:52px;box-shadow:var(--shadow-sm);}
+.det-breadcrumb{font-size:12px;color:var(--gray-400);display:flex;align-items:center;gap:6px;}
+.det-breadcrumb a{color:var(--gray-400);text-decoration:none;}.det-breadcrumb a:hover{color:var(--green);}
+.det-nav-spacer{flex:1;}
+.det-nav-btn{font-size:13px;font-weight:500;padding:7px 16px;border-radius:8px;border:1.5px solid var(--green);background:transparent;color:var(--green);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .15s;}
+.det-nav-btn:hover{background:var(--green);color:#fff;}
+.det-nav-btn.filled{background:var(--green);color:#fff;border-color:var(--green);}
 /* GALLERY */
 .gallery-section{background:var(--gray-800);position:relative;overflow:hidden;}
 .gallery-main{display:flex;gap:4px;height:420px;max-width:1280px;margin:0 auto;padding:16px 24px 0;}
 .gallery-hero{flex:2;border-radius:var(--radius-lg) var(--radius-lg) 0 0;overflow:hidden;position:relative;cursor:pointer;}
-.gallery-hero-img{width:100%;height:100%;background:linear-gradient(135deg,#2a5a3a 0%,#1a3a2a 100%);display:flex;align-items:center;justify-content:center;font-size:80px;transition:transform .3s;}
-.gallery-hero:hover .gallery-hero-img{transform:scale(1.02);}
+.gallery-hero img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+.gallery-hero:hover img{transform:scale(1.02);}
+.gallery-hero-ph{width:100%;height:100%;background:linear-gradient(135deg,#2a5a3a,#1a3a2a);display:flex;align-items:center;justify-content:center;font-size:80px;}
 .gallery-thumbs{flex:1;display:flex;flex-direction:column;gap:4px;}
 .gallery-thumb{flex:1;border-radius:0;overflow:hidden;cursor:pointer;position:relative;}
 .gallery-thumb:first-child{border-radius:0 var(--radius-lg) 0 0;}
-.gallery-thumb-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;transition:transform .3s;background:linear-gradient(135deg,#3a6a5a 0%,#1a4a3a 100%);}
-.gallery-thumb:nth-child(2) .gallery-thumb-img{background:linear-gradient(135deg,#4a5a3a 0%,#2a3a1a 100%);}
-.gallery-thumb:nth-child(3) .gallery-thumb-img{background:linear-gradient(135deg,#3a4a6a 0%,#1a2a4a 100%);}
-.gallery-thumb:nth-child(4) .gallery-thumb-img{background:linear-gradient(135deg,#5a3a4a 0%,#3a1a2a 100%);}
-.gallery-thumb:hover .gallery-thumb-img{transform:scale(1.05);}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+.gallery-thumb:hover img{transform:scale(1.05);}
+.gallery-thumb-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;background:linear-gradient(135deg,#3a6a5a,#1a4a3a);}
+.gallery-thumb:nth-child(2) .gallery-thumb-ph{background:linear-gradient(135deg,#4a5a3a,#2a3a1a);}
+.gallery-thumb:nth-child(3) .gallery-thumb-ph{background:linear-gradient(135deg,#3a4a6a,#1a2a4a);}
+.gallery-thumb:nth-child(4) .gallery-thumb-ph{background:linear-gradient(135deg,#5a3a4a,#3a1a2a);}
 .gallery-more-overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:15px;cursor:pointer;}
 .gallery-actions{position:absolute;bottom:20px;right:28px;display:flex;gap:8px;}
-.gal-btn{background:rgba(255,255,255,.9);border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .15s;}
+.gal-btn{background:rgba(255,255,255,.9);border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .15s;text-decoration:none;color:#333;}
 .gal-btn:hover{background:#fff;}
-
 /* CONTENT */
 .content-wrap{max-width:1280px;margin:0 auto;padding:24px;display:flex;gap:24px;align-items:flex-start;}
 .main-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:20px;}
 .side-col{width:320px;flex-shrink:0;display:flex;flex-direction:column;gap:16px;position:sticky;top:78px;}
-
 /* CARDS */
-.card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200);padding:22px 24px;box-shadow:var(--shadow-sm);}
-
+.det-card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--gray-200);padding:22px 24px;box-shadow:var(--shadow-sm);}
 /* TITLE BLOCK */
 .prop-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
 .prop-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--gray-800);line-height:1.25;margin-bottom:8px;}
-.prop-loc{font-size:14px;color:var(--gray-400);display:flex;align-items:center;gap:6px;margin-bottom:12px;}
-.prop-loc a{color:var(--green);text-decoration:none;}
+.prop-loc{font-size:14px;color:var(--gray-400);margin-bottom:12px;}
 .prop-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
-.badge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:6px;letter-spacing:.03em;}
-.badge-rent{background:var(--green);color:#fff;}
-.badge-verified{background:#1a4b8a;color:#fff;}
-.badge-new{background:var(--accent);color:#fff;}
-.prop-price-block{text-align:right;}
+.det-badge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:6px;letter-spacing:.03em;}
+.badge-rent{background:var(--primary-light,#2557a7);color:#fff;}
+.badge-sale{background:var(--green);color:#fff;}
+.badge-featured{background:var(--accent);color:#fff;}
+.prop-price-block{text-align:right;flex-shrink:0;}
 .prop-price{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:var(--green);line-height:1;}
 .prop-price-note{font-size:12px;color:var(--gray-400);margin-top:4px;}
-.prop-price-sub{font-size:13px;color:var(--gray-600);margin-top:2px;}
-
 /* STATS ROW */
 .stats-row{display:flex;gap:0;border:1px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden;}
 .stat-item{flex:1;text-align:center;padding:14px 8px;border-right:1px solid var(--gray-200);}
@@ -78,55 +67,17 @@ nav{background:var(--white);border-bottom:1px solid var(--gray-200);padding:0 24
 .stat-icon{font-size:20px;display:block;margin-bottom:4px;}
 .stat-val{font-size:14px;font-weight:600;color:var(--gray-800);display:block;}
 .stat-lbl{font-size:11px;color:var(--gray-400);}
-
-/* DESCRIPTION */
-.section-title{font-size:16px;font-weight:600;color:var(--gray-800);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--gray-100);}
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--gray-200);margin-bottom:18px;}
+.tab{padding:10px 18px;font-size:14px;font-weight:500;color:var(--gray-400);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.tab:hover{color:var(--green-mid);}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
 .description{font-size:14px;color:var(--gray-600);line-height:1.75;}
-.read-more-btn{font-size:13px;color:var(--green);background:none;border:none;cursor:pointer;font-weight:500;margin-top:8px;padding:0;}
-.desc-hidden{display:none;}
-.desc-hidden.visible{display:block;}
-
-/* FEATURES GRID */
-.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}
-.feature-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--gray-50);border-radius:var(--radius);border:1px solid var(--gray-200);}
-.feature-icon{font-size:18px;flex-shrink:0;}
-.feature-text{font-size:13px;color:var(--gray-600);font-weight:500;}
-
-/* AMENITIES */
-.amenities-grid{display:flex;flex-wrap:wrap;gap:8px;}
-.amenity-chip{display:flex;align-items:center;gap:7px;padding:7px 13px;background:var(--green-xlight);border:1px solid #c5e8d5;border-radius:20px;font-size:13px;color:var(--green);font-weight:500;}
-
-/* MAP PLACEHOLDER */
-.map-placeholder{height:220px;background:linear-gradient(135deg,#e8f5ee 0%,#d0eadc 100%);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:1px solid #c5e8d5;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;}
-.map-placeholder:hover{box-shadow:var(--shadow-md);}
-.map-grid{position:absolute;inset:0;opacity:.15;}
-.map-pin{font-size:36px;position:relative;z-index:1;}
-.map-label{font-size:13px;color:var(--green);font-weight:500;position:relative;z-index:1;}
-
-/* NEARBY */
-.nearby-list{display:flex;flex-direction:column;gap:8px;}
-.nearby-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--gray-50);border-radius:var(--radius);border:1px solid var(--gray-200);}
-.nearby-icon{font-size:20px;width:36px;height:36px;background:var(--white);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--gray-200);}
-.nearby-info{flex:1;}
-.nearby-name{font-size:13px;font-weight:500;color:var(--gray-800);}
-.nearby-dist{font-size:12px;color:var(--gray-400);}
-.nearby-type{font-size:11px;color:var(--gray-400);background:var(--gray-100);padding:2px 7px;border-radius:10px;}
-
-/* SIMILAR */
-.similar-scroll{display:flex;gap:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
-.similar-scroll::-webkit-scrollbar{display:none;}
-.sim-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden;flex-shrink:0;width:220px;cursor:pointer;transition:transform .15s,box-shadow .15s;}
-.sim-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
-.sim-img{height:120px;background:linear-gradient(135deg,#e8f5ee,#d0eadc);display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;}
-.sim-badge{position:absolute;top:8px;left:8px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;background:var(--green);color:#fff;}
-.sim-body{padding:10px 12px;}
-.sim-price{font-size:15px;font-weight:600;color:var(--green);}
-.sim-title{font-size:12px;color:var(--gray-600);margin-top:2px;line-height:1.4;}
-.sim-loc{font-size:11px;color:var(--gray-400);margin-top:4px;}
-
-/* SIDEBAR CONTACT CARD */
-.contact-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200);overflow:hidden;box-shadow:var(--shadow-md);}
-.contact-header{background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 100%);padding:18px 20px;color:#fff;}
+.section-title{font-size:16px;font-weight:600;color:var(--gray-800);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--gray-100);}
+/* CONTACT CARD */
+.contact-card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--gray-200);overflow:hidden;box-shadow:var(--shadow-md);}
+.contact-header{background:linear-gradient(135deg,var(--green),var(--green-mid));padding:18px 20px;color:#fff;}
 .contact-price{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;}
 .contact-price-note{font-size:12px;opacity:.75;margin-top:2px;}
 .contact-body{padding:18px 20px;display:flex;flex-direction:column;gap:12px;}
@@ -134,41 +85,22 @@ nav{background:var(--white);border-bottom:1px solid var(--gray-200);padding:0 24
 .agent-avatar{width:46px;height:46px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:2px solid var(--green);}
 .agent-name{font-size:14px;font-weight:600;color:var(--gray-800);}
 .agent-tag{font-size:12px;color:var(--gray-400);}
-.agent-rating{font-size:12px;color:var(--accent);}
-.cta-btn{width:100%;padding:13px;border-radius:10px;border:none;font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;}
-.cta-wa{background:#25D366;color:#fff;}
-.cta-wa:hover{background:#1da855;}
-.cta-call{background:var(--green);color:#fff;}
-.cta-call:hover{background:var(--green-mid);}
-.cta-email{background:var(--white);color:var(--gray-800);border:1.5px solid var(--gray-200);}
-.cta-email:hover{border-color:var(--green);color:var(--green);}
-.contact-stats{display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid var(--gray-100);}
-.c-stat{text-align:center;}
-.c-stat-val{font-size:14px;font-weight:600;color:var(--gray-800);}
-.c-stat-lbl{font-size:11px;color:var(--gray-400);}
-
-/* SAFETY CARD */
+.cta-btn-det{width:100%;padding:13px;border-radius:10px;border:none;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;text-decoration:none;}
+.cta-wa{background:#25D366;color:#fff;}.cta-wa:hover{background:#1da855;color:#fff;}
+.cta-call{background:var(--green);color:#fff;}.cta-call:hover{background:var(--green-mid);color:#fff;}
+/* SAFETY */
 .safety-card{background:var(--accent-light);border:1px solid #fde0a0;border-radius:var(--radius-lg);padding:14px 16px;}
-.safety-title{font-size:13px;font-weight:600;color:#7a4f00;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
-.safety-list{display:flex;flex-direction:column;gap:6px;}
-.safety-item{font-size:12px;color:#7a4f00;display:flex;align-items:flex-start;gap:6px;line-height:1.4;}
-
-/* REPORT */
-.report-link{font-size:12px;color:var(--gray-400);text-align:center;cursor:pointer;text-decoration:underline;}
-
-/* TABS */
-.tabs{display:flex;gap:0;border-bottom:2px solid var(--gray-200);margin-bottom:18px;}
-.tab{padding:10px 18px;font-size:14px;font-weight:500;color:var(--gray-400);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;}
-.tab.active{color:var(--green);border-bottom-color:var(--green);}
-.tab:hover{color:var(--green-mid);}
-.tab-panel{display:none;}
-.tab-panel.active{display:block;}
-
-/* VERIFIED BADGE */
-.verified-box{display:flex;align-items:center;gap:10px;background:var(--green-xlight);border:1px solid #c5e8d5;border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;}
-.verified-box-text{font-size:13px;color:var(--green);font-weight:500;}
-.verified-box-sub{font-size:12px;color:var(--gray-400);}
-
+.safety-title{font-size:13px;font-weight:600;color:#7a4f00;margin-bottom:8px;}
+.safety-item{font-size:12px;color:#7a4f00;margin-bottom:5px;}
+/* LIGHTBOX */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:90vw;max-height:88vh;object-fit:contain;border-radius:8px;}
+.lightbox-close{position:absolute;top:18px;right:24px;font-size:32px;color:#fff;cursor:pointer;background:none;border:none;line-height:1;}
+.lightbox-prev,.lightbox-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:28px;padding:12px 16px;cursor:pointer;border-radius:8px;}
+.lightbox-prev{left:16px;}.lightbox-next{right:16px;}
+/* MOBILE */
+.mobile-cta-bar{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-200);padding:12px 16px;gap:10px;z-index:200;box-shadow:0 -4px 20px rgba(0,0,0,.08);}
 @media(max-width:900px){
   .side-col{display:none;}
   .gallery-main{height:260px;padding:12px 12px 0;}
@@ -177,59 +109,80 @@ nav{background:var(--white);border-bottom:1px solid var(--gray-200);padding:0 24
   .prop-title{font-size:20px;}
   .prop-price{font-size:24px;}
   .prop-header{flex-direction:column;}
-  .prop-price-block{text-align:left;}
+  .mobile-cta-bar{display:flex;}
 }
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-.card{animation:fadeUp .35s ease both;}
-.card:nth-child(1){animation-delay:.05s;}
-.card:nth-child(2){animation-delay:.1s;}
-.card:nth-child(3){animation-delay:.15s;}
-.card:nth-child(4){animation-delay:.2s;}
-.card:nth-child(5){animation-delay:.25s;}
-
-/* FLOATING MOBILE CTA */
-.mobile-cta-bar{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--gray-200);padding:12px 16px;gap:10px;z-index:200;box-shadow:0 -4px 20px rgba(0,0,0,.08);}
-@media(max-width:900px){.mobile-cta-bar{display:flex;}}
-.mob-btn{flex:1;padding:13px;border-radius:10px;border:none;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;}
-.mob-wa{background:#25D366;color:#fff;}
-.mob-call{background:var(--green);color:#fff;}
 </style>
-</head>
-<body>
+{% endblock %}
 
-<!-- NAV -->
-<nav>
-  <a href="#" class="logo">Apna<span>Ghar</span></a>
-  <div class="breadcrumb">
-    <a href="#">Home</a> › <a href="#">Rent</a> › <a href="#">Gulshan-e-Iqbal</a> › Flat
+{% block content %}
+
+<!-- DETAIL NAV -->
+<div class="det-nav">
+  <div class="det-breadcrumb">
+    <a href="{{ url_for('index') }}">Home</a> ›
+    <a href="{{ url_for('rent_lena') if cat=='rent' else url_for('purchase_lena') }}">
+      {{ 'Rent' if cat=='rent' else 'Buy' }}
+    </a> ›
+    <span>{{ prop.location }}</span> ›
+    <span>{{ prop.property_type }}</span>
   </div>
-  <div class="nav-spacer"></div>
-  <button class="nav-btn">← Back to Search</button>
-  <button class="nav-btn filled">+ List Property</button>
-</nav>
+  <div class="det-nav-spacer"></div>
+  <a href="{{ url_for('rent_lena') if cat=='rent' else url_for('purchase_lena') }}" class="det-nav-btn">← Back to Search</a>
+  <a href="{{ url_for('rent_dena') if cat=='rent' else url_for('sale_dena') }}" class="det-nav-btn filled">+ List Property</a>
+</div>
 
 <!-- GALLERY -->
+{% set total_imgs = images|length %}
 <div class="gallery-section">
   <div class="gallery-main">
-    <div class="gallery-hero">
-      <div class="gallery-hero-img">🏢</div>
+
+    <!-- HERO IMAGE -->
+    <div class="gallery-hero" onclick="openLightbox(0)">
+      {% if total_imgs > 0 %}
+        <img src="/static/uploads/properties/{{ images[0].filename }}" alt="{{ prop.title }}">
+      {% else %}
+        <div class="gallery-hero-ph">{{ '🔑' if cat=='rent' else '🏡' }}</div>
+      {% endif %}
     </div>
+
+    <!-- THUMBNAILS -->
+    {% if total_imgs > 1 %}
     <div class="gallery-thumbs">
-      <div class="gallery-thumb"><div class="gallery-thumb-img">🛋️</div></div>
-      <div class="gallery-thumb"><div class="gallery-thumb-img">🛏️</div></div>
-      <div class="gallery-thumb"><div class="gallery-thumb-img">🍳</div></div>
-      <div class="gallery-thumb" style="position:relative">
-        <div class="gallery-thumb-img">🚿</div>
-        <div class="gallery-more-overlay">+8 Photos</div>
-      </div>
+      {% for i in range(1, [total_imgs, 5]|min) %}
+        <div class="gallery-thumb" onclick="openLightbox({{ i }})">
+          {% if i == 4 and total_imgs > 5 %}
+            <img src="/static/uploads/properties/{{ images[i].filename }}" alt="">
+            <div class="gallery-more-overlay">+{{ total_imgs - 4 }} Photos</div>
+          {% else %}
+            <img src="/static/uploads/properties/{{ images[i].filename }}" alt="">
+          {% endif %}
+        </div>
+      {% endfor %}
     </div>
+    {% endif %}
+
   </div>
-  <div class="gallery-actions">
-    <button class="gal-btn">📸 All Photos (12)</button>
-    <button class="gal-btn" onclick="toggleSave(this)">🤍 Save</button>
-    <button class="gal-btn">↗ Share</button>
+  <div class="gallery-actions" style="position:absolute;bottom:20px;right:28px;display:flex;gap:8px;">
+    {% if total_imgs > 0 %}
+    <button class="gal-btn" onclick="openLightbox(0)">📸 All Photos ({{ total_imgs }})</button>
+    {% endif %}
+    {% if session.user_id %}
+      <a href="{{ url_for('save_property', cat=cat, pid=prop.id) }}" class="gal-btn">
+        {{ '❤️ Saved' if is_saved else '🤍 Save' }}
+      </a>
+    {% else %}
+      <a href="{{ url_for('login') }}" class="gal-btn">🤍 Save</a>
+    {% endif %}
+    <button class="gal-btn" onclick="navigator.share ? navigator.share({title:'{{ prop.title }}',url:window.location.href}) : navigator.clipboard.writeText(window.location.href).then(()=>alert('Link copied!'))">↗ Share</button>
   </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-prev" onclick="changeLightbox(-1)">‹</button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-next" onclick="changeLightbox(1)">›</button>
 </div>
 
 <!-- CONTENT -->
@@ -239,158 +192,97 @@ nav{background:var(--white);border-bottom:1px solid var(--gray-200);padding:0 24
   <div class="main-col">
 
     <!-- TITLE CARD -->
-    <div class="card">
+    <div class="det-card">
       <div class="prop-header">
-        <div style="flex:1">
+        <div style="flex:1;">
           <div class="prop-badges">
-            <span class="badge badge-rent">For Rent</span>
-            <span class="badge badge-verified">✓ Verified</span>
-            <span class="badge badge-new">New</span>
+            {% if cat == 'rent' %}
+              <span class="det-badge badge-rent">For Rent</span>
+            {% else %}
+              <span class="det-badge badge-sale">For Sale</span>
+            {% endif %}
+            {% if prop.property_type %}<span class="det-badge" style="background:#1a4b8a;color:#fff;">{{ prop.property_type }}</span>{% endif %}
+            {% if prop.is_featured %}<span class="det-badge badge-featured">⭐ Featured</span>{% endif %}
           </div>
-          <div class="prop-title">3-Bedroom Flat — Gulshan-e-Iqbal Block 13D</div>
-          <div class="prop-loc">📍 <a href="#">Gulshan-e-Iqbal, Block 13D</a>, Karachi · <a href="#map">View on Map</a></div>
-          <div style="font-size:12px;color:var(--gray-400)">Listed 2 days ago · 284 views</div>
+          <div class="prop-title">{{ prop.title }}</div>
+          <div class="prop-loc">📍 {{ prop.location }}{% if prop.area %}, {{ prop.area }}{% endif %}, Karachi</div>
+          <div style="font-size:12px;color:var(--gray-400);">
+            Listed by {{ prop.poster or prop.owner_name or 'Owner' }} ·
+            {{ prop.created_at.strftime('%d %b %Y') if prop.created_at else '' }}
+          </div>
         </div>
         <div class="prop-price-block">
-          <div class="prop-price">PKR 45,000</div>
-          <div class="prop-price-note">per month</div>
-          <div class="prop-price-sub">Deposit: 2 months</div>
-        </div>
-      </div>
-
-      <div class="verified-box" style="margin-top:16px">
-        <span style="font-size:22px">✅</span>
-        <div>
-          <div class="verified-box-text">ApnaGhar Verified Property</div>
-          <div class="verified-box-sub">Documents checked · Owner identity confirmed · Physical visit done</div>
+          <div class="prop-price">Rs. {{ prop.price }}</div>
+          <div class="prop-price-note">{% if cat=='rent' %}per month{% else %}sale price{% endif %}</div>
         </div>
       </div>
 
       <!-- STATS ROW -->
-      <div class="stats-row">
-        <div class="stat-item"><span class="stat-icon">🛏️</span><span class="stat-val">3</span><span class="stat-lbl">Bedrooms</span></div>
-        <div class="stat-item"><span class="stat-icon">🚿</span><span class="stat-val">2</span><span class="stat-lbl">Bathrooms</span></div>
-        <div class="stat-item"><span class="stat-icon">📐</span><span class="stat-val">1,400</span><span class="stat-lbl">Sq Ft</span></div>
-        <div class="stat-item"><span class="stat-icon">🏢</span><span class="stat-val">4th</span><span class="stat-lbl">Floor</span></div>
-        <div class="stat-item"><span class="stat-icon">🅿️</span><span class="stat-val">1</span><span class="stat-lbl">Parking</span></div>
-        <div class="stat-item"><span class="stat-icon">📅</span><span class="stat-val">2019</span><span class="stat-lbl">Built</span></div>
+      <div class="stats-row mt-3">
+        {% if prop.bedrooms and prop.bedrooms != '0' %}
+        <div class="stat-item"><span class="stat-icon">🛏️</span><span class="stat-val">{{ prop.bedrooms }}</span><span class="stat-lbl">Bedrooms</span></div>
+        {% endif %}
+        {% if prop.bathrooms and prop.bathrooms != '0' %}
+        <div class="stat-item"><span class="stat-icon">🚿</span><span class="stat-val">{{ prop.bathrooms }}</span><span class="stat-lbl">Bathrooms</span></div>
+        {% endif %}
+        {% if cat=='rent' and prop.floor %}
+        <div class="stat-item"><span class="stat-icon">🏢</span><span class="stat-val">{{ prop.floor }}</span><span class="stat-lbl">Floor</span></div>
+        {% endif %}
+        {% if cat=='sale' and prop.total_area %}
+        <div class="stat-item"><span class="stat-icon">📐</span><span class="stat-val">{{ prop.total_area }}</span><span class="stat-lbl">Area</span></div>
+        {% endif %}
+        {% if cat=='rent' and prop.furnished %}
+        <div class="stat-item"><span class="stat-icon">🛋️</span><span class="stat-val">{{ prop.furnished }}</span><span class="stat-lbl">Furnished</span></div>
+        {% endif %}
+        {% if cat=='sale' and prop.possession %}
+        <div class="stat-item"><span class="stat-icon">🔑</span><span class="stat-val">{{ prop.possession }}</span><span class="stat-lbl">Possession</span></div>
+        {% endif %}
+        <div class="stat-item"><span class="stat-icon">🏗️</span><span class="stat-val">{{ prop.property_type or '—' }}</span><span class="stat-lbl">Type</span></div>
       </div>
     </div>
 
-    <!-- TABS CARD -->
-    <div class="card">
+    <!-- DESCRIPTION CARD -->
+    <div class="det-card">
       <div class="tabs">
         <div class="tab active" onclick="switchTab(this,'desc')">Description</div>
-        <div class="tab" onclick="switchTab(this,'features')">Features</div>
-        <div class="tab" onclick="switchTab(this,'amenities')">Amenities</div>
-        <div class="tab" onclick="switchTab(this,'docs')">Documents</div>
+        <div class="tab" onclick="switchTab(this,'contact_info')">Contact Info</div>
       </div>
-
-      <!-- DESCRIPTION TAB -->
       <div class="tab-panel active" id="desc">
-        <p class="description">This spacious 3-bedroom flat in Gulshan-e-Iqbal Block 13D is available for immediate rental. The property is on the 4th floor of a well-maintained building with 24/7 security and lift access. Each bedroom is generously sized with built-in wardrobes. The drawing room is bright and airy with large windows.</p>
-        <div class="desc-hidden" id="descMore">
-          <br>
-          <p class="description">The kitchen is fully tiled with modern fittings and connected gas. The two bathrooms are recently renovated with imported tiles. The building has a dedicated parking spot, rooftop access, and a backup generator for common areas. Water supply is reliable via a building-level overhead tank.</p>
-          <br>
-          <p class="description">Located near Karachi University, Khan Market, and various schools and hospitals. Ideal for a family of 4–5. Preference given to families. No pets allowed. Available from 1st of next month. One month advance + two months security deposit required.</p>
-        </div>
-        <button class="read-more-btn" onclick="toggleDesc(this)">Read more ▾</button>
+        {% if prop.description %}
+          <p class="description">{{ prop.description }}</p>
+        {% else %}
+          <p class="description text-muted">No description provided.</p>
+        {% endif %}
       </div>
-
-      <!-- FEATURES TAB -->
-      <div class="tab-panel" id="features">
-        <div class="features-grid">
-          <div class="feature-item"><span class="feature-icon">🏗️</span><div><div class="feature-text">Property Type</div><div style="font-size:12px;color:var(--gray-400)">Flat / Apartment</div></div></div>
-          <div class="feature-item"><span class="feature-icon">📐</span><div><div class="feature-text">Size</div><div style="font-size:12px;color:var(--gray-400)">1,400 Sq Ft</div></div></div>
-          <div class="feature-item"><span class="feature-icon">🏢</span><div><div class="feature-text">Floor</div><div style="font-size:12px;color:var(--gray-400)">4 of 7</div></div></div>
-          <div class="feature-item"><span class="feature-icon">📅</span><div><div class="feature-text">Built Year</div><div style="font-size:12px;color:var(--gray-400)">2019</div></div></div>
-          <div class="feature-item"><span class="feature-icon">🛋️</span><div><div class="feature-text">Furnishing</div><div style="font-size:12px;color:var(--gray-400)">Semi-Furnished</div></div></div>
-          <div class="feature-item"><span class="feature-icon">🧱</span><div><div class="feature-text">Condition</div><div style="font-size:12px;color:var(--gray-400)">Good</div></div></div>
-          <div class="feature-item"><span class="feature-icon">🏙️</span><div><div class="feature-text">View</div><div style="font-size:12px;color:var(--gray-400)">City View</div></div></div>
-          <div class="feature-item"><span class="feature-icon">🔑</span><div><div class="feature-text">Available</div><div style="font-size:12px;color:var(--gray-400)">Immediate</div></div></div>
-          <div class="feature-item"><span class="feature-icon">👨‍👩‍👧</span><div><div class="feature-text">Preferred</div><div style="font-size:12px;color:var(--gray-400)">Families Only</div></div></div>
-          <div class="feature-item"><span class="feature-icon">💰</span><div><div class="feature-text">Deposit</div><div style="font-size:12px;color:var(--gray-400)">2 Months</div></div></div>
-          <div class="feature-item"><span class="feature-icon">📄</span><div><div class="feature-text">Agreement</div><div style="font-size:12px;color:var(--gray-400)">12 Months</div></div></div>
-          <div class="feature-item"><span class="feature-icon">🔌</span><div><div class="feature-text">Electricity</div><div style="font-size:12px;color:var(--gray-400)">KESC + Gen</div></div></div>
-        </div>
-      </div>
-
-      <!-- AMENITIES TAB -->
-      <div class="tab-panel" id="amenities">
-        <div class="amenities-grid">
-          <div class="amenity-chip">🅿️ Parking</div>
-          <div class="amenity-chip">⚡ Generator</div>
-          <div class="amenity-chip">🛗 Lift / Elevator</div>
-          <div class="amenity-chip">📹 CCTV Security</div>
-          <div class="amenity-chip">🌐 Internet Ready</div>
-          <div class="amenity-chip">🔥 Piped Gas</div>
-          <div class="amenity-chip">💧 24/7 Water</div>
-          <div class="amenity-chip">🏠 Rooftop Access</div>
-          <div class="amenity-chip">🚪 Gated Building</div>
-          <div class="amenity-chip">🧹 Caretaker</div>
-          <div class="amenity-chip">🪟 Built-in Wardrobes</div>
-          <div class="amenity-chip">🪟 Double Glazed Windows</div>
-        </div>
-      </div>
-
-      <!-- DOCS TAB -->
-      <div class="tab-panel" id="docs">
-        <div class="check-list" style="display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--green-xlight);border-radius:var(--radius);border:1px solid #c5e8d5;">
-            <span style="font-size:18px">✅</span>
-            <div><div style="font-size:13px;font-weight:500;color:var(--green)">Owner CNIC Verified</div><div style="font-size:12px;color:var(--gray-400)">Identity confirmed by ApnaGhar team</div></div>
+      <div class="tab-panel" id="contact_info">
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--green-xlight);border-radius:10px;border:1px solid #c5e8d5;">
+            <span style="font-size:22px;">👤</span>
+            <div>
+              <div style="font-size:14px;font-weight:600;">{{ prop.owner_name or prop.poster or 'Owner' }}</div>
+              <div style="font-size:12px;color:var(--gray-400);">Property Owner / Listed By</div>
+            </div>
           </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--green-xlight);border-radius:var(--radius);border:1px solid #c5e8d5;">
-            <span style="font-size:18px">✅</span>
-            <div><div style="font-size:13px;font-weight:500;color:var(--green)">Property Title Deed</div><div style="font-size:12px;color:var(--gray-400)">Ownership documents available for review</div></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--green-xlight);border-radius:var(--radius);border:1px solid #c5e8d5;">
-            <span style="font-size:18px">✅</span>
-            <div><div style="font-size:13px;font-weight:500;color:var(--green)">Physical Site Visit Done</div><div style="font-size:12px;color:var(--gray-400)">ApnaGhar agent visited on 10 Mar 2026</div></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--accent-light);border-radius:var(--radius);border:1px solid #fde0a0;">
-            <span style="font-size:18px">📄</span>
-            <div><div style="font-size:13px;font-weight:500;color:#7a4f00">Rent Agreement Service</div><div style="font-size:12px;color:var(--gray-400)">We can prepare a legal rent agreement for PKR 2,500</div></div>
-          </div>
+          {% if prop.owner_phone %}
+          <a href="tel:{{ prop.owner_phone }}" style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--gray-50);border-radius:10px;border:1px solid var(--gray-200);text-decoration:none;color:inherit;">
+            <span style="font-size:22px;">📞</span>
+            <div>
+              <div style="font-size:14px;font-weight:600;">{{ prop.owner_phone }}</div>
+              <div style="font-size:12px;color:var(--gray-400);">Tap to call</div>
+            </div>
+          </a>
+          {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- MAP CARD -->
-    <div class="card" id="map">
-      <div class="section-title">📍 Location</div>
-      <div class="map-placeholder" onclick="alert('Google Maps integration goes here')">
-        <svg class="map-grid" viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">
-          <defs><pattern id="g" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#1a6b45" stroke-width="0.5"/></pattern></defs>
-          <rect width="300" height="220" fill="url(#g)"/>
-        </svg>
-        <div class="map-pin">📍</div>
-        <div class="map-label">Gulshan-e-Iqbal, Block 13D, Karachi</div>
-        <div style="font-size:12px;color:var(--gray-400);position:relative;z-index:1">Click to open in Google Maps</div>
-      </div>
-      <div style="margin-top:14px">
-        <div class="section-title">Nearby Places</div>
-        <div class="nearby-list">
-          <div class="nearby-item"><div class="nearby-icon">🏫</div><div class="nearby-info"><div class="nearby-name">Karachi University</div><div class="nearby-dist">1.2 km away</div></div><span class="nearby-type">University</span></div>
-          <div class="nearby-item"><div class="nearby-icon">🏥</div><div class="nearby-info"><div class="nearby-name">Aga Khan Hospital</div><div class="nearby-dist">2.8 km away</div></div><span class="nearby-type">Hospital</span></div>
-          <div class="nearby-item"><div class="nearby-icon">🕌</div><div class="nearby-info"><div class="nearby-name">Gulshan Mosque</div><div class="nearby-dist">0.4 km away</div></div><span class="nearby-type">Mosque</span></div>
-          <div class="nearby-item"><div class="nearby-icon">🛒</div><div class="nearby-info"><div class="nearby-name">Khan Market</div><div class="nearby-dist">0.7 km away</div></div><span class="nearby-type">Market</span></div>
-          <div class="nearby-item"><div class="nearby-icon">🚌</div><div class="nearby-info"><div class="nearby-name">Bus Stop Gulshan Chowk</div><div class="nearby-dist">0.2 km away</div></div><span class="nearby-type">Transport</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SIMILAR PROPERTIES -->
-    <div class="card">
-      <div class="section-title">Similar Properties</div>
-      <div class="similar-scroll">
-        <div class="sim-card"><div class="sim-img">🏢<span class="sim-badge">Rent</span></div><div class="sim-body"><div class="sim-price">PKR 40,000/mo</div><div class="sim-title">2-Bed Flat, Gulshan Block 7</div><div class="sim-loc">📍 Gulshan-e-Iqbal</div></div></div>
-        <div class="sim-card"><div class="sim-img" style="background:linear-gradient(135deg,#e8eef5,#d0dcec)">🏠<span class="sim-badge" style="background:#1a4b8a">Buy</span></div><div class="sim-body"><div class="sim-price">PKR 1.2 Crore</div><div class="sim-title">3-Bed Flat, Gulshan Block 10A</div><div class="sim-loc">📍 Gulshan-e-Iqbal</div></div></div>
-        <div class="sim-card"><div class="sim-img" style="background:linear-gradient(135deg,#f5f0e8,#ece0d0)">🏢<span class="sim-badge">Rent</span></div><div class="sim-body"><div class="sim-price">PKR 52,000/mo</div><div class="sim-title">3-Bed Flat, PECHS Block 2</div><div class="sim-loc">📍 PECHS</div></div></div>
-        <div class="sim-card"><div class="sim-img" style="background:linear-gradient(135deg,#f0e8f5,#dcd0ec)">🏢<span class="sim-badge">Rent</span></div><div class="sim-body"><div class="sim-price">PKR 38,000/mo</div><div class="sim-title">2-Bed Flat, Federal B Area</div><div class="sim-loc">📍 Federal B Area</div></div></div>
-        <div class="sim-card"><div class="sim-img" style="background:linear-gradient(135deg,#e8f0f5,#d0dce8)">🏠<span class="sim-badge">Rent</span></div><div class="sim-body"><div class="sim-price">PKR 60,000/mo</div><div class="sim-title">4-Bed House, Gulshan Block 5</div><div class="sim-loc">📍 Gulshan-e-Iqbal</div></div></div>
-      </div>
+    <!-- SAFETY TIPS -->
+    <div class="safety-card">
+      <div class="safety-title">⚠️ Safety Tips</div>
+      <div class="safety-item">✓ Always visit the property in person before paying any advance</div>
+      <div class="safety-item">✓ Never pay full deposit without a signed rent agreement</div>
+      <div class="safety-item">✓ Use ApnaGhar document services for legal agreements</div>
+      <div class="safety-item">✓ Verify owner CNIC matches property documents</div>
     </div>
 
   </div>
@@ -401,83 +293,100 @@ nav{background:var(--white);border-bottom:1px solid var(--gray-200);padding:0 24
     <!-- CONTACT CARD -->
     <div class="contact-card">
       <div class="contact-header">
-        <div class="contact-price">PKR 45,000</div>
-        <div class="contact-price-note">per month · deposit 2 months</div>
+        <div class="contact-price">Rs. {{ prop.price }}</div>
+        <div class="contact-price-note">{% if cat=='rent' %}per month{% else %}sale price{% endif %}</div>
       </div>
       <div class="contact-body">
         <div class="agent-row">
-          <div class="agent-avatar">👨</div>
+          <div class="agent-avatar">🏠</div>
           <div>
-            <div class="agent-name">Muhammad Asif</div>
-            <div class="agent-tag">ApnaGhar Verified Agent</div>
-            <div class="agent-rating">★★★★★ 4.9 (38 reviews)</div>
+            <div class="agent-name">{{ prop.owner_name or 'Property Owner' }}</div>
+            <div class="agent-tag">ApnaGhar Listing</div>
           </div>
         </div>
 
-        <button class="cta-btn cta-wa" onclick="window.open('https://wa.me/923111820660')">
+        {% set wa_msg = 'Hello ApnaGhar, I am interested in: ' ~ prop.title ~ ' — ' ~ prop.location ~ '. Price: Rs. ' ~ prop.price %}
+        <a href="https://wa.me/923111820660?text={{ wa_msg|urlencode }}" target="_blank" class="cta-btn-det cta-wa">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           WhatsApp Now
-        </button>
-        <button class="cta-btn cta-call" onclick="window.open('tel:03111820660')">
-          📞 Call Agent
-        </button>
-        <button class="cta-btn cta-email">
-          ✉️ Send Inquiry
-        </button>
+        </a>
+        {% if prop.owner_phone %}
+        <a href="tel:{{ prop.owner_phone }}" class="cta-btn-det cta-call">
+          📞 Call: {{ prop.owner_phone }}
+        </a>
+        {% else %}
+        <a href="tel:03111820660" class="cta-btn-det cta-call">📞 Call ApnaGhar</a>
+        {% endif %}
 
-        <div class="contact-stats">
-          <div class="c-stat"><div class="c-stat-val">284</div><div class="c-stat-lbl">Views</div></div>
-          <div class="c-stat"><div class="c-stat-val">18</div><div class="c-stat-lbl">Inquiries</div></div>
-          <div class="c-stat"><div class="c-stat-val">2 days</div><div class="c-stat-lbl">Listed</div></div>
+        <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid var(--gray-100);">
+          <div style="text-align:center;"><div style="font-size:14px;font-weight:600;">{{ prop.location }}</div><div style="font-size:11px;color:var(--gray-400);">Location</div></div>
+          <div style="text-align:center;"><div style="font-size:14px;font-weight:600;">{{ prop.property_type }}</div><div style="font-size:11px;color:var(--gray-400);">Type</div></div>
+          <div style="text-align:center;"><div style="font-size:14px;font-weight:600;">{{ prop.bedrooms or '—' }}</div><div style="font-size:11px;color:var(--gray-400);">Beds</div></div>
         </div>
-      </div>
-    </div>
-
-    <!-- SAFETY CARD -->
-    <div class="safety-card">
-      <div class="safety-title">⚠️ Safety Tips</div>
-      <div class="safety-list">
-        <div class="safety-item">✓ Always visit the property in person before paying</div>
-        <div class="safety-item">✓ Never pay full deposit without a signed agreement</div>
-        <div class="safety-item">✓ Use ApnaGhar document services for legal agreements</div>
-        <div class="safety-item">✓ Verify owner CNIC matches title deed</div>
       </div>
     </div>
 
     <!-- TENANT VERIFY CTA -->
-    <div class="card" style="text-align:center;padding:18px;">
-      <div style="font-size:28px;margin-bottom:8px">🔍</div>
-      <div style="font-size:14px;font-weight:600;margin-bottom:6px">Tenant Verification</div>
-      <div style="font-size:12px;color:var(--gray-400);margin-bottom:12px;line-height:1.5">Are you an owner? Verify your tenant's background before renting.</div>
-      <button class="nav-btn" style="width:100%;padding:10px">Verify Tenant</button>
+    <div class="det-card" style="text-align:center;padding:18px;">
+      <div style="font-size:28px;margin-bottom:8px;">🔍</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:6px;">Tenant Verification</div>
+      <div style="font-size:12px;color:var(--gray-400);margin-bottom:12px;line-height:1.5;">Are you an owner? Verify your tenant's background before renting.</div>
+      <a href="{{ url_for('tenant_verification') }}" class="det-nav-btn" style="width:100%;justify-content:center;">Verify Tenant</a>
     </div>
 
-    <div class="report-link" onclick="alert('Report submitted. Thank you.')">🚩 Report this listing</div>
+    <!-- DOCUMENT SERVICES -->
+    <div class="det-card" style="text-align:center;padding:18px;">
+      <div style="font-size:28px;margin-bottom:8px;">📄</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:6px;">Need a Rent Agreement?</div>
+      <div style="font-size:12px;color:var(--gray-400);margin-bottom:12px;line-height:1.5;">We prepare legal agreements on stamp paper. Fast &amp; affordable.</div>
+      <a href="{{ url_for('document_services') }}" class="det-nav-btn" style="width:100%;justify-content:center;">Document Services</a>
+    </div>
 
   </div>
 </div>
 
 <!-- MOBILE CTA BAR -->
 <div class="mobile-cta-bar">
-  <button class="mob-btn mob-wa" onclick="window.open('https://wa.me/923111820660')">💬 WhatsApp</button>
-  <button class="mob-btn mob-call" onclick="window.open('tel:03111820660')">📞 Call</button>
+  {% set wa_msg = 'Hello ApnaGhar, interested in: ' ~ prop.title ~ ' — Rs. ' ~ prop.price %}
+  <a href="https://wa.me/923111820660?text={{ wa_msg|urlencode }}" target="_blank" class="mob-btn mob-wa" style="flex:1;padding:13px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:#25D366;color:#fff;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">💬 WhatsApp</a>
+  <a href="tel:{{ prop.owner_phone or '03111820660' }}" class="mob-btn mob-call" style="flex:1;padding:13px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer;background:var(--green);color:#fff;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">📞 Call</a>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
 <script>
+// Image filenames for lightbox
+const imgFiles = [{% for img in images %}"{{ img.filename }}"{% if not loop.last %},{% endif %}{% endfor %}];
+const imgBase = '/static/uploads/properties/';
+let currentIdx = 0;
+
+function openLightbox(idx) {
+  if (!imgFiles.length) return;
+  currentIdx = idx;
+  document.getElementById('lightboxImg').src = imgBase + imgFiles[currentIdx];
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function changeLightbox(dir) {
+  currentIdx = (currentIdx + dir + imgFiles.length) % imgFiles.length;
+  document.getElementById('lightboxImg').src = imgBase + imgFiles[currentIdx];
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') changeLightbox(1);
+  if (e.key === 'ArrowLeft') changeLightbox(-1);
+});
+
 function switchTab(el, tabId) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById(tabId).classList.add('active');
 }
-function toggleDesc(btn) {
-  const more = document.getElementById('descMore');
-  more.classList.toggle('visible');
-  btn.textContent = more.classList.contains('visible') ? 'Read less ▴' : 'Read more ▾';
-}
-function toggleSave(btn) {
-  btn.textContent = btn.textContent.includes('🤍') ? '❤️ Saved' : '🤍 Save';
-}
 </script>
-</body>
-</html>
+{% endblock %}
