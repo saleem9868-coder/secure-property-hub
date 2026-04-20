@@ -168,8 +168,13 @@
 
 
 <!-- ═══════════════════════════════════════
-     FEATURED LISTINGS — 10 SAMPLE PROPERTIES
+     FEATURED LISTINGS — DYNAMIC FROM DB
 ════════════════════════════════════════ -->
+{# Combine rent + sale into one list for the grid #}
+{% set all_featured = [] %}
+{% for p in featured_rent %}{% set _ = all_featured.append(('rent', p)) %}{% endfor %}
+{% for p in featured_sale %}{% set _ = all_featured.append(('sale', p)) %}{% endfor %}
+
 <section class="py-5" style="background:var(--light-bg);">
     <div class="container">
         <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
@@ -193,285 +198,88 @@
             <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 prop-filter-btn" data-filter="sale">
                 🏷️ {% if lang=='ur' %}فروخت{% else %}For Sale{% endif %}
             </button>
-            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 prop-filter-btn" data-filter="flat">
-                🏢 {% if lang=='ur' %}فلیٹ{% else %}Flats{% endif %}
-            </button>
-            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 prop-filter-btn" data-filter="house">
-                🏠 {% if lang=='ur' %}گھر{% else %}Houses{% endif %}
-            </button>
         </div>
 
         <div class="row g-4" id="listingsGrid">
 
-            <!-- Listing 1 -->
-            <div class="col-lg-4 col-md-6 listing-item" data-cat="rent flat">
+        {% if all_featured %}
+            {# ── DYNAMIC: Real listings from database ── #}
+            {% for cat, p in all_featured %}
+            {% set ptype_lower = (p.property_type or '')|lower %}
+            <div class="col-lg-4 col-md-6 listing-item" data-cat="{{ cat }} {{ ptype_lower }}">
                 <div class="prop-card">
-                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#bbdefb,#90caf9);font-size:3.5rem;">🏢</div>
+                    {% if p.filename %}
+                        <img src="/static/uploads/properties/{{ p.filename }}"
+                             alt="{{ p.title }}"
+                             style="height:190px;width:100%;object-fit:cover;border-radius:12px 12px 0 0;"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#bbdefb,#90caf9);font-size:3.5rem;display:none!important;">
+                            {% if cat=='rent' %}🔑{% else %}🏡{% endif %}
+                        </div>
+                    {% else %}
+                        <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#bbdefb,#90caf9);font-size:3.5rem;">
+                            {% if ptype_lower in ('flat','apartment') %}🏢
+                            {% elif ptype_lower == 'plot' %}🏗️
+                            {% elif ptype_lower == 'shop' %}🏪
+                            {% else %}{% if cat=='rent' %}🔑{% else %}🏡{% endif %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
                     <div class="p-3">
                         <div class="d-flex gap-2 mb-2 flex-wrap">
-                            <span class="badge-rent">For Rent</span>
-                            <span class="badge-type">Flat</span>
+                            {% if cat == 'rent' %}
+                                <span class="badge-rent">{% if lang=='ur' %}کرایہ{% else %}For Rent{% endif %}</span>
+                            {% else %}
+                                <span class="badge-sale">{% if lang=='ur' %}فروخت{% else %}For Sale{% endif %}</span>
+                            {% endif %}
+                            {% if p.property_type %}<span class="badge-type">{{ p.property_type }}</span>{% endif %}
+                            {% if p.is_featured %}<span class="badge bg-warning text-dark" style="font-size:.68rem;">⭐ Featured</span>{% endif %}
                         </div>
-                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">3-Bedroom Flat — Gulshan-e-Iqbal Block 13D</h5>
-                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Gulshan-e-Iqbal, Block 13D, Karachi</p>
+                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">{{ p.title }}</h5>
+                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>{{ p.location }}{% if p.area %}, {{ p.area }}{% endif %}</p>
                         <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
-                            <span><i class="bi bi-door-open me-1"></i>3 Beds</span>
-                            <span><i class="bi bi-grid me-1"></i>1,400 sqft</span>
-                            <span><i class="bi bi-droplet me-1"></i>2 Baths</span>
+                            {% if p.bedrooms %}<span><i class="bi bi-door-open me-1"></i>{{ p.bedrooms }} Beds</span>{% endif %}
+                            {% if p.bathrooms %}<span><i class="bi bi-droplet me-1"></i>{{ p.bathrooms }} Baths</span>{% endif %}
+                            {% if cat=='rent' and p.furnished %}<span><i class="bi bi-house-door me-1"></i>{{ p.furnished }}</span>{% endif %}
+                            {% if cat=='sale' and p.total_area %}<span><i class="bi bi-grid me-1"></i>{{ p.total_area }}</span>{% endif %}
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="prop-price">PKR 45,000/mo</span>
-                            <a href="https://wa.me/923111820660?text=I'm%20interested%20in%20the%203-bed%20flat%20in%20Gulshan%20Block%2013D." 
-                               target="_blank" class="btn btn-sm btn-whatsapp">
-                                <i class="bi bi-whatsapp"></i> Inquire
+                            <span class="prop-price">
+                                Rs. {{ p.price }}{% if cat=='rent' %}/mo{% endif %}
+                            </span>
+                            <a href="{{ url_for('rent_detail', pid=p.id) if cat=='rent' else url_for('sale_detail', pid=p.id) }}"
+                               class="btn btn-sm btn-primary rounded-pill">
+                                {% if lang=='ur' %}تفصیل{% else %}View{% endif %} →
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
 
-            <!-- Listing 2 -->
-            <div class="col-lg-4 col-md-6 listing-item" data-cat="sale house">
-                <div class="prop-card">
-                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#c8e6c9,#a5d6a7);font-size:3.5rem;">🏡</div>
-                    <div class="p-3">
-                        <div class="d-flex gap-2 mb-2 flex-wrap">
-                            <span class="badge-sale">For Sale</span>
-                            <span class="badge-type">House</span>
-                        </div>
-                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">240 Sq Yd House — DHA Phase 6</h5>
-                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>DHA Phase 6, Karachi</p>
-                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
-                            <span><i class="bi bi-door-open me-1"></i>4 Beds</span>
-                            <span><i class="bi bi-grid me-1"></i>240 Sq Yd</span>
-                            <span><i class="bi bi-car-front me-1"></i>Parking</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="prop-price">PKR 4.5 Crore</span>
-                            <a href="https://wa.me/923111820660?text=I'm%20interested%20in%20the%20240sqyd%20house%20in%20DHA%20Phase%206." 
-                               target="_blank" class="btn btn-sm btn-whatsapp">
-                                <i class="bi bi-whatsapp"></i> Inquire
-                            </a>
-                        </div>
+        {% else %}
+            {# ── FALLBACK: No DB listings yet — show placeholder cards ── #}
+            <div class="col-12">
+                <div class="alert alert-info d-flex align-items-center gap-3 rounded-4 border-0 shadow-sm" style="background:#e3f0ff;">
+                    <span style="font-size:2rem;">🏠</span>
+                    <div>
+                        <strong>{% if lang=='ur' %}ابھی تک کوئی فیچرڈ پراپرٹی نہیں{% else %}No featured properties yet{% endif %}</strong><br>
+                        <span class="text-muted" style="font-size:.88rem;">
+                            {% if lang=='ur' %}
+                                ایڈمن پینل میں جائیں → Rent یا Sale ٹیب → ⭐ Featured کریں
+                            {% else %}
+                                Go to Admin Panel → Rent or Sale tab → click the ⭐ badge to feature a listing, then it will appear here.
+                            {% endif %}
+                        </span>
+                        {% if session.get('is_admin') %}
+                        <br><a href="{{ url_for('admin_add_property') }}" class="btn btn-sm btn-primary rounded-pill mt-2">
+                            <i class="bi bi-plus-circle me-1"></i>Add Property Now
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-
-            <!-- Listing 3 -->
-            <div class="col-lg-4 col-md-6 listing-item" data-cat="rent flat">
-                <div class="prop-card">
-                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#ffe0b2,#ffcc80);font-size:3.5rem;">🏢</div>
-                    <div class="p-3">
-                        <div class="d-flex gap-2 mb-2 flex-wrap">
-                            <span class="badge-rent">For Rent</span>
-                            <span class="badge-type">Flat</span>
-                        </div>
-                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">2-Bedroom Flat — PECHS Block 2</h5>
-                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>PECHS Block 2, Karachi</p>
-                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
-                            <span><i class="bi bi-door-open me-1"></i>2 Beds</span>
-                            <span><i class="bi bi-grid me-1"></i>1,100 sqft</span>
-                            <span><i class="bi bi-wifi me-1"></i>Fiber Ready</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="prop-price">PKR 38,000/mo</span>
-                            <a href="https://wa.me/923111820660?text=I'm%20interested%20in%20the%202-bed%20flat%20in%20PECHS." 
-                               target="_blank" class="btn btn-sm btn-whatsapp">
-                                <i class="bi bi-whatsapp"></i> Inquire
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Listing 4 -->
-            <div class="col-lg-4 col-md-6 listing-item" data-cat="sale flat">
-                <div class="prop-card">
-                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#e1bee7,#ce93d8);font-size:3.5rem;">🏢</div>
-                    <div class="p-3">
-                        <div class="d-flex gap-2 mb-2 flex-wrap">
-                            <span class="badge-sale">For Sale</span>
-                            <span class="badge-type">Apartment</span>
-                        </div>
-                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">Luxury 3-Bed Apartment — Clifton Block 5</h5>
-                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Clifton Block 5, Karachi</p>
-                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
-                            <span><i class="bi bi-door-open me-1"></i>3 Beds</span>
-                            <span><i class="bi bi-grid me-1"></i>2,000 sqft</span>
-                            <span><i class="bi bi-building me-1"></i>Sea View</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="prop-price">PKR 2.8 Crore</span>
-                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20Clifton%20Block%205%20apartment." 
-                               target="_blank" class="btn btn-sm btn-whatsapp">
-                                <i class="bi bi-whatsapp"></i> Inquire
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Listing 5 -->
-            <div class="col-lg-4 col-md-6 listing-item" data-cat="rent house">
-                <div class="prop-card">
-                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#b2dfdb,#80cbc4);font-size:3.5rem;">🏠</div>
-                    <div class="p-3">
-                        <div class="d-flex gap-2 mb-2 flex-wrap">
-                            <span class="badge-rent">For Rent</span>
-                            <span class="badge-type">House</span>
-                        </div>
-                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">120 Sq Yd House — Gulistan-e-Johar Block 14</h5>
-                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Gulistan-e-Johar, Karachi</p>
-                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
-                            <span><i class="bi bi-door-open me-1"></i>3 Beds</span>
-                            <span><i class="bi bi-grid me-1"></i>120 Sq Yd</span>
-                            <span><i class="bi bi-car-front me-1"></i>Parking</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="prop-price">PKR 55,000/mo</span>
-                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20house%20in%20Gulistan-e-Johar." 
-                               target="_blank" class="btn btn-sm btn-whatsapp">
-                                <i class="bi bi-whatsapp"></i> Inquire
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Listing 6 -->
-            <div class="col-lg-4 col-md-6 listing-item" data-cat="sale house">
-                <div class="prop-card">
-                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#f8bbd9,#f48fb1);font-size:3.5rem;">🏡</div>
-                    <div class="p-3">
-                        <div class="d-flex gap-2 mb-2 flex-wrap">
-                            <span class="badge-sale">For Sale</span>
-                            <span class="badge-type">House</span>
-                        </div>
-                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">160 Sq Yd House — Bahria Town Precinct 10</h5>
-                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Bahria Town Karachi</p>
-                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
-                            <span><i class="bi bi-door-open me-1"></i>4 Beds</span>
-                            <span><i class="bi bi-grid me-1"></i>160 Sq Yd</span>
-                            <span><i class="bi bi-lightning me-1"></i>Solar</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="prop-price">PKR 1.85 Crore</span>
-                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20Bahria%20Town%20house." 
-                               target="_blank" class="btn btn-sm btn-whatsapp">
-                                <i class="bi bi-whatsapp"></i> Inquire
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Listing 7 -->
-            <div class="col-lg-4 col-md-6 listing-item" data-cat="rent flat">
-                <div class="prop-card">
-                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#c5cae9,#9fa8da);font-size:3.5rem;">🏢</div>
-                    <div class="p-3">
-                        <div class="d-flex gap-2 mb-2 flex-wrap">
-                            <span class="badge-rent">For Rent</span>
-                            <span class="badge-type">Flat</span>
-                        </div>
-                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">1-Bedroom Flat — North Nazimabad Block H</h5>
-                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>North Nazimabad, Karachi</p>
-                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
-                            <span><i class="bi bi-door-open me-1"></i>1 Bed</span>
-                            <span><i class="bi bi-grid me-1"></i>750 sqft</span>
-                            <span><i class="bi bi-droplet me-1"></i>1 Bath</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="prop-price">PKR 22,000/mo</span>
-                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20flat%20in%20North%20Nazimabad." 
-                               target="_blank" class="btn btn-sm btn-whatsapp">
-                                <i class="bi bi-whatsapp"></i> Inquire
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Listing 8 -->
-            <div class="col-lg-4 col-md-6 listing-item" data-cat="sale flat">
-                <div class="prop-card">
-                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#d7ccc8,#bcaaa4);font-size:3.5rem;">🏢</div>
-                    <div class="p-3">
-                        <div class="d-flex gap-2 mb-2 flex-wrap">
-                            <span class="badge-sale">For Sale</span>
-                            <span class="badge-type">Flat</span>
-                        </div>
-                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">2-Bed Flat — Federal B Area Block 12</h5>
-                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Federal B Area, Karachi</p>
-                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
-                            <span><i class="bi bi-door-open me-1"></i>2 Beds</span>
-                            <span><i class="bi bi-grid me-1"></i>950 sqft</span>
-                            <span><i class="bi bi-check-circle me-1"></i>Registry Ready</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="prop-price">PKR 85 Lakh</span>
-                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20flat%20in%20Federal%20B%20Area." 
-                               target="_blank" class="btn btn-sm btn-whatsapp">
-                                <i class="bi bi-whatsapp"></i> Inquire
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Listing 9 -->
-            <div class="col-lg-4 col-md-6 listing-item" data-cat="rent house">
-                <div class="prop-card">
-                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#dcedc8,#c5e1a5);font-size:3.5rem;">🏠</div>
-                    <div class="p-3">
-                        <div class="d-flex gap-2 mb-2 flex-wrap">
-                            <span class="badge-rent">For Rent</span>
-                            <span class="badge-type">Upper Portion</span>
-                        </div>
-                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">Upper Portion — Saddar near Empress Market</h5>
-                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Saddar, Karachi</p>
-                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
-                            <span><i class="bi bi-door-open me-1"></i>2 Beds</span>
-                            <span><i class="bi bi-grid me-1"></i>80 Sq Yd</span>
-                            <span><i class="bi bi-bus-front me-1"></i>Bus Stop Nearby</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="prop-price">PKR 28,000/mo</span>
-                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20upper%20portion%20in%20Saddar." 
-                               target="_blank" class="btn btn-sm btn-whatsapp">
-                                <i class="bi bi-whatsapp"></i> Inquire
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Listing 10 -->
-            <div class="col-lg-4 col-md-6 listing-item" data-cat="sale house">
-                <div class="prop-card">
-                    <div class="img-ph d-flex align-items-center justify-content-center" style="height:190px;background:linear-gradient(135deg,#ffecb3,#ffe082);font-size:3.5rem;">🏡</div>
-                    <div class="p-3">
-                        <div class="d-flex gap-2 mb-2 flex-wrap">
-                            <span class="badge-sale">For Sale</span>
-                            <span class="badge-type">House</span>
-                        </div>
-                        <h5 style="font-size:1rem;font-weight:700;margin-bottom:6px;">200 Sq Yd Corner House — Nazimabad No. 3</h5>
-                        <p class="text-muted mb-2" style="font-size:.84rem;"><i class="bi bi-geo-alt me-1"></i>Nazimabad No. 3, Karachi</p>
-                        <div class="d-flex gap-3 mb-3" style="font-size:.82rem;color:#555;">
-                            <span><i class="bi bi-door-open me-1"></i>5 Beds</span>
-                            <span><i class="bi bi-grid me-1"></i>200 Sq Yd</span>
-                            <span><i class="bi bi-star me-1"></i>Corner Plot</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="prop-price">PKR 2.2 Crore</span>
-                            <a href="https://wa.me/923111820660?text=Inquiry%20about%20corner%20house%20in%20Nazimabad." 
-                               target="_blank" class="btn btn-sm btn-whatsapp">
-                                <i class="bi bi-whatsapp"></i> Inquire
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        {% endif %}
 
         </div><!-- /row -->
         <div class="text-center mt-4">
