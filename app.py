@@ -520,6 +520,35 @@ def set_lang(lang):
         session['lang'] = lang
     return redirect(request.referrer or url_for('index'))
 
+# ─── LEGACY URDU URL REDIRECTS (301 permanent) ───────────────────────────────
+@app.route('/kiraya-par-lena')
+@app.route('/kiraya-par-lena/<int:pid>')
+def legacy_rent_lena(pid=None):
+    if pid: return redirect(url_for('rent_detail', pid=pid), 301)
+    return redirect(url_for('rent_lena'), 301)
+
+@app.route('/kiraya-par-dena', methods=['GET','POST'])
+def legacy_rent_dena():
+    return redirect(url_for('rent_dena'), 301)
+
+@app.route('/kiraya-chahiye', methods=['GET','POST'])
+def legacy_rent_chahiye():
+    return redirect(url_for('rent_chahiye'), 301)
+
+@app.route('/khareedna-chahta-hoon')
+@app.route('/khareedna-chahta-hoon/<int:pid>')
+def legacy_purchase_lena(pid=None):
+    if pid: return redirect(url_for('sale_detail', pid=pid), 301)
+    return redirect(url_for('purchase_lena'), 301)
+
+@app.route('/bechna-chahta-hoon', methods=['GET','POST'])
+def legacy_sale_dena():
+    return redirect(url_for('sale_dena'), 301)
+
+@app.route('/khareedna-chahiye', methods=['GET','POST'])
+def legacy_purchase_chahiye():
+    return redirect(url_for('purchase_chahiye'), 301)
+
 def allowed_file(f):
     return '.' in f and f.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -898,49 +927,49 @@ def search():
     bedrooms = request.args.get('beds', '')
 
     if purpose == 'buy':
-        q = ("SELECT s.*, pi.filename FROM sale_properties s "
+        q = ("SELECT DISTINCT ON (s.id) s.*, pi.filename FROM sale_properties s "
              "LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' "
              "WHERE s.is_approved=1")
         params = []
         if ptype:    q += " AND s.property_type=?";                     params.append(ptype)
         if location: q += " AND (s.location ILIKE ? OR s.area ILIKE ?)";  params += [f'%{location}%', f'%{location}%']
         if bedrooms: q += " AND s.bedrooms=?";                          params.append(bedrooms)
-        q += " ORDER BY s.is_featured DESC, s.created_at DESC"
+        q += " ORDER BY s.id, s.is_featured DESC, s.created_at DESC"
         props = conn.execute(q, params).fetchall()
         conn.close()
         return render_template('purchase_lena.html', props=props, ptype=ptype, loc=location, bed=bedrooms)
     else:
-        q = ("SELECT r.*, pi.filename FROM rent_properties r "
+        q = ("SELECT DISTINCT ON (r.id) r.*, pi.filename FROM rent_properties r "
              "LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' "
              "WHERE r.is_approved=1")
         params = []
         if ptype:    q += " AND r.property_type=?";                     params.append(ptype)
         if location: q += " AND (r.location ILIKE ? OR r.area ILIKE ?)";  params += [f'%{location}%', f'%{location}%']
         if bedrooms: q += " AND r.bedrooms=?";                          params.append(bedrooms)
-        q += " ORDER BY r.is_featured DESC, r.created_at DESC"
+        q += " ORDER BY r.id, r.is_featured DESC, r.created_at DESC"
         props = conn.execute(q, params).fetchall()
         conn.close()
         return render_template('rent_lena.html', props=props, ptype=ptype, loc=location, bed=bedrooms)
 
 # ─── RENT SECTION ─────────────────────────────────────────────────────────────
 
-@app.route('/kiraya-par-lena')
+@app.route('/properties-for-rent')
 def rent_lena():
     conn = get_db()
     ptype = request.args.get('type','')
     loc   = request.args.get('location','')
     bed   = request.args.get('bedrooms','')
-    q = "SELECT r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.is_approved=1"
+    q = "SELECT DISTINCT ON (r.id) r.*, pi.filename FROM rent_properties r LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' WHERE r.is_approved=1"
     params = []
     if ptype: q += " AND r.property_type=?"; params.append(ptype)
     if loc:   q += " AND (r.location ILIKE ? OR r.area ILIKE ?)"; params += [f'%{loc}%', f'%{loc}%']
     if bed:   q += " AND r.bedrooms=?"; params.append(bed)
-    q += " ORDER BY r.is_featured DESC, r.created_at DESC"
+    q += " ORDER BY r.id, r.is_featured DESC, r.created_at DESC"
     props = conn.execute(q, params).fetchall()
     conn.close()
     return render_template('rent_lena.html', props=props, ptype=ptype, loc=loc, bed=bed)
 
-@app.route('/kiraya-par-lena/<int:pid>')
+@app.route('/properties-for-rent/<int:pid>')
 def rent_detail(pid):
     conn = get_db()
     prop = conn.execute(
@@ -954,7 +983,7 @@ def rent_detail(pid):
     conn.close()
     return render_template('property_detail.html', prop=prop, images=images, cat='rent', is_saved=is_saved)
 
-@app.route('/kiraya-par-dena', methods=['GET','POST'])
+@app.route('/list-for-rent', methods=['GET','POST'])
 @login_required
 def rent_dena():
     if request.method == 'POST':
@@ -1000,7 +1029,7 @@ def rent_dena():
         return redirect(url_for('dashboard'))
     return render_template('rent_dena.html')
 
-@app.route('/kiraya-chahiye', methods=['GET','POST'])
+@app.route('/rent-requirement', methods=['GET','POST'])
 def rent_chahiye():
     if request.method == 'POST':
         conn = get_db()
@@ -1032,21 +1061,21 @@ def rent_chahiye():
 
 # ─── SALE / PURCHASE SECTION ──────────────────────────────────────────────────
 
-@app.route('/khareedna-chahta-hoon')
+@app.route('/properties-for-sale')
 def purchase_lena():
     conn = get_db()
     ptype = request.args.get('type','')
     loc   = request.args.get('location','')
-    q = "SELECT s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.is_approved=1"
+    q = "SELECT DISTINCT ON (s.id) s.*, pi.filename FROM sale_properties s LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' WHERE s.is_approved=1"
     params = []
     if ptype: q += " AND s.property_type=?"; params.append(ptype)
     if loc:   q += " AND (s.location ILIKE ? OR s.area ILIKE ?)"; params += [f'%{loc}%', f'%{loc}%']
-    q += " ORDER BY s.is_featured DESC, s.created_at DESC"
+    q += " ORDER BY s.id, s.is_featured DESC, s.created_at DESC"
     props = conn.execute(q, params).fetchall()
     conn.close()
     return render_template('purchase_lena.html', props=props, ptype=ptype, loc=loc)
 
-@app.route('/khareedna-chahta-hoon/<int:pid>')
+@app.route('/properties-for-sale/<int:pid>')
 def sale_detail(pid):
     conn = get_db()
     prop = conn.execute(
@@ -1060,7 +1089,7 @@ def sale_detail(pid):
     conn.close()
     return render_template('property_detail.html', prop=prop, images=images, cat='sale', is_saved=is_saved)
 
-@app.route('/bechna-chahta-hoon', methods=['GET','POST'])
+@app.route('/list-for-sale', methods=['GET','POST'])
 @login_required
 def sale_dena():
     if request.method == 'POST':
@@ -1105,7 +1134,7 @@ def sale_dena():
         return redirect(url_for('dashboard'))
     return render_template('sale_dena.html')
 
-@app.route('/khareedna-chahiye', methods=['GET','POST'])
+@app.route('/purchase-requirement', methods=['GET','POST'])
 def purchase_chahiye():
     if request.method == 'POST':
         conn = get_db()
