@@ -4,6 +4,36 @@ from werkzeug.utils import secure_filename
 import os, threading, re
 from datetime import datetime
 from functools import wraps
+
+# ─── CLOUDINARY SETUP ─────────────────────────────────────────────────────────
+import cloudinary
+import cloudinary.uploader
+
+cloudinary.config(
+    cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key    = os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret = os.environ.get('CLOUDINARY_API_SECRET'),
+    secure     = True
+)
+
+def upload_to_cloudinary(file_obj, prefix=''):
+    """Upload a file to Cloudinary and return the secure URL."""
+    try:
+        if not file_obj or not allowed_file(file_obj.filename):
+            return None
+        ts = datetime.now().strftime('%Y%m%d%H%M%S')
+        safe = secure_filename(file_obj.filename).rsplit('.', 1)[0]
+        public_id = f"apnaghar/{prefix}{ts}_{safe}"
+        result = cloudinary.uploader.upload(
+            file_obj,
+            public_id=public_id,
+            overwrite=True,
+            resource_type='image'
+        )
+        return result.get('secure_url')
+    except Exception as e:
+        print(f"Cloudinary upload error: {e}")
+        return None
 try:
     import urllib.request, json as _json
     def _get_geo(ip):
@@ -416,6 +446,15 @@ def get_lang():
 
 def T():
     return TRANSLATIONS.get(get_lang(), TRANSLATIONS['en'])
+
+@app.template_filter('img_url')
+def img_url_filter(filename):
+    """Convert a filename or Cloudinary URL to a displayable src."""
+    if not filename:
+        return ''
+    if filename.startswith('http://') or filename.startswith('https://'):
+        return filename   # already a full Cloudinary URL
+    return '/uploads/' + filename   # legacy local file
 
 @app.context_processor
 def inject_globals():
@@ -883,12 +922,18 @@ def init_db():
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
+    """Legacy route — kept for any old local files still on disk."""
     return send_from_directory(UPLOAD_PROPERTIES, filename)
 
 def save_uploaded_file(file_obj, subfolder, prefix=''):
-    """Save a file to a subfolder under static/uploads/ and return filename."""
+    """Upload to Cloudinary and return the secure URL.
+    Falls back to local disk if Cloudinary is not configured."""
     if not file_obj or not allowed_file(file_obj.filename):
         return None
+    # Try Cloudinary first
+    if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+        return upload_to_cloudinary(file_obj, prefix=prefix)
+    # Fallback: local disk
     os.makedirs(subfolder, exist_ok=True)
     safe = secure_filename(file_obj.filename)
     ts = datetime.now().strftime('%Y%m%d%H%M%S')
@@ -1002,14 +1047,17 @@ def rent_dena():
             request.form.get('tenant_preference','Family'),
             request.form['description'], auto_approve))
         pid = cur.lastrowid
-        os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
         for f in request.files.getlist('images'):
             if f and allowed_file(f.filename):
-                fname = f"rent_{pid}_{secure_filename(f.filename)}"
-                upload_path = os.path.join(UPLOAD_PROPERTIES, fname)
-                print("Saving image to:", upload_path)
-                f.save(upload_path)
-                conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'rent',fname))
+                if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+                    url = upload_to_cloudinary(f, prefix=f"rent_{pid}_")
+                else:
+                    os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
+                    fname = f"rent_{pid}_{secure_filename(f.filename)}"
+                    f.save(os.path.join(UPLOAD_PROPERTIES, fname))
+                    url = fname
+                if url:
+                    conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'rent',url))
         conn.commit(); conn.close()
         # WhatsApp notification for admin
         msg = (
@@ -1107,14 +1155,17 @@ def sale_dena():
             request.form.get('total_area',''), request.form.get('possession','Immediate'),
             request.form['description'], auto_approve))
         pid = cur.lastrowid
-        os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
         for f in request.files.getlist('images'):
             if f and allowed_file(f.filename):
-                fname = f"sale_{pid}_{secure_filename(f.filename)}"
-                upload_path = os.path.join(UPLOAD_PROPERTIES, fname)
-                print("Saving image to:", upload_path)
-                f.save(upload_path)
-                conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'sale',fname))
+                if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+                    url = upload_to_cloudinary(f, prefix=f"sale_{pid}_")
+                else:
+                    os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
+                    fname = f"sale_{pid}_{secure_filename(f.filename)}"
+                    f.save(os.path.join(UPLOAD_PROPERTIES, fname))
+                    url = fname
+                if url:
+                    conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'sale',url))
         conn.commit(); conn.close()
         # WhatsApp notification for admin
         msg = (
@@ -1432,14 +1483,17 @@ def admin_add_property():
                 1 if request.form.get('is_featured') else 0,
             ))
             pid = cur.lastrowid
-            os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
             for f in request.files.getlist('images'):
                 if f and allowed_file(f.filename):
-                    fname = f"rent_{pid}_{secure_filename(f.filename)}"
-                    upload_path = os.path.join(UPLOAD_PROPERTIES, fname)
-                    print("Saving image to:", upload_path)
-                    f.save(upload_path)
-                    conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'rent',fname))
+                    if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+                        url = upload_to_cloudinary(f, prefix=f"rent_{pid}_")
+                    else:
+                        os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
+                        fname = f"rent_{pid}_{secure_filename(f.filename)}"
+                        f.save(os.path.join(UPLOAD_PROPERTIES, fname))
+                        url = fname
+                    if url:
+                        conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'rent',url))
             conn.commit(); conn.close()
             flash(f'Rent property "{request.form["title"]}" add aur approve ho gayi!', 'success')
         else:
@@ -1464,14 +1518,17 @@ def admin_add_property():
                 1 if request.form.get('is_featured') else 0,
             ))
             pid = cur.lastrowid
-            os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
             for f in request.files.getlist('images'):
                 if f and allowed_file(f.filename):
-                    fname = f"sale_{pid}_{secure_filename(f.filename)}"
-                    upload_path = os.path.join(UPLOAD_PROPERTIES, fname)
-                    print("Saving image to:", upload_path)
-                    f.save(upload_path)
-                    conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'sale',fname))
+                    if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+                        url = upload_to_cloudinary(f, prefix=f"sale_{pid}_")
+                    else:
+                        os.makedirs(UPLOAD_PROPERTIES, exist_ok=True)
+                        fname = f"sale_{pid}_{secure_filename(f.filename)}"
+                        f.save(os.path.join(UPLOAD_PROPERTIES, fname))
+                        url = fname
+                    if url:
+                        conn.execute("INSERT INTO property_images (property_id,property_cat,filename) VALUES (?,?,?)", (pid,'sale',url))
             conn.commit(); conn.close()
             flash(f'Sale property "{request.form["title"]}" add aur approve ho gayi!', 'success')
         return redirect(url_for('admin_panel') + '#aRent')
