@@ -79,11 +79,11 @@
         <div class="tab-pane fade" id="myReqs">
             <h6 class="fw-bold mb-2">Kiraye Ki Requirements</h6>
             {% if my_rent_reqs %}<div class="table-responsive mb-3"><table class="table table-sm align-middle"><thead style="background:var(--light-bg);"><tr><th>Area</th><th>Budget</th><th>Type</th><th>Status</th><th>Date</th></tr></thead><tbody>
-            {% for r in my_rent_reqs %}<tr><td>{{ r.preferred_area }}</td><td>Rs. {{ r.max_budget }}</td><td>{{ r.tenant_type }}</td><td><span class="badge bg-info">{{ r.status }}</span></td><td class="text-muted small">{{ r.created_at[:10] }}</td></tr>{% endfor %}
+            {% for r in my_rent_reqs %}<tr><td>{{ r.preferred_area }}</td><td>Rs. {{ r.max_budget }}</td><td>{{ r.tenant_type }}</td><td><span class="badge bg-info">{{ r.status }}</span></td><td class="text-muted small">{{ r.created_at.strftime('%Y-%m-%d') if r.created_at else '' }}</td></tr>{% endfor %}
             </tbody></table></div>{% else %}<p class="text-muted small">Koi requirement nahi.</p>{% endif %}
             <h6 class="fw-bold mb-2 mt-3">Purchase Requirements</h6>
             {% if my_buy_reqs %}<div class="table-responsive"><table class="table table-sm align-middle"><thead style="background:var(--light-bg);"><tr><th>Area</th><th>Budget</th><th>Type</th><th>Status</th><th>Date</th></tr></thead><tbody>
-            {% for r in my_buy_reqs %}<tr><td>{{ r.preferred_area }}</td><td>Rs. {{ r.max_budget }}</td><td>{{ r.payment_method }}</td><td><span class="badge bg-info">{{ r.status }}</span></td><td class="text-muted small">{{ r.created_at[:10] }}</td></tr>{% endfor %}
+            {% for r in my_buy_reqs %}<tr><td>{{ r.preferred_area }}</td><td>Rs. {{ r.max_budget }}</td><td>{{ r.payment_method }}</td><td><span class="badge bg-info">{{ r.status }}</span></td><td class="text-muted small">{{ r.created_at.strftime('%Y-%m-%d') if r.created_at else '' }}</td></tr>{% endfor %}
             </tbody></table></div>{% else %}<p class="text-muted small">Koi purchase requirement nahi.</p>{% endif %}
         </div>
         <!-- Saved -->
@@ -103,7 +103,7 @@
         <div class="tab-pane fade" id="myVerif">
             <div class="d-flex justify-content-between mb-3"><h6 class="fw-bold mb-0">Tenant Verifications</h6><a href="{{ url_for('tenant_verification') }}" class="btn btn-sm btn-primary rounded-pill">+ Nayi Request</a></div>
             {% if my_verifs %}<div class="table-responsive"><table class="table align-middle"><thead style="background:var(--light-bg);"><tr><th>Naam</th><th>CNIC</th><th>Mobile</th><th>Status</th><th>Date</th></tr></thead><tbody>
-            {% for v in my_verifs %}<tr><td>{{ v.tenant_name }}</td><td>{{ v.cnic }}</td><td>{{ v.mobile }}</td><td><span class="st-{{ v.status|lower }}">{{ v.status }}</span></td><td class="text-muted small">{{ v.created_at[:10] }}</td></tr>{% endfor %}
+            {% for v in my_verifs %}<tr><td>{{ v.tenant_name }}</td><td>{{ v.cnic }}</td><td>{{ v.mobile }}</td><td><span class="st-{{ v.status|lower }}">{{ v.status }}</span></td><td class="text-muted small">{{ v.created_at.strftime('%Y-%m-%d') if v.created_at else '' }}</td></tr>{% endfor %}
             </tbody></table></div>{% else %}<div class="text-center py-4" style="background:var(--light-bg);border-radius:12px;"><p class="text-muted mb-2">Koi verification nahi.</p><a href="{{ url_for('tenant_verification') }}" class="btn btn-sm btn-primary rounded-pill">Request Karein</a></div>{% endif %}
         </div>
         <!-- Profile -->
