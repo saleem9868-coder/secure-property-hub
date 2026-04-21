@@ -66,7 +66,7 @@
         <div class="col-md-6 col-lg-4">
             <div class="prop-card">
                 {% if p.filename %}
-                <img src="/uploads/{{ p.filename }}" alt="{{ p.title }}">
+                <img src="{{ p.filename | img_url }}" alt="{{ p.title }}">
                 {% else %}
                 <div class="img-ph"><i class="bi bi-building" style="font-size:2.5rem;"></i></div>
                 {% endif %}
