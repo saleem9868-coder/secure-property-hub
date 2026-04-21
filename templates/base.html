@@ -299,8 +299,10 @@ Resources
                     </ul>
                 </li>
                 {% if session.user_id %}
+                {% if not session.is_admin %}
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}"><i class="bi bi-person-circle me-1"></i>{{ session.user_name.split()[0] }}</a></li>
-                {% if session.is_admin %}<li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('admin_panel') }}"><i class="bi bi-shield me-1"></i>Admin</a></li>{% endif %}
+                {% endif %}
+                {% if session.is_admin %}<li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('admin_panel') }}"><i class="bi bi-shield me-1"></i>Admin Panel</a></li>{% endif %}
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
                 {% else %}
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
@@ -374,7 +376,7 @@ Resources
         </div>
         <hr style="border-color:rgba(255,255,255,.15);" class="mt-3 mb-3">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center" style="font-size:.8rem;">
-            <p class="mb-0">© 2026 ApnaGhar | اپنا گھر. All rights reserved.</p>
+            <p class="mb-0">© {{ now.year }} ApnaGhar | اپنا گھر. All rights reserved.</p>
             <div class="d-flex gap-3 mt-2 mt-md-0">
                 <a href="{{ url_for('about') }}" style="color:rgba(255,255,255,.6);">About</a>
                 <a href="{{ url_for('contact') }}" style="color:rgba(255,255,255,.6);">Contact</a>
