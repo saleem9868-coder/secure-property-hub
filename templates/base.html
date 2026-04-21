@@ -19,7 +19,7 @@
     <meta property="og:description" content="{% block og_desc %}Rent, buy or sell property in Karachi. Trusted agents in Akhtar Colony. Call 0311-1820660.{% endblock %}">
     <meta property="og:image"       content="{% block og_image %}{{ request.host_url }}static/og-banner.jpg{% endblock %}">
     <meta property="og:site_name"   content="ApnaGhar | اپنا گھر">
-    <meta property="og:locale"      content="{{ 'ur_PK' if lang=='ur' else 'en_PK' }}">
+    <meta property="og:locale"      content="en_PK">
 
     <!-- ═══ TWITTER CARD ═══ -->
     <meta name="twitter:card"        content="summary_large_image">
@@ -74,26 +74,24 @@
             --accent-light:#f0c060; --light-bg:#f8f9fc; --card-border:#e8edf5;
         }
         body {
-            font-family:'Noto Nastaliq Urdu',serif{% else %}'DM Sans',sans-serif{% endif %};
+font-family:'DM Sans',sans-serif;
             color:#1a2535; background:#fff;
-            line-height:2.2;{% endif %}
+            line-height:1.6;
         }
         h1,h2,h3,h4,h5,h6 {
-            font-family:'Noto Nastaliq Urdu',serif{% else %}'Playfair Display',serif{% endif %};
+font-family:'Playfair Display',serif;
         }
-        {% if T.dir=='rtl' %}
         .ms-auto{margin-left:0!important;margin-right:auto!important;}
         .wa-float{right:auto!important;left:24px!important;}
         .alert{border-left:none;border-right:4px solid;}
         .dropdown-menu{text-align:right;}
-        {% endif %}
+        
 
         /* ── Navbar ── */
         .navbar{background:var(--primary)!important;padding:10px 0;box-shadow:0 2px 20px rgba(0,0,0,.15);}
         .navbar-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
         .navbar-brand .brand-logo{height:46px;width:auto;object-fit:contain;}
         .navbar-brand .brand-text{display:flex;flex-direction:column;line-height:1.1;}
-        .navbar-brand .brand-urdu{font-family:'Noto Nastaliq Urdu',serif;font-size:1.15rem;font-weight:700;color:#fff;}
         .navbar-brand .brand-en{font-size:.65rem;color:var(--accent-light);letter-spacing:.5px;font-weight:600;}
         .nav-link{color:rgba(255,255,255,.88)!important;font-weight:500;padding:6px 10px!important;border-radius:6px;transition:all .2s;font-size:.88rem;white-space:nowrap;}
         .nav-link:hover,.nav-link.active{color:#fff!important;background:rgba(255,255,255,.15);}
@@ -114,7 +112,7 @@
         .action-card{border:none;border-radius:18px;cursor:pointer;transition:all .28s;text-decoration:none;display:block;padding:28px 20px;min-height:220px;text-align:center;}
         .action-card:hover{transform:translateY(-7px);box-shadow:0 18px 45px rgba(0,0,0,.18);}
         .action-card .c-icon{font-size:2.8rem;display:block;margin-bottom:12px;}
-        .action-card .c-title{font-size:1.15rem{% else %}1.05rem{% endif %};font-weight:700;color:#fff;margin-bottom:8px;line-height:2.2{% else %}1.4{% endif %};white-space:pre-line;}
+        .action-card .c-title{1.05rem;font-weight:700;color:#fff;margin-bottom:8px;1.4;white-space:pre-line;}
         .action-card .c-sub{color:rgba(255,255,255,.85);font-size:.82rem;margin-bottom:14px;line-height:1.6;}
         .action-card .c-btn{background:rgba(255,255,255,.22);color:#fff;border-radius:20px;padding:5px 16px;font-size:.8rem;font-weight:600;display:inline-block;}
         .card-rl{background:linear-gradient(135deg,#1565c0,#1976d2);}
@@ -179,8 +177,8 @@
         /* ── Misc ── */
         .prop-price{font-size:1.2rem;font-weight:700;color:var(--accent);}
         .stats-strip{background:var(--primary-light);color:#fff;padding:18px 0;}
-        .stat-num{font-size:1.8rem;font-weight:700;color:var(--accent-light);font-family:'Playfair Display',serif;}
-        .sec-title{font-family:'Noto Nastaliq Urdu',serif{% else %}'Playfair Display',serif{% endif %};color:var(--primary);display:inline-block;}
+        .stat-num{font-size:1.8rem;font-weight:700;color:var(--accent-light);font-family:font-family:'Playfair Display',serif;}
+        .sec-title{font-family:'Playfair Display',serif;color:var(--primary);display:inline-block;}
         .sec-title::after{content:'';display:block;width:50px;height:3px;background:var(--accent);margin-top:6px;border-radius:2px;}
         .offer-box{background:linear-gradient(135deg,var(--accent),#e8a840);border-radius:18px;padding:36px;color:#fff;}
         .st-pending{background:#fff3cd;color:#856404;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;}
@@ -191,7 +189,7 @@
         .trust-badge{background:#fff;border:1px solid var(--card-border);border-radius:14px;padding:20px;text-align:center;transition:all .2s;}
         .trust-badge:hover{box-shadow:0 8px 25px rgba(0,0,0,.08);transform:translateY(-3px);}
         .trust-badge .tb-icon{font-size:2.2rem;display:block;margin-bottom:10px;}
-        .trust-badge .tb-num{font-size:1.6rem;font-weight:700;color:var(--primary);font-family:'Playfair Display',serif;}
+        .trust-badge .tb-num{font-size:1.6rem;font-weight:700;color:var(--primary);font-family:font-family:'Playfair Display',serif;}
         .trust-badge .tb-lbl{font-size:.82rem;color:#666;}
 
         /* ── Blog Cards ── */
@@ -276,38 +274,38 @@
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('document_services') }}"><i class="bi bi-file-earmark-text me-1"></i>Documents</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-info-circle me-1"></i>معلومات{% else %}Resources{% endif %}
+Resources
                     </a>
                     <ul class="dropdown-menu">
                         {% if menu_items %}
                             {% for item in menu_items %}
                             <li>
                                 <a class="dropdown-item" href="{{ item.url }}"
-                                   {% if item.open_new_tab %}target="_blank" rel="noopener"{% endif %}>
+                                   {% if item.open_new_tab %}target="_blank" rel="noopener">
                                     <em class="di">{{ item.icon }}</em>
                                     <span class="dt">{{ item.title }}</span>
                                 </a>
                             </li>
                             {% endfor %}
-                        {% else %}
-                            <li><a class="dropdown-item" href="{{ url_for('property_laws') }}"><em class="di">⚖️</em><span class="dt">پراپرٹی قوانین{% else %}Property Laws{% endif %}</span></a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('calculators') }}"><em class="di">🧮</em><span class="dt">کیلکولیٹر{% else %}Calculators{% endif %}</span></a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('area_guide') }}"><em class="di">🗺️</em><span class="dt">کراچی ایریا گائیڈ{% else %}Karachi Area Guide{% endif %}</span></a></li>
+
+                            <li><a class="dropdown-item" href="{{ url_for('property_laws') }}"><em class="di">⚖️</em><span class="dt">Property Laws</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('calculators') }}Calculators</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('area_guide') }}Karachi Area Guide</span></a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('about') }}"><em class="di">👤</em><span class="dt">ہمارے بارے میں{% else %}About Us{% endif %}</span></a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blog') }}"><em class="di">📰</em><span class="dt">بلاگ{% else %}Blog{% endif %}</span></a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('contact') }}"><em class="di">📞</em><span class="dt">رابطہ کریں{% else %}Contact Us{% endif %}</span></a></li>
-                        {% endif %}
+                            <li><a class="dropdown-item" href="{{ url_for('about') }}About Us</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blog') }}Blog</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('contact') }}Contact Us</span></a></li>
+                        
                     </ul>
                 </li>
                 {% if session.user_id %}
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}"><i class="bi bi-person-circle me-1"></i>{{ session.user_name.split()[0] }}</a></li>
-                {% if session.is_admin %}<li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('admin_panel') }}"><i class="bi bi-shield me-1"></i>Admin</a></li>{% endif %}
+                {% if session.is_admin %}<li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('admin_panel') }}"><i class="bi bi-shield me-1"></i>Admin</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
-                {% else %}
+
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
                 <li class="nav-item"><a class="nav-link ms-1" href="{{ url_for('register') }}" style="background:var(--accent);border-radius:8px;color:#fff!important;padding:6px 14px!important;font-weight:600;">Register</a></li>
-                {% endif %}
+                
             </ul>
         </div>
     </div>
@@ -323,7 +321,7 @@
     </div>
     {% endfor %}
 </div>
-{% endif %}
+
 {% endwith %}
 
 {% block content %}{% endblock %}
