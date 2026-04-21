@@ -1739,6 +1739,46 @@ def admin_seed_blog():
     return redirect(url_for("admin_panel"))
 
 
+# ─── SITEMAP & ROBOTS ────────────────────────────────────────────────────────
+
+@app.route('/sitemap.xml')
+def sitemap():
+    conn = get_db()
+    rent_props = conn.execute("SELECT id FROM rent_properties WHERE is_approved=1").fetchall()
+    sale_props = conn.execute("SELECT id FROM sale_properties WHERE is_approved=1").fetchall()
+    blogs = conn.execute("SELECT slug FROM blog_posts WHERE is_published=1").fetchall()
+    conn.close()
+    base = "https://apnagharkarachi.com"
+    urls = [
+        f"<url><loc>{base}/</loc><priority>1.0</priority></url>",
+        f"<url><loc>{base}/properties-for-rent</loc><priority>0.9</priority></url>",
+        f"<url><loc>{base}/properties-for-sale</loc><priority>0.9</priority></url>",
+        f"<url><loc>{base}/tenant-verification</loc><priority>0.8</priority></url>",
+        f"<url><loc>{base}/document-services</loc><priority>0.8</priority></url>",
+        f"<url><loc>{base}/blog</loc><priority>0.8</priority></url>",
+        f"<url><loc>{base}/about</loc><priority>0.6</priority></url>",
+        f"<url><loc>{base}/contact</loc><priority>0.6</priority></url>",
+    ]
+    for p in rent_props:
+        urls.append(f"<url><loc>{base}/properties-for-rent/{p['id']}</loc><priority>0.7</priority></url>")
+    for p in sale_props:
+        urls.append(f"<url><loc>{base}/properties-for-sale/{p['id']}</loc><priority>0.7</priority></url>")
+    for b in blogs:
+        urls.append(f"<url><loc>{base}/blog/{b['slug']}</loc><priority>0.6</priority></url>")
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    xml += '\n'.join(urls)
+    xml += '\n</urlset>'
+    resp = make_response(xml)
+    resp.headers['Content-Type'] = 'application/xml'
+    return resp
+
+@app.route('/robots.txt')
+def robots():
+    r = "User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /debug-upload\nSitemap: https://apnagharkarachi.com/sitemap.xml\n"
+    resp = make_response(r)
+    resp.headers['Content-Type'] = 'text/plain'
+    return resp
+
 # ─── STARTUP ──────────────────────────────────────────────────────────────────
 
 os.makedirs('uploads', exist_ok=True)
