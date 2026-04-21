@@ -26,7 +26,7 @@
     <div class="row g-4">
         {% for p in props %}
         <div class="col-md-6 col-lg-4"><div class="prop-card">
-            {% if p.filename %}<img src="/uploads/{{ p.filename }}" alt="{{ p.title }}">
+            {% if p.filename %}<img src="{{ p.filename | img_url }}" alt="{{ p.title }}">
             {% else %}<div class="img-ph"><i class="bi bi-building" style="font-size:2.5rem;"></i></div>{% endif %}
             <div class="p-3">
                 {% if p.is_featured %}<span class="badge bg-warning text-dark mb-2" style="font-size:.7rem;">⭐ {{ T.featured }}</span>{% endif %}
