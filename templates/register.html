@@ -1,15 +1,15 @@
-{% extends 'base.html' %}{% block title %}{{ T.reg_title }}{% endblock %}{% block content %}
+{% extends 'base.html' %}{% block title %}Create Account{% endblock %}{% block content %}
 <div class="py-5" style="background:var(--light-bg);min-height:80vh;display:flex;align-items:center;">
 <div class="container"><div class="row justify-content-center"><div class="col-md-5">
 <div class="card border-0 shadow-sm rounded-4 p-4">
-    <div class="text-center mb-4"><i class="bi bi-person-plus" style="font-size:2.5rem;color:var(--primary-light);"></i><h2 class="mt-2 mb-0">{{ T.reg_title }}</h2><p class="text-muted small">{{ T.reg_sub }}</p></div>
+    <div class="text-center mb-4"><i class="bi bi-person-plus" style="font-size:2.5rem;color:var(--primary-light);"></i><h2 class="mt-2 mb-0">Create Account</h2><p class="text-muted small">Join ApnaGhar</p></div>
     <form method="POST">
-        <div class="mb-3"><label class="form-label">{{ T.full_name }} *</label><input type="text" name="name" class="form-control" required></div>
-        <div class="mb-3"><label class="form-label">{{ T.email }} *</label><input type="email" name="email" class="form-control" required></div>
-        <div class="mb-3"><label class="form-label">{{ T.password }} *</label><input type="password" name="password" class="form-control" required minlength="6"></div>
-        <div class="mb-4"><label class="form-label">{{ T.confirm_pass }} *</label><input type="password" name="confirm_password" class="form-control" required></div>
-        <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-semibold">{{ T.reg_btn }}</button>
+        <div class="mb-3"><label class="form-label">Full Name *</label><input type="text" name="name" class="form-control" required></div>
+        <div class="mb-3"><label class="form-label">Email Address *</label><input type="email" name="email" class="form-control" required></div>
+        <div class="mb-3"><label class="form-label">Password *</label><input type="password" name="password" class="form-control" required minlength="6"></div>
+        <div class="mb-4"><label class="form-label">Confirm Password *</label><input type="password" name="confirm_password" class="form-control" required></div>
+        <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-semibold">Create Account</button>
     </form>
-    <div class="text-center mt-3"><span class="text-muted small">{{ T.have_account }} </span><a href="{{ url_for('login') }}" class="small fw-semibold">{{ T.login_btn }}</a></div>
+    <div class="text-center mt-3"><span class="text-muted small">Already have an account? </span><a href="{{ url_for('login') }}" class="small fw-semibold">Login</a></div>
 </div></div></div></div></div>
 {% endblock %}

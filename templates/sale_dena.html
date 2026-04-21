@@ -1,32 +1,32 @@
-{% extends 'base.html' %}{% block title %}{{ T.nav_sell }}{% endblock %}
+{% extends 'base.html' %}{% block title %}Sell My Property{% endblock %}
 {% block content %}
-<div class="page-hdr hdr-buy"><div class="container"><h1>🏡 {{ T.nav_sell }}</h1><p>{{ T.free_listing_sub }}</p></div></div>
+<div class="page-hdr hdr-buy"><div class="container"><h1>🏡 Sell My Property</h1><p>List your property and we will find you the right tenant/buyer.</p></div></div>
 <div class="container py-4"><div class="row justify-content-center"><div class="col-lg-8">
 <div class="card border-0 shadow-sm rounded-4 p-4">
-    <div class="alert border-0 rounded-3 mb-4" style="background:#e8f5e9;"><strong>✅ {{ T.free_listing }}</strong> {{ T.free_listing_sub }}</div>
+    <div class="alert border-0 rounded-3 mb-4" style="background:#e8f5e9;"><strong>✅ Free Listing!</strong> List your property and we will find you the right tenant/buyer.</div>
     <form method="POST" enctype="multipart/form-data">
         <div class="row g-3">
-            <div class="col-md-6"><label class="form-label">{{ T.owner_name }} *</label><input type="text" name="owner_name" class="form-control" required value="{{ session.user_name if session.user_id else '' }}"></div>
-            <div class="col-md-6"><label class="form-label">{{ T.owner_phone }} *</label><input type="text" name="owner_phone" class="form-control" required placeholder="03xxxxxxxxx"></div>
-            <div class="col-12"><label class="form-label">{{ T.prop_title }} *</label><input type="text" name="title" class="form-control" required placeholder="e.g. 5 Marla House North Nazimabad"></div>
-            <div class="col-md-6"><label class="form-label">{{ T.location }} *</label><input type="text" name="location" class="form-control" required></div>
-            <div class="col-md-6"><label class="form-label">{{ T.full_addr }} *</label><input type="text" name="area" class="form-control" required></div>
-            <div class="col-md-4"><label class="form-label">{{ T.prop_type }} *</label>
+            <div class="col-md-6"><label class="form-label">Owner Name *</label><input type="text" name="owner_name" class="form-control" required value="{{ session.user_name if session.user_id else '' }}"></div>
+            <div class="col-md-6"><label class="form-label">Phone / WhatsApp *</label><input type="text" name="owner_phone" class="form-control" required placeholder="03xxxxxxxxx"></div>
+            <div class="col-12"><label class="form-label">Property Title *</label><input type="text" name="title" class="form-control" required placeholder="e.g. 5 Marla House North Nazimabad"></div>
+            <div class="col-md-6"><label class="form-label">Area / Locality *</label><input type="text" name="location" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Full Address *</label><input type="text" name="area" class="form-control" required></div>
+            <div class="col-md-4"><label class="form-label">Property Type *</label>
             <select name="property_type" class="form-select" required><option value="">---</option><option>House</option><option>Flat</option><option>Portion</option><option>Shop</option><option>Office</option><option>Plot</option></select></div>
-            <div class="col-md-4"><label class="form-label">{{ T.bedrooms }}</label>
+            <div class="col-md-4"><label class="form-label">Bedrooms</label>
             <select name="bedrooms" class="form-select"><option value="0">N/A</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
-            <div class="col-md-4"><label class="form-label">{{ T.bathrooms }}</label>
+            <div class="col-md-4"><label class="form-label">Bathrooms</label>
             <select name="bathrooms" class="form-select"><option>1</option><option>2</option><option>3</option><option>4+</option></select></div>
             <div class="col-md-6"><label class="form-label">Total Area</label><input type="text" name="total_area" class="form-control" placeholder="e.g. 5 Marla / 1000 sqft"></div>
-            <div class="col-md-6"><label class="form-label">{{ T.possession }}</label>
+            <div class="col-md-6"><label class="form-label">Possession</label>
             <select name="possession" class="form-select"><option>Immediate</option><option>1 Month</option><option>3 Months</option><option>6 Months</option></select></div>
-            <div class="col-12"><label class="form-label">{{ T.price_sale }} *</label><input type="text" name="price" class="form-control" required placeholder="e.g. 1.8 Crore"></div>
-            <div class="col-12"><label class="form-label">{{ T.description }}</label><textarea name="description" class="form-control" rows="4"></textarea></div>
-            <div class="col-12"><label class="form-label">{{ T.upload_img }}</label><input type="file" name="images" class="form-control" multiple accept="image/*"></div>
+            <div class="col-12"><label class="form-label">Sale Price (Rs.) *</label><input type="text" name="price" class="form-control" required placeholder="e.g. 1.8 Crore"></div>
+            <div class="col-12"><label class="form-label">Description</label><textarea name="description" class="form-control" rows="4"></textarea></div>
+            <div class="col-12"><label class="form-label">Upload Images</label><input type="file" name="images" class="form-control" multiple accept="image/*"></div>
         </div>
         <div class="mt-4 d-flex gap-3">
-            <button type="submit" class="btn rounded-pill px-5 py-2 fw-semibold" style="background:#2e7d32;color:#fff;">✅ {{ T.list_btn }}</button>
-            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary rounded-pill px-4">{{ T.back }}</a>
+            <button type="submit" class="btn rounded-pill px-5 py-2 fw-semibold" style="background:#2e7d32;color:#fff;">✅ List Property</button>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary rounded-pill px-4">Go Back</a>
         </div>
     </form>
 </div></div></div></div>

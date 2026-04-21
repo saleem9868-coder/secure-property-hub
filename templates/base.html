@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ lang }}" dir="{{ T.dir }}">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -74,12 +74,12 @@
             --accent-light:#f0c060; --light-bg:#f8f9fc; --card-border:#e8edf5;
         }
         body {
-            font-family:{% if lang=='ur' %}'Noto Nastaliq Urdu',serif{% else %}'DM Sans',sans-serif{% endif %};
+            font-family:'Noto Nastaliq Urdu',serif{% else %}'DM Sans',sans-serif{% endif %};
             color:#1a2535; background:#fff;
-            {% if lang=='ur' %}line-height:2.2;{% endif %}
+            line-height:2.2;{% endif %}
         }
         h1,h2,h3,h4,h5,h6 {
-            font-family:{% if lang=='ur' %}'Noto Nastaliq Urdu',serif{% else %}'Playfair Display',serif{% endif %};
+            font-family:'Noto Nastaliq Urdu',serif{% else %}'Playfair Display',serif{% endif %};
         }
         {% if T.dir=='rtl' %}
         .ms-auto{margin-left:0!important;margin-right:auto!important;}
@@ -108,14 +108,13 @@
         .dropdown-item .dt{flex:1;white-space:nowrap;}
 
         /* ── Language Button ── */
-        .lang-btn{background:rgba(255,255,255,.15)!important;color:#fff!important;border:1px solid rgba(255,255,255,.35)!important;border-radius:20px!important;padding:5px 14px!important;font-size:.82rem!important;font-weight:600!important;transition:all .2s;font-family:{% if lang=='ur' %}'DM Sans',sans-serif{% else %}'Noto Nastaliq Urdu',serif{% endif %}!important;white-space:nowrap;}
-        .lang-btn:hover{background:var(--accent)!important;border-color:var(--accent)!important;}
+        
 
         /* ── 4 Action Cards ── */
         .action-card{border:none;border-radius:18px;cursor:pointer;transition:all .28s;text-decoration:none;display:block;padding:28px 20px;min-height:220px;text-align:center;}
         .action-card:hover{transform:translateY(-7px);box-shadow:0 18px 45px rgba(0,0,0,.18);}
         .action-card .c-icon{font-size:2.8rem;display:block;margin-bottom:12px;}
-        .action-card .c-title{font-size:{% if lang=='ur' %}1.15rem{% else %}1.05rem{% endif %};font-weight:700;color:#fff;margin-bottom:8px;line-height:{% if lang=='ur' %}2.2{% else %}1.4{% endif %};white-space:pre-line;}
+        .action-card .c-title{font-size:1.15rem{% else %}1.05rem{% endif %};font-weight:700;color:#fff;margin-bottom:8px;line-height:2.2{% else %}1.4{% endif %};white-space:pre-line;}
         .action-card .c-sub{color:rgba(255,255,255,.85);font-size:.82rem;margin-bottom:14px;line-height:1.6;}
         .action-card .c-btn{background:rgba(255,255,255,.22);color:#fff;border-radius:20px;padding:5px 16px;font-size:.8rem;font-weight:600;display:inline-block;}
         .card-rl{background:linear-gradient(135deg,#1565c0,#1976d2);}
@@ -181,7 +180,7 @@
         .prop-price{font-size:1.2rem;font-weight:700;color:var(--accent);}
         .stats-strip{background:var(--primary-light);color:#fff;padding:18px 0;}
         .stat-num{font-size:1.8rem;font-weight:700;color:var(--accent-light);font-family:'Playfair Display',serif;}
-        .sec-title{font-family:{% if lang=='ur' %}'Noto Nastaliq Urdu',serif{% else %}'Playfair Display',serif{% endif %};color:var(--primary);display:inline-block;}
+        .sec-title{font-family:'Noto Nastaliq Urdu',serif{% else %}'Playfair Display',serif{% endif %};color:var(--primary);display:inline-block;}
         .sec-title::after{content:'';display:block;width:50px;height:3px;background:var(--accent);margin-top:6px;border-radius:2px;}
         .offer-box{background:linear-gradient(135deg,var(--accent),#e8a840);border-radius:18px;padding:36px;color:#fff;}
         .st-pending{background:#fff3cd;color:#856404;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;}
@@ -248,36 +247,36 @@
             <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('index') }}">
-                        <i class="bi bi-house me-1"></i>{{ T.nav_home }}
+                        <i class="bi bi-house me-1"></i>Home
                     </a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-key me-1"></i>{{ T.nav_rent }}
+                        <i class="bi bi-key me-1"></i>Rent
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ url_for('rent_lena') }}"><em class="di">🔑</em><span class="dt">{{ T.nav_rent_lena }}</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('rent_dena') }}"><em class="di">🏠</em><span class="dt">{{ T.nav_rent_dena }}</span></a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('rent_lena') }}"><em class="di">🔑</em><span class="dt">Rent a Property</span></a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('rent_dena') }}"><em class="di">🏠</em><span class="dt">List for Rent</span></a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ url_for('rent_chahiye') }}"><em class="di">📋</em><span class="dt">{{ T.nav_rent_req }}</span></a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('rent_chahiye') }}"><em class="di">📋</em><span class="dt">Submit Rent Requirement</span></a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-building me-1"></i>{{ T.nav_buy_sell }}
+                        <i class="bi bi-building me-1"></i>Buy / Sell
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ url_for('purchase_lena') }}"><em class="di">🏡</em><span class="dt">{{ T.nav_buy }}</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('sale_dena') }}"><em class="di">🏷️</em><span class="dt">{{ T.nav_sell }}</span></a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('purchase_lena') }}"><em class="di">🏡</em><span class="dt">Buy a Property</span></a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('sale_dena') }}"><em class="di">🏷️</em><span class="dt">Sell My Property</span></a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ url_for('purchase_chahiye') }}"><em class="di">📋</em><span class="dt">{{ T.nav_buy_req }}</span></a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('purchase_chahiye') }}"><em class="di">📋</em><span class="dt">Submit Buy Requirement</span></a></li>
                     </ul>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('tenant_verification') }}"><i class="bi bi-person-check me-1"></i>{{ T.nav_verify }}</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('document_services') }}"><i class="bi bi-file-earmark-text me-1"></i>{{ T.nav_docs }}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('tenant_verification') }}"><i class="bi bi-person-check me-1"></i>Tenant Verify</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('document_services') }}"><i class="bi bi-file-earmark-text me-1"></i>Documents</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-info-circle me-1"></i>{% if lang=='ur' %}معلومات{% else %}Resources{% endif %}
+                        <i class="bi bi-info-circle me-1"></i>معلومات{% else %}Resources{% endif %}
                     </a>
                     <ul class="dropdown-menu">
                         {% if menu_items %}
@@ -291,29 +290,24 @@
                             </li>
                             {% endfor %}
                         {% else %}
-                            <li><a class="dropdown-item" href="{{ url_for('property_laws') }}"><em class="di">⚖️</em><span class="dt">{% if lang=='ur' %}پراپرٹی قوانین{% else %}Property Laws{% endif %}</span></a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('calculators') }}"><em class="di">🧮</em><span class="dt">{% if lang=='ur' %}کیلکولیٹر{% else %}Calculators{% endif %}</span></a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('area_guide') }}"><em class="di">🗺️</em><span class="dt">{% if lang=='ur' %}کراچی ایریا گائیڈ{% else %}Karachi Area Guide{% endif %}</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('property_laws') }}"><em class="di">⚖️</em><span class="dt">پراپرٹی قوانین{% else %}Property Laws{% endif %}</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('calculators') }}"><em class="di">🧮</em><span class="dt">کیلکولیٹر{% else %}Calculators{% endif %}</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('area_guide') }}"><em class="di">🗺️</em><span class="dt">کراچی ایریا گائیڈ{% else %}Karachi Area Guide{% endif %}</span></a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('about') }}"><em class="di">👤</em><span class="dt">{% if lang=='ur' %}ہمارے بارے میں{% else %}About Us{% endif %}</span></a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blog') }}"><em class="di">📰</em><span class="dt">{% if lang=='ur' %}بلاگ{% else %}Blog{% endif %}</span></a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('contact') }}"><em class="di">📞</em><span class="dt">{% if lang=='ur' %}رابطہ کریں{% else %}Contact Us{% endif %}</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('about') }}"><em class="di">👤</em><span class="dt">ہمارے بارے میں{% else %}About Us{% endif %}</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blog') }}"><em class="di">📰</em><span class="dt">بلاگ{% else %}Blog{% endif %}</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('contact') }}"><em class="di">📞</em><span class="dt">رابطہ کریں{% else %}Contact Us{% endif %}</span></a></li>
                         {% endif %}
                     </ul>
                 </li>
                 {% if session.user_id %}
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}"><i class="bi bi-person-circle me-1"></i>{{ session.user_name.split()[0] }}</a></li>
-                {% if session.is_admin %}<li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('admin_panel') }}"><i class="bi bi-shield me-1"></i>{{ T.nav_admin }}</a></li>{% endif %}
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">{{ T.nav_logout }}</a></li>
+                {% if session.is_admin %}<li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('admin_panel') }}"><i class="bi bi-shield me-1"></i>Admin</a></li>{% endif %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
                 {% else %}
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">{{ T.nav_login }}</a></li>
-                <li class="nav-item"><a class="nav-link ms-1" href="{{ url_for('register') }}" style="background:var(--accent);border-radius:8px;color:#fff!important;padding:6px 14px!important;font-weight:600;">{{ T.nav_register }}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                <li class="nav-item"><a class="nav-link ms-1" href="{{ url_for('register') }}" style="background:var(--accent);border-radius:8px;color:#fff!important;padding:6px 14px!important;font-weight:600;">Register</a></li>
                 {% endif %}
-                <li class="nav-item ms-1">
-                    <a href="{{ url_for('set_lang', lang=T.switch_code) }}" class="nav-link lang-btn">
-                        🌐 {{ T.switch_lang }}
-                    </a>
-                </li>
             </ul>
         </div>
     </div>
@@ -346,7 +340,7 @@
                         <div style="color:var(--accent-light);font-size:.7rem;letter-spacing:.5px;">ApnaGhar</div>
                     </div>
                 </div>
-                <p style="font-size:.88rem;">{{ T.footer_desc }}</p>
+                <p style="font-size:.88rem;">Trusted property and documentation services in Karachi.</p>
                 <p style="font-size:.88rem;"><i class="bi bi-geo-alt-fill me-1" style="color:var(--accent-light)"></i>Akhtar Colony, Karachi</p>
                 <div class="mt-2">
                     <a href="https://wa.me/923111820660" target="_blank" class="soc-link me-2"><i class="bi bi-whatsapp"></i></a>
@@ -355,37 +349,34 @@
                 </div>
             </div>
             <div class="col-lg-2 col-6">
-                <h6 class="mb-2" style="font-size:.9rem;">{{ T.footer_rent }}</h6>
+                <h6 class="mb-2" style="font-size:.9rem;">Rent</h6>
                 <ul>
-                    <li><a href="{{ url_for('rent_lena') }}">🔑 {{ T.nav_rent_lena }}</a></li>
-                    <li><a href="{{ url_for('rent_dena') }}">🏠 {{ T.nav_rent_dena }}</a></li>
-                    <li><a href="{{ url_for('rent_chahiye') }}">📋 {{ T.nav_rent_req }}</a></li>
+                    <li><a href="{{ url_for('rent_lena') }}">🔑 Rent a Property</a></li>
+                    <li><a href="{{ url_for('rent_dena') }}">🏠 List for Rent</a></li>
+                    <li><a href="{{ url_for('rent_chahiye') }}">📋 Submit Rent Requirement</a></li>
                 </ul>
             </div>
             <div class="col-lg-2 col-6">
-                <h6 class="mb-2" style="font-size:.9rem;">{{ T.footer_buy }}</h6>
+                <h6 class="mb-2" style="font-size:.9rem;">Buy / Sell</h6>
                 <ul>
-                    <li><a href="{{ url_for('purchase_lena') }}">🏡 {{ T.nav_buy }}</a></li>
-                    <li><a href="{{ url_for('sale_dena') }}">🏷️ {{ T.nav_sell }}</a></li>
-                    <li><a href="{{ url_for('purchase_chahiye') }}">📋 {{ T.nav_buy_req }}</a></li>
+                    <li><a href="{{ url_for('purchase_lena') }}">🏡 Buy a Property</a></li>
+                    <li><a href="{{ url_for('sale_dena') }}">🏷️ Sell My Property</a></li>
+                    <li><a href="{{ url_for('purchase_chahiye') }}">📋 Submit Buy Requirement</a></li>
                 </ul>
             </div>
             <div class="col-lg-4">
-                <h6 class="mb-2" style="font-size:.9rem;">{{ T.footer_contact }}</h6>
+                <h6 class="mb-2" style="font-size:.9rem;">Contact Us</h6>
                 <ul>
                     <li><a href="tel:03111820660"><i class="bi bi-telephone-fill" style="color:var(--accent-light)"></i> 0311-1820660</a></li>
                     <li><a href="https://wa.me/923111820660" target="_blank"><i class="bi bi-whatsapp" style="color:#25d366"></i> WhatsApp</a></li>
                     <li><span style="color:rgba(255,255,255,.7);display:inline-flex;align-items:center;gap:6px;font-size:.85rem;"><i class="bi bi-envelope-fill" style="color:var(--accent-light);"></i> apnagharkarachi.pk@gmail.com</span></li>
-                    <li><span><i class="bi bi-clock-fill" style="color:var(--accent-light)"></i> {{ T.footer_hours }}</span></li>
+                    <li><span><i class="bi bi-clock-fill" style="color:var(--accent-light)"></i> Mon–Sat: 9am – 8pm</span></li>
                 </ul>
-                <a href="{{ url_for('set_lang', lang=T.switch_code) }}" class="btn btn-sm btn-outline-light rounded-pill mt-2">
-                    🌐 {{ T.switch_lang }}
-                </a>
             </div>
         </div>
         <hr style="border-color:rgba(255,255,255,.15);" class="mt-3 mb-3">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center" style="font-size:.8rem;">
-            <p class="mb-0">© 2026 ApnaGhar | اپنا گھر. {{ T.footer_rights }}</p>
+            <p class="mb-0">© 2026 ApnaGhar | اپنا گھر. All rights reserved.</p>
             <div class="d-flex gap-3 mt-2 mt-md-0">
                 <a href="{{ url_for('about') }}" style="color:rgba(255,255,255,.6);">About</a>
                 <a href="{{ url_for('contact') }}" style="color:rgba(255,255,255,.6);">Contact</a>

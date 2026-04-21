@@ -35,7 +35,7 @@
             <!-- LEFT: Brand + Search -->
             <div class="col-lg-6">
                 <p style="color:var(--accent-light);font-weight:600;font-size:.85rem;letter-spacing:2px;text-transform:uppercase;" class="mb-3">
-                    {{ T.hero_tag }}
+                    KARACHI'S TRUSTED PROPERTY & DOCUMENT SERVICES
                 </p>
 
 
@@ -209,7 +209,7 @@
             <div class="col-lg-4 col-md-6 listing-item" data-cat="{{ cat }} {{ ptype_lower }}">
                 <div class="prop-card">
                     {% if p.filename %}
-                        <img src="/static/uploads/properties/{{ p.filename }}"
+                        <img src="{{ p.filename | img_url }}"
                              alt="{{ p.title }}"
                              style="height:190px;width:100%;object-fit:cover;border-radius:12px 12px 0 0;"
                              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">

@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
-{% block title %}{{ T.nav_rent_dena }}{% endblock %}
+{% block title %}List for Rent{% endblock %}
 {% block content %}
 <div class="page-hdr hdr-give">
     <div class="container">
-        <h1>🏠 {{ T.nav_rent_dena }}</h1>
-        <p>{{ T.free_listing_sub }}</p>
+        <h1>🏠 List for Rent</h1>
+        <p>List your property and we will find you the right tenant/buyer.</p>
     </div>
 </div>
 <div class="container py-4">
@@ -12,37 +12,37 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm rounded-4 p-4">
                 <div class="alert border-0 rounded-3 mb-4" style="background:#fff3e0;">
-                    <strong>✅ {{ T.free_listing }}</strong> {{ T.free_listing_sub }}
+                    <strong>✅ Free Listing!</strong> List your property and we will find you the right tenant/buyer.
                 </div>
                 <form method="POST" enctype="multipart/form-data">
-                    <h5 class="fw-bold mb-3" style="color:#e65100;">👤 {{ T.owner_name }}</h5>
+                    <h5 class="fw-bold mb-3" style="color:#e65100;">👤 Owner Name</h5>
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <label class="form-label">{{ T.owner_name }} *</label>
+                            <label class="form-label">Owner Name *</label>
                             <input type="text" name="owner_name" class="form-control" required
                                    value="{{ session.user_name if session.user_id else '' }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">{{ T.owner_phone }} *</label>
+                            <label class="form-label">Phone / WhatsApp *</label>
                             <input type="text" name="owner_phone" class="form-control" required placeholder="03xxxxxxxxx">
                         </div>
                     </div>
-                    <h5 class="fw-bold mb-3" style="color:#e65100;">🏠 {{ T.prop_title }}</h5>
+                    <h5 class="fw-bold mb-3" style="color:#e65100;">🏠 Property Title</h5>
                     <div class="row g-3">
                         <div class="col-12">
-                            <label class="form-label">{{ T.prop_title }} *</label>
+                            <label class="form-label">Property Title *</label>
                             <input type="text" name="title" class="form-control" required placeholder="e.g. 3 Bed House Akhtar Colony">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">{{ T.location }} *</label>
+                            <label class="form-label">Area / Locality *</label>
                             <input type="text" name="location" class="form-control" required placeholder="e.g. Akhtar Colony">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">{{ T.full_addr }} *</label>
+                            <label class="form-label">Full Address *</label>
                             <input type="text" name="area" class="form-control" required placeholder="e.g. Block B, Akhtar Colony, Karachi">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{ T.prop_type }} *</label>
+                            <label class="form-label">Property Type *</label>
                             <select name="property_type" class="form-select" required>
                                 <option value="">---</option>
                                 <option>House</option><option>Flat</option><option>Portion</option>
@@ -50,7 +50,7 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{ T.bedrooms }}</label>
+                            <label class="form-label">Bedrooms</label>
                             <select name="bedrooms" class="form-select">
                                 <option value="0">N/A</option>
                                 <option>1</option><option>2</option><option>3</option>
@@ -58,51 +58,51 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{ T.bathrooms }}</label>
+                            <label class="form-label">Bathrooms</label>
                             <select name="bathrooms" class="form-select">
                                 <option>1</option><option>2</option><option>3</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{ T.floor }}</label>
+                            <label class="form-label">Floor</label>
                             <select name="floor" class="form-select">
                                 <option>Ground</option><option>1st</option><option>2nd</option>
                                 <option>3rd</option><option>4th</option><option>5th+</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{ T.furnished }}</label>
+                            <label class="form-label">Furnished</label>
                             <select name="furnished" class="form-select">
                                 <option>Unfurnished</option><option>Semi-Furnished</option><option>Fully Furnished</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{ T.tenant_pref }}</label>
+                            <label class="form-label">Tenant Preference</label>
                             <select name="tenant_preference" class="form-select">
                                 <option>Family</option><option>Bachelor</option>
                                 <option>Family/Bachelor</option><option>Commercial</option>
                             </select>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">{{ T.price_rent }} *</label>
+                            <label class="form-label">Monthly Rent (Rs.) *</label>
                             <input type="text" name="price" class="form-control" required placeholder="e.g. 35,000">
                         </div>
                         <div class="col-12">
-                            <label class="form-label">{{ T.description }}</label>
+                            <label class="form-label">Description</label>
                             <textarea name="description" class="form-control" rows="4"></textarea>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">{{ T.upload_img }}</label>
+                            <label class="form-label">Upload Images</label>
                             <input type="file" name="images" class="form-control" multiple accept="image/*">
                         </div>
                     </div>
                     <div class="mt-4 d-flex gap-3">
                         <button type="submit" class="btn rounded-pill px-5 py-2 fw-semibold"
                                 style="background:#e65100;color:#fff;">
-                            ✅ {{ T.list_btn }}
+                            ✅ List Property
                         </button>
                         <a href="{{ url_for('index') }}" class="btn btn-outline-secondary rounded-pill px-4">
-                            {{ T.back }}
+                            Go Back
                         </a>
                     </div>
                 </form>
