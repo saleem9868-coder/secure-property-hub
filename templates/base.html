@@ -281,7 +281,7 @@ Resources
                             {% for item in menu_items %}
                             <li>
                                 <a class="dropdown-item" href="{{ item.url }}"
-                                   {% if item.open_new_tab %}target="_blank" rel="noopener">
+                                   {% if item.open_new_tab %}target="_blank" rel="noopener"{% endif %}>
                                     <em class="di">{{ item.icon }}</em>
                                     <span class="dt">{{ item.title }}</span>
                                 </a>
@@ -289,12 +289,12 @@ Resources
                             {% endfor %}
 
                             <li><a class="dropdown-item" href="{{ url_for('property_laws') }}"><em class="di">⚖️</em><span class="dt">Property Laws</span></a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('calculators') }}Calculators</span></a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('area_guide') }}Karachi Area Guide</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('calculators') }}">⚖️ Calculators</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('area_guide') }}">🗺️ Karachi Area Guide</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('about') }}About Us</span></a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('blog') }}Blog</span></a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('contact') }}Contact Us</span></a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('about') }}">ℹ️ About Us</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('blog') }}">📰 Blog</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('contact') }}">📞 Contact Us</a></li>
                         
                     </ul>
                 </li>
