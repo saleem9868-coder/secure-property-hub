@@ -8,8 +8,8 @@
 
 <div class="page-hdr hdr-verif">
     <div class="container">
-        <h1 class="mb-2">📞 {% if lang=='ur' %}رابطہ کریں{% else %}Contact Us{% endif %}</h1>
-        <p class="mb-0">{% if lang=='ur' %}ہمارا دفتر اختر کالونی، کراچی میں ہے{% else %}Visit us in Akhtar Colony, Karachi — or reach us instantly via WhatsApp{% endif %}</p>
+        <h1 class="mb-2">📞 Contact Us</h1>
+        <p class="mb-0">Visit us in Akhtar Colony, Karachi — or reach us instantly via WhatsApp</p>
     </div>
 </div>
 
@@ -95,43 +95,43 @@
                 <!-- Quick Enquiry Form -->
                 <div class="p-4 rounded-3" style="background:#fff;border:1px solid var(--card-border);box-shadow:0 4px 20px rgba(0,0,0,.05);">
                     <h4 style="color:var(--primary);margin-bottom:20px;">
-                        <i class="bi bi-send me-2"></i>{% if lang=='ur' %}فوری سوال بھیجیں{% else %}Send a Quick Enquiry{% endif %}
+                        <i class="bi bi-send me-2"></i>Send a Quick Enquiry
                     </h4>
                     <form action="{{ url_for('contact') }}" method="POST">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">{% if lang=='ur' %}آپ کا نام{% else %}Your Name{% endif %} *</label>
+                                <label class="form-label">Your Name *</label>
                                 <input type="text" name="name" class="form-control" placeholder="Muhammad Ali" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">{% if lang=='ur' %}فون نمبر{% else %}Phone / WhatsApp{% endif %} *</label>
+                                <label class="form-label">Phone / WhatsApp *</label>
                                 <input type="tel" name="phone" class="form-control" placeholder="0311-1234567" required>
                             </div>
                             <div class="col-12">
-                                <label class="form-label">{% if lang=='ur' %}موضوع{% else %}Subject{% endif %}</label>
+                                <label class="form-label">Subject</label>
                                 <select name="subject" class="form-select">
-                                    <option>{% if lang=='ur' %}کرایہ پر گھر چاہیے{% else %}Looking for Rental Property{% endif %}</option>
-                                    <option>{% if lang=='ur' %}پراپرٹی خریدنی ہے{% else %}Want to Buy Property{% endif %}</option>
-                                    <option>{% if lang=='ur' %}پراپرٹی بیچنی ہے{% else %}Want to Sell Property{% endif %}</option>
-                                    <option>{% if lang=='ur' %}کرایہ پر دینی ہے{% else %}Want to Rent Out Property{% endif %}</option>
-                                    <option>{% if lang=='ur' %}دستاویز سروس{% else %}Document Services{% endif %}</option>
-                                    <option>{% if lang=='ur' %}کرایہ دار تصدیق{% else %}Tenant Verification{% endif %}</option>
-                                    <option>{% if lang=='ur' %}دیگر{% else %}Other{% endif %}</option>
+                                    <option>Looking for Rental Property</option>
+                                    <option>Want to Buy Property</option>
+                                    <option>Want to Sell Property</option>
+                                    <option>Want to Rent Out Property</option>
+                                    <option>Document Services</option>
+                                    <option>Tenant Verification</option>
+                                    <option>Other</option>
                                 </select>
                             </div>
                             <div class="col-12">
-                                <label class="form-label">{% if lang=='ur' %}پیغام{% else %}Message{% endif %}</label>
+                                <label class="form-label">Message</label>
                                 <textarea name="message" class="form-control" rows="3" 
-                                    placeholder="{% if lang=='ur' %}آپ کا پیغام یہاں لکھیں...{% else %}Describe your property requirement...{% endif %}"></textarea>
+                                    placeholder="Describe your property requirement..."></textarea>
                             </div>
                             <div class="col-12 d-flex gap-2 flex-wrap">
                                 <button type="submit" class="btn btn-primary px-4">
-                                    <i class="bi bi-send me-2"></i>{% if lang=='ur' %}بھیجیں{% else %}Send Enquiry{% endif %}
+                                    <i class="bi bi-send me-2"></i>Send Enquiry
                                 </button>
                                 <a href="https://wa.me/923111820660?text=Hello%20ApnaGhar%2C%20I%20have%20a%20property%20enquiry." 
                                    target="_blank" class="btn btn-whatsapp px-4">
-                                    <i class="bi bi-whatsapp me-2"></i>{% if lang=='ur' %}واٹس ایپ پر بھیجیں{% else %}Send via WhatsApp{% endif %}
+                                    <i class="bi bi-whatsapp me-2"></i>Send via WhatsApp
                                 </a>
                             </div>
                         </div>

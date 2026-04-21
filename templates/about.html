@@ -4,8 +4,8 @@
 
 <div class="page-hdr hdr-verif">
     <div class="container">
-        <h1>👤 {% if lang=='ur' %}ہمارے بارے میں{% else %}About Us{% endif %}</h1>
-        <p>{% if lang=='ur' %}اپنا گھر — کراچی کی قابل اعتماد پراپرٹی سروس{% else %}ApnaGhar — Karachi's Trusted Property & Document Service{% endif %}</p>
+        <h1>👤 About Us</h1>
+        <p>ApnaGhar — Karachi's Trusted Property & Document Service</p>
     </div>
 </div>
 
@@ -26,7 +26,7 @@
             <div class="mt-4 card border-0 rounded-4 p-3" style="background:var(--primary);color:#fff;max-width:320px;margin:16px auto 0;">
                 <div style="font-size:1.1rem;font-weight:700;color:var(--accent-light);">Muhammad Saleem</div>
                 <div style="font-size:.85rem;color:rgba(255,255,255,.75);margin-bottom:10px;">
-                    {% if lang=='ur' %}بانی — اپنا گھر، اختر کالونی کراچی{% else %}Founder — ApnaGhar, Akhtar Colony Karachi{% endif %}
+                    Founder — ApnaGhar, Akhtar Colony Karachi
                 </div>
                 <a href="tel:03111820660" class="btn btn-sm rounded-pill mb-2" style="background:var(--accent);color:#fff;">
                     <i class="bi bi-telephone-fill me-1"></i>0311-1820660
@@ -39,17 +39,7 @@
 
         <!-- Story -->
         <div class="col-lg-8">
-            {% if lang == 'ur' %}
-            <p style="color:var(--accent);font-weight:600;font-size:.88rem;letter-spacing:1px;" class="mb-2">ہماری کہانی</p>
-            <h2 style="color:var(--primary);font-family:'Noto Nastaliq Urdu',serif;font-size:2rem;" class="mb-3">
-                ریٹائرمنٹ کے بعد نئی شروعات
-            </h2>
-            <div style="font-family:'Noto Nastaliq Urdu',serif;line-height:2.6;color:#334;font-size:1rem;">
-                <p>میں محمد سلیم ہوں — اپنا گھر کا بانی۔ میں نے اپنی پیشہ ورانہ زندگی بحیثیت الیکٹریکل اینڈ مکینیکل سپروائزر گزاری۔ ریٹائرمنٹ کے بعد میں نے سوچا کہ اپنے تجربے اور مہارت کو کسی کارآمد کام میں لگاؤں۔</p>
-                <p>میں نے فیصلہ کیا کہ ایک دستاویزات کی دکان کھولوں — کیونکہ MS Word اور دستاویزات بنانے میں مجھے اچھی مہارت حاصل ہے۔ آہستہ آہستہ میں نے پراپرٹی کرایہ اور خرید و فروخت کی سروسز بھی شامل کر لیں۔</p>
-                <p>ہماری خدمات سادہ، قابل اعتماد اور کراچی کے عام لوگوں کے لیے ہیں۔ ہمارا مقصد ہے کہ ہر کوئی آسانی سے اپنی جائیداد کے معاملات سلجھا سکے۔</p>
-            </div>
-            {% else %}
+            
             <p style="color:var(--accent);font-weight:600;font-size:.88rem;letter-spacing:1px;" class="mb-2">OUR STORY</p>
             <h2 style="color:var(--primary);" class="mb-3">A New Beginning After Retirement</h2>
             <p style="color:#445;line-height:1.9;font-size:1rem;">
@@ -67,15 +57,13 @@
                 for the people of Karachi. Whether you need a rent agreement, a property listing, or just a CV —
                 we are here to help.
             </p>
-            {% endif %}
+            
 
             <!-- Values -->
             <div class="row g-3 mt-2">
-                {% if lang == 'ur' %}
-                {% set values = [('🤝','ایمانداری','ہم آپ کو سچ بتاتے ہیں — چاہے فائدہ ہو یا نہ ہو'),('💰','مناسب قیمت','کم قیمت میں پیشہ ورانہ سروس'),('⚡','فوری سروس','آج کا کام آج — کوئی تاخیر نہیں'),('📋','تجربہ','MS Office اور دستاویزات میں مہارت')] %}
-                {% else %}
+                
                 {% set values = [('🤝','Honest','We tell you the truth — always'),('💰','Affordable','Professional service at fair prices'),('⚡','Fast','Same day service — no delays'),('📋','Experienced','Expert in MS Office & documentation')] %}
-                {% endif %}
+                
                 {% for icon, title, desc in values %}
                 <div class="col-sm-6">
                     <div class="d-flex gap-3 p-3 rounded-3" style="background:var(--light-bg);">
@@ -94,21 +82,10 @@
     <!-- Services Section -->
     <div class="mb-5">
         <div class="text-center mb-4">
-            <h2 class="sec-title mx-auto">{% if lang=='ur' %}ہماری خدمات{% else %}Our Services{% endif %}</h2>
+            <h2 class="sec-title mx-auto">Our Services</h2>
         </div>
         <div class="row g-3">
-            {% if lang == 'ur' %}
-            {% set services = [
-                ('file-earmark-text-fill','#e3f0ff','#1565c0','کرایہ نامہ','اسٹامپ پیپر پر مکمل کرایہ نامہ بنانا'),
-                ('file-earmark-check-fill','#e8f5e9','#2e7d32','سیل ایگریمنٹ','جائیداد خریدنے بیچنے کا قانونی معاہدہ'),
-                ('patch-check-fill','#fff3e0','#e65100','حلف نامہ','ہر قسم کے حلف نامے بنانا'),
-                ('keyboard-fill','#f3e5f5','#6a1b9a','اردو/انگریزی ٹائپنگ','درخواستیں، خطوط، فارم'),
-                ('person-bounding-box','#e0f2f1','#00796b','پاسپورٹ سائز فوٹو','سرکاری دستاویزات کے لیے تصاویر'),
-                ('file-person-fill','#fce4ec','#c62828','CV بنانا','نوکری کے لیے پیشہ ورانہ CV'),
-                ('files','#fff8e1','#f57f17','فوٹو کاپی','دستاویزات کی فوٹو کاپی'),
-                ('shield-fill','#e8edf5','#1a3c5e','پراپرٹی لسٹنگ','کرایہ اور فروخت کی پراپرٹی'),
-            ] %}
-            {% else %}
+            
             {% set services = [
                 ('file-earmark-text-fill','#e3f0ff','#1565c0','Rent Agreement','Professional rent agreement on stamp paper'),
                 ('file-earmark-check-fill','#e8f5e9','#2e7d32','Sale Agreement','Legal agreement for property purchase/sale'),
@@ -119,7 +96,7 @@
                 ('files','#fff8e1','#f57f17','Photocopies & Printing','Document photocopies, plastic coating'),
                 ('shield-fill','#e8edf5','#1a3c5e','Property Listing','Rent & sale property listing service'),
             ] %}
-            {% endif %}
+            
             {% for icon, bg, color, name, desc in services %}
             <div class="col-md-6 col-lg-3">
                 <div class="card border-0 rounded-4 p-3 h-100" style="background:{{ bg }};">
@@ -137,20 +114,20 @@
         <div class="col-lg-6">
             <div class="card border-0 rounded-4 p-4 h-100" style="background:var(--light-bg);">
                 <h4 class="fw-bold mb-3" style="color:var(--primary);">
-                    📍 {% if lang=='ur' %}ہماری جگہ{% else %}Our Location{% endif %}
+                    📍 Our Location
                 </h4>
                 <div class="d-flex gap-3 mb-3">
                     <i class="bi bi-geo-alt-fill" style="font-size:1.5rem;color:var(--accent);flex-shrink:0;"></i>
                     <div>
                         <div class="fw-semibold">Akhtar Colony, Karachi</div>
-                        <div class="text-muted small">{% if lang=='ur' %}کراچی، پاکستان{% else %}Karachi, Pakistan{% endif %}</div>
+                        <div class="text-muted small">Karachi, Pakistan</div>
                     </div>
                 </div>
                 <div class="d-flex gap-3 mb-3">
                     <i class="bi bi-clock-fill" style="font-size:1.5rem;color:var(--accent);flex-shrink:0;"></i>
                     <div>
-                        <div class="fw-semibold">{% if lang=='ur' %}اوقات کار{% else %}Working Hours{% endif %}</div>
-                        <div class="text-muted small">{% if lang=='ur' %}پیر تا ہفتہ — صبح ۹ سے شام ۸{% else %}Monday to Saturday — 9 AM to 8 PM{% endif %}</div>
+                        <div class="fw-semibold">Working Hours</div>
+                        <div class="text-muted small">Monday to Saturday — 9 AM to 8 PM</div>
                     </div>
                 </div>
                 <div class="d-flex gap-3">
@@ -166,14 +143,12 @@
         <div class="col-lg-6">
             <div class="card border-0 rounded-4 p-4 h-100" style="background:var(--primary);color:#fff;">
                 <h4 class="fw-bold mb-3" style="color:var(--accent-light);">
-                    💬 {% if lang=='ur' %}ہم سے رابطہ کریں{% else %}Get In Touch{% endif %}
+                    💬 Get In Touch
                 </h4>
                 <p style="color:rgba(255,255,255,.85);line-height:1.8;">
-                    {% if lang=='ur' %}
-                    کوئی بھی سوال ہو — پراپرٹی، دستاویزات، یا کچھ اور — ہم سے بلا جھجک رابطہ کریں۔
-                    {% else %}
+                    
                     Any question — property, documents, or anything else — feel free to contact us. We are always happy to help!
-                    {% endif %}
+                    
                 </p>
                 <div class="d-flex flex-column gap-2 mt-3">
                     <a href="https://wa.me/923111820660?text=Hello%2C%20I%20want%20to%20know%20more%20about%20ApnaGhar%20services." target="_blank"
@@ -194,14 +169,12 @@
     <!-- Why Choose Us -->
     <div class="card border-0 rounded-4 p-5" style="background:linear-gradient(135deg,var(--primary),#0f2340);color:#fff;text-align:center;">
         <h3 style="color:var(--accent-light);" class="mb-4">
-            ⭐ {% if lang=='ur' %}ہمیں کیوں چنیں؟{% else %}Why Choose ApnaGhar?{% endif %}
+            ⭐ Why Choose ApnaGhar?
         </h3>
         <div class="row g-3 justify-content-center">
-            {% if lang == 'ur' %}
-            {% set reasons = [('🏠','مقامی علم','اختر کالونی اور کراچی کا مکمل علم'),('📋','قانونی دستاویزات','تمام دستاویزات قانوناً درست'),('💰','مناسب قیمت','جیب پر بوجھ نہیں'),('⚡','فوری','آج کا کام آج')] %}
-            {% else %}
+            
             {% set reasons = [('🏠','Local Knowledge','Complete knowledge of Akhtar Colony & Karachi'),('📋','Legal Documents','All documents legally correct'),('💰','Affordable','Easy on the pocket'),('⚡','Fast Service','Same day delivery')] %}
-            {% endif %}
+            
             {% for icon, title, desc in reasons %}
             <div class="col-md-3 col-6">
                 <div class="p-3 rounded-3" style="background:rgba(255,255,255,.1);">
@@ -214,7 +187,7 @@
         </div>
         <div class="mt-4">
             <a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp btn-lg rounded-pill px-5 fw-bold">
-                <i class="bi bi-whatsapp me-2"></i>{% if lang=='ur' %}ابھی رابطہ کریں{% else %}Contact Us Now{% endif %}
+                <i class="bi bi-whatsapp me-2"></i>Contact Us Now
             </a>
         </div>
     </div>

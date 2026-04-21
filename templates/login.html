@@ -26,11 +26,9 @@
                     <div style="color:rgba(255,255,255,.7);font-size:.78rem;">Founder — ApnaGhar | اپنا گھر</div>
                 </div>
                 <p class="mt-4 text-center" style="color:rgba(255,255,255,.7);font-size:.9rem;max-width:320px;line-height:1.8;">
-                    {% if lang=='ur' %}
-                        کراچی کا سب سے بھروسہ مند پراپرٹی پورٹل
-                    {% else %}
+                    
                         Karachi's most trusted property portal — helping families find their dream home since 2018.
-                    {% endif %}
+                    
                 </p>
             </div>
 
@@ -42,10 +40,10 @@
                     <div class="text-center mb-4">
                         <img src="/static/logo.png" alt="ApnaGhar" style="height:56px;width:auto;margin-bottom:12px;">
                         <h2 style="color:var(--primary);font-size:1.5rem;margin-bottom:4px;">
-                            {% if lang=='ur' %}لاگ ان کریں{% else %}Welcome Back{% endif %}
+                            Welcome Back
                         </h2>
                         <p style="color:#888;font-size:.88rem;">
-                            {% if lang=='ur' %}اپنے اکاؤنٹ میں داخل ہوں{% else %}Login to your ApnaGhar account{% endif %}
+                            Login to your ApnaGhar account
                         </p>
                     </div>
 
@@ -54,28 +52,28 @@
                         <div class="mb-3">
                             <label style="font-size:.85rem;font-weight:600;color:#444;margin-bottom:6px;display:block;">
                                 <i class="bi bi-envelope me-1"></i>
-                                {% if lang=='ur' %}ای میل{% else %}Email Address{% endif %}
+                                Email Address
                             </label>
                             <input type="email" name="email" required
                                    class="form-control"
                                    style="border-radius:10px;padding:11px 14px;border-color:#ddd;font-size:.9rem;"
-                                   placeholder="{% if lang=='ur' %}آپ کی ای میل{% else %}Enter your email{% endif %}">
+                                   placeholder="Enter your email">
                         </div>
 
                         <div class="mb-4">
                             <label style="font-size:.85rem;font-weight:600;color:#444;margin-bottom:6px;display:block;">
                                 <i class="bi bi-lock me-1"></i>
-                                {% if lang=='ur' %}پاس ورڈ{% else %}Password{% endif %}
+                                Password
                             </label>
                             <input type="password" name="password" required
                                    class="form-control"
                                    style="border-radius:10px;padding:11px 14px;border-color:#ddd;font-size:.9rem;"
-                                   placeholder="{% if lang=='ur' %}آپ کا پاس ورڈ{% else %}Enter your password{% endif %}">
+                                   placeholder="Enter your password">
                         </div>
 
                         <button type="submit" class="btn w-100 py-2 fw-bold"
                                 style="background:var(--primary);color:#fff;border-radius:10px;font-size:.95rem;">
-                            {% if lang=='ur' %}لاگ ان{% else %}Login{% endif %}
+                            Login
                         </button>
                     </form>
 
@@ -92,18 +90,15 @@
                        class="btn w-100 py-2 fw-bold btn-whatsapp"
                        style="border-radius:10px;font-size:.9rem;">
                         <i class="bi bi-whatsapp me-2"></i>
-                        {% if lang=='ur' %}واٹس ایپ پر مدد لیں{% else %}Get Help on WhatsApp{% endif %}
+                        Get Help on WhatsApp
                     </a>
 
                     <!-- Register link -->
                     <p class="text-center mt-3 mb-0" style="font-size:.88rem;color:#666;">
-                        {% if lang=='ur' %}
-                            اکاؤنٹ نہیں ہے؟
-                            <a href="{{ url_for('register') }}" style="color:var(--accent);font-weight:600;">رجسٹر کریں</a>
-                        {% else %}
+                        
                             Don't have an account?
                             <a href="{{ url_for('register') }}" style="color:var(--accent);font-weight:600;">Register here</a>
-                        {% endif %}
+                        
                     </p>
 
                 </div>

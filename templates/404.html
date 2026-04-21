@@ -5,21 +5,19 @@
     <div style="font-size:6rem;">🏚️</div>
     <h1 class="mt-3" style="color:var(--primary);font-size:3rem;">404</h1>
     <h4 class="text-muted mb-4">
-        {% if lang=='ur' %}یہ صفحہ نہیں ملا{% else %}Page Not Found{% endif %}
+        Page Not Found
     </h4>
     <p class="text-muted mb-4">
-        {% if lang=='ur' %}
-        آپ جو صفحہ ڈھونڈ رہے ہیں وہ موجود نہیں ہے۔
-        {% else %}
+        
         The page you are looking for doesn't exist or has been moved.
-        {% endif %}
+        
     </p>
     <div class="d-flex gap-3 justify-content-center flex-wrap">
         <a href="{{ url_for('index') }}" class="btn btn-primary rounded-pill px-4">
-            <i class="bi bi-house me-2"></i>{% if lang=='ur' %}ہوم پر جائیں{% else %}Go to Home{% endif %}
+            <i class="bi bi-house me-2"></i>Go to Home
         </a>
         <a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp rounded-pill px-4">
-            <i class="bi bi-whatsapp me-2"></i>{% if lang=='ur' %}مدد لیں{% else %}Get Help{% endif %}
+            <i class="bi bi-whatsapp me-2"></i>Get Help
         </a>
     </div>
 </div>
