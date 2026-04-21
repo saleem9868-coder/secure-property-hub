@@ -9,10 +9,22 @@
             <div class="col-md-6"><label class="form-label">Phone / WhatsApp *</label><input type="text" name="phone" class="form-control" required placeholder="03xxxxxxxxx"></div>
             <div class="col-md-6"><label class="form-label">Preferred Area *</label><input type="text" name="preferred_area" class="form-control" required placeholder="e.g. Gulshan, DHA"></div>
             <div class="col-md-6"><label class="form-label">Property Type *</label>
-            <select name="property_type" class="form-select" required><option value="">---</option><option>House</option><option>Flat</option><option>Shop</option><option>Office</option><option>Plot</option><option>Any</option></select></div>
+            <select name="property_type" class="form-select" required>
+                <option value="">---</option>
+                <option>House</option><option>Bungalow</option><option>Flat</option>
+                <option>Apartment</option><option>Portion</option><option>Penthouse</option>
+                <option>Shop</option><option>Office</option><option>Warehouse</option>
+                <option>Plot</option><option>Farm House</option><option>Corner House</option>
+                <option>Any</option>
+            </select></div>
             <div class="col-md-6"><label class="form-label">Maximum Budget (Rs.) *</label><input type="text" name="max_budget" class="form-control" required placeholder="e.g. 1.5 Crore"></div>
             <div class="col-md-6"><label class="form-label">Bedrooms</label>
-            <select name="bedrooms" class="form-select"><option value="">N/A</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></div>
+            <select name="bedrooms" class="form-select">
+                <option value="">N/A</option>
+                <option>1</option><option>2</option><option>3</option><option>4</option>
+                <option>5</option><option>6</option><option>7</option><option>8+</option>
+                <option>Any</option>
+            </select></div>
             <div class="col-md-6"><label class="form-label">Payment Method</label>
             <select name="payment_method" class="form-select"><option>Cash</option><option>Bank Loan</option><option>Installments</option></select></div>
             <div class="col-md-6"><label class="form-label">Purpose</label>
@@ -24,7 +36,12 @@
 </div></div>
 <div class="col-lg-4"><div class="card border-0 rounded-4 p-4" style="background:#e8f5e9;">
     <h6 class="fw-bold mb-3" style="color:#2e7d32;">How It Works</h6>
-    {% for n,s in [('1',T.step1),('2',T.step2),('3',T.step3),('4',T.step4)] %}
+    {% for n,s in [
+        ('1','Submit your requirement with budget and preferred area'),
+        ('2','Our team contacts you within 24 hours'),
+        ('3','We shortlist the best matching properties for you'),
+        ('4','Visit properties and finalise your purchase with our help')
+    ] %}
     <div class="d-flex gap-3 mb-3"><div style="width:30px;height:30px;border-radius:50%;background:#2e7d32;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">{{ n }}</div><small>{{ s }}</small></div>
     {% endfor %}
     <a href="https://wa.me/923111820660" target="_blank" class="btn btn-whatsapp btn-sm w-100 rounded-pill mt-2"><i class="bi bi-whatsapp me-1"></i>Or WhatsApp Directly</a>
