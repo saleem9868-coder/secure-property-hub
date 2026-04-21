@@ -139,7 +139,7 @@
     <!-- HERO IMAGE -->
     <div class="gallery-hero" onclick="openLightbox(0)">
       {% if total_imgs > 0 %}
-        <img src="/static/uploads/properties/{{ images[0].filename }}" alt="{{ prop.title }}">
+        <img src="{{ images[0].filename | img_url }}" alt="{{ prop.title }}">
       {% else %}
         <div class="gallery-hero-ph">{{ '🔑' if cat=='rent' else '🏡' }}</div>
       {% endif %}
@@ -151,10 +151,10 @@
       {% for i in range(1, [total_imgs, 5]|min) %}
         <div class="gallery-thumb" onclick="openLightbox({{ i }})">
           {% if i == 4 and total_imgs > 5 %}
-            <img src="/static/uploads/properties/{{ images[i].filename }}" alt="">
+            <img src="{{ images[i].filename | img_url }}" alt="">
             <div class="gallery-more-overlay">+{{ total_imgs - 4 }} Photos</div>
           {% else %}
-            <img src="/static/uploads/properties/{{ images[i].filename }}" alt="">
+            <img src="{{ images[i].filename | img_url }}" alt="">
           {% endif %}
         </div>
       {% endfor %}
@@ -356,15 +356,14 @@
 
 {% block extra_js %}
 <script>
-// Image filenames for lightbox
-const imgFiles = [{% for img in images %}"{{ img.filename }}"{% if not loop.last %},{% endif %}{% endfor %}];
-const imgBase = '/static/uploads/properties/';
+// Image URLs for lightbox
+const imgFiles = [{% for img in images %}"{{ img.filename | img_url }}"{% if not loop.last %},{% endif %}{% endfor %}];
 let currentIdx = 0;
 
 function openLightbox(idx) {
   if (!imgFiles.length) return;
   currentIdx = idx;
-  document.getElementById('lightboxImg').src = imgBase + imgFiles[currentIdx];
+  document.getElementById('lightboxImg').src = imgFiles[currentIdx];
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -374,7 +373,7 @@ function closeLightbox() {
 }
 function changeLightbox(dir) {
   currentIdx = (currentIdx + dir + imgFiles.length) % imgFiles.length;
-  document.getElementById('lightboxImg').src = imgBase + imgFiles[currentIdx];
+  document.getElementById('lightboxImg').src = imgFiles[currentIdx];
 }
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeLightbox();
