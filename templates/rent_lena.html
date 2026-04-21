@@ -16,7 +16,7 @@
                 <label class="form-label">Property Type</label>
                 <select name="type" class="form-select">
                     <option value="">All Types</option>
-                    {% for tp in ['House','Flat','Portion','Shop','Office'] %}
+                    {% for tp in ['House','Bungalow','Flat','Apartment','Portion','Penthouse','Shop','Office','Warehouse','Farm House','Corner House'] %}
                     <option {% if ptype==tp %}selected{% endif %}>{{ tp }}</option>
                     {% endfor %}
                 </select>
@@ -25,7 +25,7 @@
                 <label class="form-label">Bedrooms</label>
                 <select name="bedrooms" class="form-select">
                     <option value="">Any</option>
-                    {% for b in ['1','2','3','4','5'] %}
+                    {% for b in ['1','2','3','4','5','6','7','8+'] %}
                     <option {% if bed==b %}selected{% endif %}>{{ b }}</option>
                     {% endfor %}
                 </select>
