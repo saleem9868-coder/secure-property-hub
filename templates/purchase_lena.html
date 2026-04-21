@@ -6,7 +6,7 @@
         <form method="GET" class="row g-2 align-items-end">
             <div class="col-md-4"><label class="form-label">Property Type</label>
             <select name="type" class="form-select"><option value="">All Types</option>
-            {% for tp in ['House','Flat','Portion','Shop','Office','Plot'] %}<option {% if ptype==tp %}selected{% endif %}>{{ tp }}</option>{% endfor %}</select></div>
+            {% for tp in ['House','Bungalow','Flat','Apartment','Portion','Penthouse','Shop','Office','Warehouse','Plot','Farm House','Corner House'] %}<option {% if ptype==tp %}selected{% endif %}>{{ tp }}</option>{% endfor %}</select></div>
             <div class="col-md-4"><label class="form-label">Location / Area</label>
             <input type="text" name="location" class="form-control" value="{{ loc }}" placeholder="e.g. Gulshan, DHA"></div>
             <div class="col-md-4 d-flex gap-2 align-items-end">
