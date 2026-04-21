@@ -165,6 +165,44 @@
 
 
 <!-- ═══════════════════════════════════════
+     4 ACTION CARDS — compact strip below hero
+════════════════════════════════════════ -->
+<section style="background:#fff;padding:18px 0;border-bottom:1px solid #eee;">
+    <div class="container">
+        <div class="row g-3 justify-content-center">
+            <div class="col-6 col-md-3">
+                <a href="{{ url_for('rent_lena') }}" class="action-card card-rl" style="padding:14px 12px;border-radius:12px;text-align:center;display:block;text-decoration:none;">
+                    <span style="font-size:1.4rem;">🔑</span>
+                    <div style="font-weight:700;font-size:.85rem;margin-top:4px;">Rent a Property</div>
+                    <div style="font-size:.72rem;color:#666;">Find flats & houses</div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="{{ url_for('rent_dena') }}" class="action-card card-rd" style="padding:14px 12px;border-radius:12px;text-align:center;display:block;text-decoration:none;">
+                    <span style="font-size:1.4rem;">🏠</span>
+                    <div style="font-weight:700;font-size:.85rem;margin-top:4px;">List for Rent</div>
+                    <div style="font-size:.72rem;color:#666;">Free in 5 minutes</div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="{{ url_for('purchase_lena') }}" class="action-card card-buy" style="padding:14px 12px;border-radius:12px;text-align:center;display:block;text-decoration:none;">
+                    <span style="font-size:1.4rem;">🏡</span>
+                    <div style="font-weight:700;font-size:.85rem;margin-top:4px;">Buy Property</div>
+                    <div style="font-size:.72rem;color:#666;">Houses & plots</div>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a href="{{ url_for('sale_dena') }}" class="action-card card-sell" style="padding:14px 12px;border-radius:12px;text-align:center;display:block;text-decoration:none;">
+                    <span style="font-size:1.4rem;">🏷️</span>
+                    <div style="font-weight:700;font-size:.85rem;margin-top:4px;">Sell Property</div>
+                    <div style="font-size:.72rem;color:#666;">Fast & hassle-free</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════
      FEATURED LISTINGS — DYNAMIC FROM DB
 ════════════════════════════════════════ -->
 {# Combine rent + sale into one list for the grid #}
@@ -315,49 +353,7 @@
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     4 ACTION CARDS
-════════════════════════════════════════ -->
-<section class="py-5" style="background:var(--light-bg);">
-    <div class="container">
-        <h2 class="sec-title mb-2">What We Offer</h2>
-        <p class="text-muted mb-4" style="font-size:.9rem;">All your property needs under one roof</p>
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-3">
-                <a href="{{ url_for('rent_lena') }}" class="action-card card-rl">
-                    <span class="c-icon">🔑</span>
-                    <div class="c-title">Rent a Property</div>
-                    <div class="c-sub">Flats, houses & rooms across Karachi</div>
-                    <span class="c-btn">Browse →</span>
-                </a>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <a href="{{ url_for('rent_dena') }}" class="action-card card-rd">
-                    <span class="c-icon">🏠</span>
-                    <div class="c-title">List for Rent</div>
-                    <div class="c-sub">List your property free in 5 minutes</div>
-                    <span class="c-btn">List Now →</span>
-                </a>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <a href="{{ url_for('purchase_lena') }}" class="action-card card-buy">
-                    <span class="c-icon">🏡</span>
-                    <div class="c-title">Buy Property</div>
-                    <div class="c-sub">Houses, flats & plots in Karachi</div>
-                    <span class="c-btn">Buy →</span>
-                </a>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <a href="{{ url_for('sale_dena') }}" class="action-card card-sell">
-                    <span class="c-icon">🏷️</span>
-                    <div class="c-title">Sell Property</div>
-                    <div class="c-sub">Fast, hassle-free property sale</div>
-                    <span class="c-btn">Sell →</span>
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 <!-- ═══════════════════════════════════════
      TRUST BADGES
