@@ -295,17 +295,17 @@ Resources
                             <li><a class="dropdown-item" href="{{ url_for('about') }}">ℹ️ About Us</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('blog') }}">📰 Blog</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('contact') }}">📞 Contact Us</a></li>
-                        
+                        {% endif %}
                     </ul>
                 </li>
                 {% if session.user_id %}
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}"><i class="bi bi-person-circle me-1"></i>{{ session.user_name.split()[0] }}</a></li>
-                {% if session.is_admin %}<li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('admin_panel') }}"><i class="bi bi-shield me-1"></i>Admin</a></li>
+                {% if session.is_admin %}<li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('admin_panel') }}"><i class="bi bi-shield me-1"></i>Admin</a></li>{% endif %}
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
-
+                {% else %}
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
                 <li class="nav-item"><a class="nav-link ms-1" href="{{ url_for('register') }}" style="background:var(--accent);border-radius:8px;color:#fff!important;padding:6px 14px!important;font-weight:600;">Register</a></li>
-                
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -321,7 +321,7 @@ Resources
     </div>
     {% endfor %}
 </div>
-
+{% endif %}
 {% endwith %}
 
 {% block content %}{% endblock %}
