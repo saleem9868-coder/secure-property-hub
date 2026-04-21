@@ -111,7 +111,7 @@ def inject_globals():
         menu_items = []
     # Pop WhatsApp notify link from session (show once after a listing is submitted)
     wa_notify = session.pop('wa_notify', None)
-    return dict(now=datetime.now(), T=T(), menu_items=menu_items, wa_notify=wa_notify)
+    return dict(now=datetime.now(), T=T(), lang="en", menu_items=menu_items, wa_notify=wa_notify)
 
 # ─── SECURITY BLOCKER ────────────────────────────────────────────────────────
 
