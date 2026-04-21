@@ -303,6 +303,7 @@ Resources
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}"><i class="bi bi-person-circle me-1"></i>{{ session.user_name.split()[0] }}</a></li>
                 {% endif %}
                 {% if session.is_admin %}<li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('admin_panel') }}"><i class="bi bi-shield me-1"></i>Admin Panel</a></li>{% endif %}
+                {% if session.is_admin %}<li class="nav-item"><a class="nav-link text-success fw-semibold" href="{{ url_for('admin_add_property') }}"><i class="bi bi-plus-circle me-1"></i>Enlist Property</a></li>{% endif %}
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
                 {% else %}
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
