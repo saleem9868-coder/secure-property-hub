@@ -12,14 +12,32 @@
             <div class="col-md-6"><label class="form-label">Area / Locality *</label><input type="text" name="location" class="form-control" required></div>
             <div class="col-md-6"><label class="form-label">Full Address *</label><input type="text" name="area" class="form-control" required></div>
             <div class="col-md-4"><label class="form-label">Property Type *</label>
-            <select name="property_type" class="form-select" required><option value="">---</option><option>House</option><option>Flat</option><option>Portion</option><option>Shop</option><option>Office</option><option>Plot</option></select></div>
+            <select name="property_type" class="form-select" required>
+                <option value="">---</option>
+                <option>House</option><option>Bungalow</option><option>Flat</option>
+                <option>Apartment</option><option>Portion</option><option>Penthouse</option>
+                <option>Shop</option><option>Office</option><option>Warehouse</option>
+                <option>Plot</option><option>Farm House</option><option>Corner House</option>
+                <option>Other</option>
+            </select></div>
             <div class="col-md-4"><label class="form-label">Bedrooms</label>
-            <select name="bedrooms" class="form-select"><option value="0">N/A</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+            <select name="bedrooms" class="form-select">
+                <option value="0">N/A</option>
+                <option>1</option><option>2</option><option>3</option><option>4</option>
+                <option>5</option><option>6</option><option>7</option><option>8+</option>
+            </select></div>
             <div class="col-md-4"><label class="form-label">Bathrooms</label>
-            <select name="bathrooms" class="form-select"><option>1</option><option>2</option><option>3</option><option>4+</option></select></div>
+            <select name="bathrooms" class="form-select">
+                <option>1</option><option>2</option><option>3</option>
+                <option>4</option><option>5</option><option>6+</option>
+            </select></div>
             <div class="col-md-6"><label class="form-label">Total Area</label><input type="text" name="total_area" class="form-control" placeholder="e.g. 5 Marla / 1000 sqft"></div>
             <div class="col-md-6"><label class="form-label">Possession</label>
-            <select name="possession" class="form-select"><option>Immediate</option><option>1 Month</option><option>3 Months</option><option>6 Months</option></select></div>
+            <select name="possession" class="form-select">
+                <option>Immediate</option><option>1 Month</option><option>3 Months</option>
+                <option>6 Months</option><option>On Booking</option>
+                <option>Under Construction</option><option>1 Year+</option>
+            </select></div>
             <div class="col-12"><label class="form-label">Sale Price (Rs.) *</label><input type="text" name="price" class="form-control" required placeholder="e.g. 1.8 Crore"></div>
             <div class="col-12"><label class="form-label">Description</label><textarea name="description" class="form-control" rows="4"></textarea></div>
             <div class="col-12"><label class="form-label">Upload Images</label><input type="file" name="images" class="form-control" multiple accept="image/*"></div>
