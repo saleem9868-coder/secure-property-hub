@@ -231,7 +231,7 @@ font-family:'Playfair Display',serif;
     -->
 
     <!-- ═══ PWA — Progressive Web App ═══ -->
-    <link rel="manifest" href="/static/manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#1a3c5e">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -245,7 +245,7 @@ font-family:'Playfair Display',serif;
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/static/sw.js')
+          navigator.serviceWorker.register('/sw.js')
             .then(reg => console.log('ApnaGhar SW registered:', reg.scope))
             .catch(err => console.log('SW error:', err));
         });
