@@ -1772,6 +1772,14 @@ def sitemap():
     resp.headers['Content-Type'] = 'application/xml'
     return resp
 
+@app.route('/sw.js')
+def service_worker():
+    from flask import send_from_directory
+    response = send_from_directory('static', 'sw.js')
+    response.headers['Cache-Control'] = 'no-cache'
+    response.headers['Content-Type'] = 'application/javascript'
+    return response
+
 @app.route('/robots.txt')
 def robots():
     r = "User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /debug-upload\nSitemap: https://apnagharkarachi.com/sitemap.xml\n"
