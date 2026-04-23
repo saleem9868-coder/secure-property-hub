@@ -56,7 +56,7 @@
                 </p>
 
                 <!-- ✅ PREMIUM WHITE SEARCH BOX -->
-                <form action="{{ url_for('rent_lena') }}" method="GET"
+                <form action="{{ url_for('rent_lena') }}" method="GET" id="searchForm"
                       style="background:#fff;border-radius:16px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:520px;">
 
                     <p style="color:var(--primary);font-weight:700;font-size:.9rem;margin-bottom:12px;">
@@ -65,9 +65,9 @@
 
                     <div class="row g-2">
                         <div class="col-md-4">
-                            <select name="purpose" class="form-select rounded-pill"
+                            <select name="purpose" id="purposeSelect" class="form-select rounded-pill"
                                     style="font-weight:500;border-color:#e0e0e0;font-size:.88rem;"
-                                    onchange="this.form.action=(this.value=='Buy'||this.value=='Sale')?'{{ url_for('purchase_lena') }}':'{{ url_for('rent_lena') }}'">
+                                    onchange="updateSearchAction(this.value)">
                                 <option value="Rent">🔑 Rent</option>
                                 <option value="ToLet">🏠 To Let</option>
                                 <option value="Sale">🏷️ For Sale</option>
@@ -543,6 +543,23 @@ document.querySelectorAll('.prop-filter-btn').forEach(btn => {
             item.style.display = (filter==='all' || cats.includes(filter)) ? '' : 'none';
         });
     });
+});
+
+// Search form routing
+var RENT_URL   = "{{ url_for('rent_lena') }}";
+var SALE_URL   = "{{ url_for('purchase_lena') }}";
+
+function updateSearchAction(val) {
+    var form = document.getElementById('searchForm');
+    if (form) {
+        form.action = (val === 'Buy' || val === 'Sale') ? SALE_URL : RENT_URL;
+    }
+}
+
+// Set correct action on page load based on default selected value
+document.addEventListener('DOMContentLoaded', function() {
+    var sel = document.getElementById('purposeSelect');
+    if (sel) updateSearchAction(sel.value);
 });
 </script>
 {% endblock %}
