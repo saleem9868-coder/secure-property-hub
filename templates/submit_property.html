@@ -1,0 +1,458 @@
+{% extends 'base.html' %}
+{% block title %}Submit Your Property — ApnaGhar Karachi{% endblock %}
+{% block content %}
+
+<style>
+.submit-hdr { background: linear-gradient(135deg,#1a3c5e,#2557a7); padding: 40px 0 30px; color: #fff; }
+.submit-hdr h1 { color: #fff; }
+.submit-hdr p  { color: rgba(255,255,255,.85); }
+
+.step-bar { display: flex; gap: 0; margin-bottom: 2rem; border-radius: 12px; overflow: hidden; border: 1px solid #e0e0e0; }
+.step { flex: 1; padding: 12px 8px; text-align: center; font-size: .82rem; font-weight: 600;
+        background: #f5f5f5; color: #999; cursor: pointer; transition: all .2s; }
+.step.active   { background: #1a3c5e; color: #fff; }
+.step.done     { background: #c8973a; color: #fff; }
+.step span     { display: block; font-size: .7rem; font-weight: 400; margin-top: 2px; }
+
+.section-card { background: #fff; border: 1px solid #e8edf5; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.2rem; }
+.section-title { font-size: 1rem; font-weight: 700; color: #1a3c5e; margin-bottom: 1rem;
+                 padding-bottom: .5rem; border-bottom: 2px solid #f0c060; display: flex; align-items: center; gap: 8px; }
+
+/* Purpose toggle */
+.purpose-toggle { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 2px solid #1a3c5e; margin-bottom: 1rem; }
+.purpose-btn    { flex: 1; padding: 12px; text-align: center; font-weight: 600; font-size: .9rem;
+                  background: #fff; color: #1a3c5e; cursor: pointer; border: none; transition: all .2s; }
+.purpose-btn.active { background: #1a3c5e; color: #fff; }
+
+/* Rent-only fields */
+.rent-only, .sale-only { transition: all .3s; }
+.rent-only.hidden, .sale-only.hidden { display: none !important; }
+
+/* Photo upload */
+.photo-drop { border: 2px dashed #c8973a; border-radius: 12px; padding: 2rem; text-align: center;
+              cursor: pointer; background: #fffbf4; transition: all .2s; }
+.photo-drop:hover { background: #fff3e0; border-color: #1a3c5e; }
+.photo-drop .icon { font-size: 2rem; margin-bottom: .5rem; }
+.photo-previews { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
+.photo-previews img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px;
+                      border: 2px solid #e0e0e0; }
+
+/* Amenity chips */
+.amenity-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.amenity-chip { padding: 6px 14px; border: 1.5px solid #d0d0d0; border-radius: 20px;
+                font-size: .82rem; cursor: pointer; background: #fff; color: #555; transition: all .2s; user-select: none; }
+.amenity-chip.on { border-color: #1a3c5e; background: #e8f0fb; color: #1a3c5e; font-weight: 600; }
+
+/* Submit button */
+.btn-submit { background: #1a3c5e; color: #fff; border: none; border-radius: 12px;
+              padding: 14px 40px; font-size: 1rem; font-weight: 700; width: 100%;
+              cursor: pointer; transition: background .2s; margin-top: .5rem; }
+.btn-submit:hover { background: #c8973a; }
+
+/* Success screen */
+.success-screen { display: none; text-align: center; padding: 3rem 1rem; }
+.success-screen .tick { font-size: 4rem; margin-bottom: 1rem; }
+.success-screen h2 { color: #1a3c5e; }
+.success-screen p  { color: #555; }
+.wa-confirm-btn { display: inline-block; margin-top: 1.5rem; background: #25D366; color: #fff;
+                  padding: 12px 30px; border-radius: 30px; font-weight: 700; text-decoration: none; font-size: .95rem; }
+
+.required-star { color: #e53935; }
+.char-count { font-size: .75rem; color: #999; float: right; }
+
+@media(max-width:576px){
+    .step span { display: none; }
+    .step { font-size: .78rem; padding: 10px 4px; }
+}
+</style>
+
+<div class="submit-hdr">
+    <div class="container">
+        <h1>🏠 List Your Property</h1>
+        <p>Free listing — reach thousands of buyers & tenants in Karachi</p>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for cat, msg in messages %}
+                <div class="alert alert-{{ 'success' if cat=='success' else 'warning' }} rounded-3 mb-3">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <!-- Step bar -->
+            <div class="step-bar">
+                <div class="step active" id="step1-tab">1 <span>Purpose & Type</span></div>
+                <div class="step" id="step2-tab">2 <span>Location</span></div>
+                <div class="step" id="step3-tab">3 <span>Details & Price</span></div>
+                <div class="step" id="step4-tab">4 <span>Photos</span></div>
+                <div class="step" id="step5-tab">5 <span>Contact</span></div>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" id="submitForm" action="/submit-property">
+
+                <!-- ══ STEP 1: Purpose & Type ══ -->
+                <div id="step1">
+                    <div class="section-card">
+                        <div class="section-title">🎯 What do you want to do?</div>
+                        <div class="purpose-toggle">
+                            <button type="button" class="purpose-btn active" onclick="setPurpose('rent',this)">🔑 Rent Out</button>
+                            <button type="button" class="purpose-btn" onclick="setPurpose('sale',this)">🏡 Sell</button>
+                        </div>
+                        <input type="hidden" name="purpose" id="purposeInput" value="rent">
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-title">🏘️ Property Type <span class="required-star">*</span></div>
+                        <div class="row g-2">
+                            {% for pt in ['House','Bungalow','Flat','Apartment','Portion','Penthouse','Shop','Office','Warehouse','Plot','Farm House','Corner House','Other'] %}
+                            <div class="col-6 col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="property_type" value="{{ pt }}" id="pt_{{ loop.index }}" {% if loop.first %}checked{% endif %} required>
+                                    <label class="form-check-label" for="pt_{{ loop.index }}">{{ pt }}</label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn rounded-pill px-4 py-2 fw-bold" style="background:#1a3c5e;color:#fff;" onclick="goStep(2)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- ══ STEP 2: Location ══ -->
+                <div id="step2" style="display:none">
+                    <div class="section-card">
+                        <div class="section-title">📍 Location Details</div>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Area / Society <span class="required-star">*</span></label>
+                                <input type="text" name="location" class="form-control" required
+                                       placeholder="e.g. DHA Phase 6, Gulshan-e-Iqbal, Clifton, North Nazimabad">
+                                <div class="form-text">Popular: DHA · Clifton · Gulshan · North Nazimabad · Akhtar Colony · PECHS</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Block / Sector</label>
+                                <input type="text" name="block_sector" class="form-control" placeholder="e.g. Block 4, Sector F">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Street / Road</label>
+                                <input type="text" name="street" class="form-control" placeholder="e.g. Street 12, Main Road">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Full Address <span class="required-star">*</span></label>
+                                <input type="text" name="area" class="form-control" required
+                                       placeholder="e.g. House 15, Street 8, Block B, North Nazimabad, Karachi">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" onclick="goStep(1)">← Back</button>
+                        <button type="button" class="btn rounded-pill px-4 py-2 fw-bold" style="background:#1a3c5e;color:#fff;" onclick="goStep(3)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- ══ STEP 3: Details & Price ══ -->
+                <div id="step3" style="display:none">
+                    <div class="section-card">
+                        <div class="section-title">📋 Property Details</div>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Property Title <span class="required-star">*</span></label>
+                                <input type="text" name="title" class="form-control" required
+                                       placeholder="e.g. 3 Bed House North Nazimabad Block 4">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Bedrooms</label>
+                                <select name="bedrooms" class="form-select">
+                                    <option value="0">N/A (Plot/Shop)</option>
+                                    <option>1</option><option>2</option><option selected>3</option>
+                                    <option>4</option><option>5</option><option>6</option><option>7</option><option>8+</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Bathrooms</label>
+                                <select name="bathrooms" class="form-select">
+                                    <option>1</option><option selected>2</option><option>3</option>
+                                    <option>4</option><option>5</option><option>6+</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Parking</label>
+                                <select name="parking" class="form-select">
+                                    <option>None</option><option>1 Car</option>
+                                    <option>2 Cars</option><option>3+ Cars</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Size</label>
+                                <input type="text" name="total_area" class="form-control" placeholder="e.g. 240">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Size Unit</label>
+                                <select name="size_unit" class="form-select">
+                                    <option>Sq Yards</option><option>Sq Ft</option>
+                                    <option>Marla</option><option>Kanal</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 rent-only">
+                                <label class="form-label fw-semibold">Floor</label>
+                                <select name="floor" class="form-select">
+                                    <option>Ground</option><option>1st</option><option>2nd</option>
+                                    <option>3rd</option><option>4th</option><option>5th+</option>
+                                    <option>Basement</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 rent-only">
+                                <label class="form-label fw-semibold">Furnished Status</label>
+                                <select name="furnished" class="form-select">
+                                    <option>Unfurnished</option>
+                                    <option>Semi-Furnished</option>
+                                    <option>Fully Furnished</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 rent-only">
+                                <label class="form-label fw-semibold">Tenant Preference</label>
+                                <select name="tenant_preference" class="form-select">
+                                    <option>Family</option><option>Bachelor</option>
+                                    <option>Family/Bachelor</option><option>Commercial</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 sale-only hidden">
+                                <label class="form-label fw-semibold">Possession</label>
+                                <select name="possession" class="form-select">
+                                    <option>Immediate</option><option>Within 1 Month</option>
+                                    <option>Within 3 Months</option><option>After 6 Months</option>
+                                    <option>On File Transfer</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-title">✅ Amenities</div>
+                        <div class="amenity-grid" id="amenityGrid">
+                            {% for a in ['Generator','Solar Panels','CCTV','Gas Connection','Water Supply',
+                                         'Elevator/Lift','Servant Quarters','Store Room','Lawn/Garden',
+                                         'Gated Community','Rooftop','Basement','Car Porch','Boundary Wall'] %}
+                            <div class="amenity-chip" onclick="toggleAmenity(this)" data-val="{{ a }}">{{ a }}</div>
+                            {% endfor %}
+                        </div>
+                        <input type="hidden" name="amenities" id="amenitiesInput" value="">
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-title">💰 Price <span class="required-star">*</span></div>
+                        <div class="row g-3">
+                            <div class="col-md-7">
+                                <label class="form-label fw-semibold rent-only">Monthly Rent (Rs.)</label>
+                                <label class="form-label fw-semibold sale-only hidden">Sale Price (Rs.)</label>
+                                <input type="text" name="price" class="form-control" required
+                                       placeholder="e.g. 35,000" id="priceInput">
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label fw-semibold">Negotiable?</label>
+                                <select name="negotiable" class="form-select">
+                                    <option value="Yes">Yes, Negotiable</option>
+                                    <option value="No">Fixed Price</option>
+                                    <option value="OnRequest">On Request</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Description
+                                    <span class="char-count"><span id="descCount">0</span>/500</span>
+                                </label>
+                                <textarea name="description" class="form-control" rows="4" maxlength="500"
+                                          id="descArea"
+                                          placeholder="Describe the property — condition, nearby landmarks, special features, maintenance status..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" onclick="goStep(2)">← Back</button>
+                        <button type="button" class="btn rounded-pill px-4 py-2 fw-bold" style="background:#1a3c5e;color:#fff;" onclick="goStep(4)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- ══ STEP 4: Photos ══ -->
+                <div id="step4" style="display:none">
+                    <div class="section-card">
+                        <div class="section-title">📸 Property Photos</div>
+                        <div class="alert alert-info rounded-3 mb-3" style="font-size:.88rem;">
+                            💡 <strong>Tip:</strong> Properties with 5+ clear photos get <strong>3x more inquiries</strong>. Take photos of every room, exterior, and street view.
+                        </div>
+                        <div class="photo-drop" onclick="document.getElementById('photoInput').click()">
+                            <div class="icon">📷</div>
+                            <div class="fw-semibold" style="color:#1a3c5e;">Tap to upload photos</div>
+                            <div class="text-muted mt-1" style="font-size:.83rem;">JPG, PNG — up to 10 photos — minimum 5 recommended</div>
+                        </div>
+                        <input type="file" name="images" id="photoInput" multiple accept="image/*"
+                               style="display:none" onchange="showPreviews(this)">
+                        <div class="photo-previews" id="photoPreviews"></div>
+                        <div id="photoCount" class="mt-2 text-muted" style="font-size:.83rem;"></div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" onclick="goStep(3)">← Back</button>
+                        <button type="button" class="btn rounded-pill px-4 py-2 fw-bold" style="background:#1a3c5e;color:#fff;" onclick="goStep(5)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- ══ STEP 5: Contact ══ -->
+                <div id="step5" style="display:none">
+                    <div class="section-card">
+                        <div class="section-title">👤 Your Contact Details</div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Full Name <span class="required-star">*</span></label>
+                                <input type="text" name="owner_name" class="form-control" required
+                                       placeholder="Muhammad Ali"
+                                       value="{{ session.user_name if session.get('user_id') else '' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">WhatsApp Number <span class="required-star">*</span></label>
+                                <input type="tel" name="owner_phone" class="form-control" required
+                                       placeholder="03XX-XXXXXXX">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">You are the</label>
+                                <select name="owner_type" class="form-select">
+                                    <option>Owner</option>
+                                    <option>Agent / Broker</option>
+                                    <option>Developer</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Best time to call</label>
+                                <select name="call_time" class="form-select">
+                                    <option>Anytime</option>
+                                    <option>Morning (9am–12pm)</option>
+                                    <option>Afternoon (12pm–5pm)</option>
+                                    <option>Evening (5pm–9pm)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary card -->
+                    <div class="section-card" style="background:#f8f9fc;">
+                        <div class="section-title">📋 Your Listing Summary</div>
+                        <div id="summaryBox" style="font-size:.9rem; line-height:2; color:#333;"></div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" onclick="goStep(4)">← Back</button>
+                    </div>
+                    <button type="submit" class="btn-submit">
+                        ✅ Submit Property Listing — FREE
+                    </button>
+                    <p class="text-center text-muted mt-2" style="font-size:.8rem;">
+                        We will review and publish your listing within 24 hours. You will be contacted on WhatsApp.
+                    </p>
+                </div>
+
+            </form>
+
+            <!-- Success screen (shown after redirect with flash) -->
+
+        </div>
+    </div>
+</div>
+
+<script>
+let currentPurpose = 'rent';
+let currentStep = 1;
+
+function setPurpose(p, btn) {
+    currentPurpose = p;
+    document.getElementById('purposeInput').value = p;
+    document.querySelectorAll('.purpose-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    // Show/hide rent-only / sale-only fields
+    document.querySelectorAll('.rent-only').forEach(el => el.classList.toggle('hidden', p !== 'rent'));
+    document.querySelectorAll('.sale-only').forEach(el => el.classList.toggle('hidden', p !== 'sale'));
+    // Update price placeholder
+    document.getElementById('priceInput').placeholder = p === 'rent' ? 'e.g. 35,000' : 'e.g. 2,50,00,000';
+}
+
+function goStep(n) {
+    // Basic validation before leaving step
+    if (n > currentStep) {
+        if (currentStep === 2) {
+            const loc = document.querySelector('input[name="location"]').value.trim();
+            const addr = document.querySelector('input[name="area"]').value.trim();
+            if (!loc || !addr) { alert('Please fill in Area and Full Address.'); return; }
+        }
+        if (currentStep === 3) {
+            const title = document.querySelector('input[name="title"]').value.trim();
+            const price = document.querySelector('input[name="price"]').value.trim();
+            if (!title || !price) { alert('Please fill in Property Title and Price.'); return; }
+        }
+    }
+    document.getElementById('step' + currentStep).style.display = 'none';
+    document.getElementById('step' + n).style.display = 'block';
+    // Update step bar
+    for (let i = 1; i <= 5; i++) {
+        const t = document.getElementById('step' + i + '-tab');
+        t.classList.remove('active','done');
+        if (i < n)  t.classList.add('done');
+        if (i === n) t.classList.add('active');
+    }
+    currentStep = n;
+    if (n === 5) buildSummary();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function toggleAmenity(el) {
+    el.classList.toggle('on');
+    const selected = [...document.querySelectorAll('.amenity-chip.on')].map(c => c.dataset.val);
+    document.getElementById('amenitiesInput').value = selected.join(', ');
+}
+
+function showPreviews(input) {
+    const wrap = document.getElementById('photoPreviews');
+    const cnt  = document.getElementById('photoCount');
+    wrap.innerHTML = '';
+    const files = Array.from(input.files).slice(0, 10);
+    files.forEach(f => {
+        const r = new FileReader();
+        r.onload = e => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            wrap.appendChild(img);
+        };
+        r.readAsDataURL(f);
+    });
+    cnt.textContent = files.length + ' photo(s) selected' + (files.length < 5 ? ' — please add at least 5 for best results' : ' ✅');
+}
+
+document.getElementById('descArea').addEventListener('input', function() {
+    document.getElementById('descCount').textContent = this.value.length;
+});
+
+function buildSummary() {
+    const g = n => { const el = document.querySelector('[name="'+n+'"]'); return el ? el.value : ''; };
+    const pt = document.querySelector('input[name="property_type"]:checked');
+    const amenities = document.getElementById('amenitiesInput').value;
+    const purpose = currentPurpose === 'rent' ? '🔑 Rent Out' : '🏡 Sell';
+    const photos = document.getElementById('photoInput').files.length;
+    document.getElementById('summaryBox').innerHTML = `
+        <b>Purpose:</b> ${purpose}<br>
+        <b>Type:</b> ${pt ? pt.value : '—'}<br>
+        <b>Title:</b> ${g('title') || '—'}<br>
+        <b>Area:</b> ${g('location') || '—'}<br>
+        <b>Address:</b> ${g('area') || '—'}<br>
+        <b>Bedrooms:</b> ${g('bedrooms')} &nbsp; <b>Bathrooms:</b> ${g('bathrooms')}<br>
+        <b>Size:</b> ${g('total_area') || '—'} ${g('size_unit')}<br>
+        <b>Price:</b> Rs. ${g('price') || '—'} &nbsp; <b>Negotiable:</b> ${g('negotiable')}<br>
+        <b>Photos:</b> ${photos} uploaded<br>
+        ${amenities ? '<b>Amenities:</b> ' + amenities + '<br>' : ''}
+    `;
+}
+</script>
+{% endblock %}
