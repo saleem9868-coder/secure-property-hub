@@ -623,7 +623,7 @@ def search():
     ptype    = request.args.get('type', '')
     bedrooms = request.args.get('beds', '')
 
-    if purpose in ('buy', 'sale', 'forsale', 'for sale'):
+    if purpose in ('sale', 'buy'):
         q = ("SELECT DISTINCT ON (s.id) s.*, pi.filename FROM sale_properties s "
              "LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' "
              "WHERE s.is_approved=1")
@@ -634,7 +634,7 @@ def search():
         q += " ORDER BY s.id, s.is_featured DESC, s.created_at DESC"
         props = conn.execute(q, params).fetchall()
         conn.close()
-        return render_template('purchase_lena.html', props=props, ptype=ptype, loc=location, bed=bedrooms)
+        return render_template('purchase_lena.html', props=props, ptype=ptype, loc=location, bed=bedrooms, mode=purpose)
     else:
         q = ("SELECT DISTINCT ON (r.id) r.*, pi.filename FROM rent_properties r "
              "LEFT JOIN property_images pi ON r.id=pi.property_id AND pi.property_cat='rent' "
