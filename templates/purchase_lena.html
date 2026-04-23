@@ -1,6 +1,6 @@
-{% extends 'base.html' %}{% block title %}Buy a Property{% endblock %}
+{% extends 'base.html' %}{% block title %}{% if mode == 'sale' %}Properties For Sale{% else %}Buy a Property{% endif %}{% endblock %}
 {% block content %}
-<div class="page-hdr hdr-buy"><div class="container"><h1>🏡 Buy a Property</h1><p>{{ props|length }} properties available</p></div></div>
+<div class="page-hdr {% if mode == 'sale' %}hdr-sale{% else %}hdr-buy{% endif %}"><div class="container"><h1>{% if mode == 'sale' %}🏷️ Properties For Sale{% else %}🏡 Buy a Property{% endif %}</h1><p>{{ props|length }} properties available</p></div></div>
 <div class="container py-4">
     <div class="card border-0 shadow-sm rounded-4 p-3 mb-4">
         <form method="GET" class="row g-2 align-items-end">
