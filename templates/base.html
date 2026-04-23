@@ -304,18 +304,6 @@ font-family:'Playfair Display',serif;
 Resources
                     </a>
                     <ul class="dropdown-menu">
-                        {% if menu_items %}
-                            {% for item in menu_items %}
-                            <li>
-                                <a class="dropdown-item" href="{{ item.url }}"
-                                   {% if item.open_new_tab %}target="_blank" rel="noopener"{% endif %}>
-                                    <em class="di">{{ item.icon }}</em>
-                                    <span class="dt">{{ item.title }}</span>
-                                </a>
-                            </li>
-                            {% endfor %}
-                            <li><hr class="dropdown-divider"></li>
-                        {% endif %}
                         <li><a class="dropdown-item" href="{{ url_for('property_laws') }}"><em class="di">⚖️</em><span class="dt">Property Laws</span></a></li>
                         <li><a class="dropdown-item" href="{{ url_for('calculators') }}"><em class="di">🧮</em><span class="dt">Calculators</span></a></li>
                         <li><a class="dropdown-item" href="{{ url_for('area_guide') }}"><em class="di">🗺️</em><span class="dt">Karachi Area Guide</span></a></li>
