@@ -545,15 +545,40 @@ document.querySelectorAll('.prop-filter-btn').forEach(btn => {
     });
 });
 
-// Search form routing — always /search, purpose handled server-side
+// Search form routing
+// Rent / Buy  → go to /search (find properties)
+// To Let       → go to /rent-dena (list property for rent)
+// Sale         → go to /sale-dena (list property for sale)
 function updateSearchAction(val) {
     var form = document.getElementById('searchForm');
-    if (form) { form.action = '/search'; }
+    var typeSelect = document.querySelector('select[name="type"]');
+    var locationInput = document.querySelector('input[name="location"]');
+    var searchBtn = form ? form.querySelector('button[type="submit"]') : null;
+
+    if (val === 'ToLet') {
+        if (searchBtn) searchBtn.textContent = '🏠 List for Rent';
+        if (typeSelect) typeSelect.closest('.col-md-4').style.display = 'none';
+        if (locationInput) locationInput.placeholder = 'Click button to list your property for rent';
+        if (form) form.action = '/rent-dena';
+    } else if (val === 'Sale') {
+        if (searchBtn) searchBtn.textContent = '🏷️ List for Sale';
+        if (typeSelect) typeSelect.closest('.col-md-4').style.display = 'none';
+        if (locationInput) locationInput.placeholder = 'Click button to list your property for sale';
+        if (form) form.action = '/sale-dena';
+    } else {
+        if (searchBtn) searchBtn.textContent = '🔍 Search';
+        if (typeSelect) typeSelect.closest('.col-md-4').style.display = '';
+        if (locationInput) locationInput.placeholder = 'Enter location... e.g. Gulshan, DHA, Clifton';
+        if (form) form.action = '/search';
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     var form = document.getElementById('searchForm');
     if (form) { form.action = '/search'; }
+    // Run once on load to set correct initial state
+    var sel = document.getElementById('purposeSelect');
+    if (sel) updateSearchAction(sel.value);
 });
 </script>
 {% endblock %}
