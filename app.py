@@ -829,6 +829,118 @@ def sale_dena():
         return redirect(url_for('dashboard') if session.get('user_id') else url_for('index'))
     return render_template('sale_dena.html')
 
+# ─── UNIFIED PROPERTY SUBMISSION ─────────────────────────────────────────────
+
+@app.route('/submit-property', methods=['GET','POST'])
+def submit_property():
+    if request.method == 'POST':
+        purpose = request.form.get('purpose', 'rent')
+        conn = get_db()
+        cur  = conn.cursor()
+        auto_approve = 1 if session.get('is_admin') else 0
+
+        # Build amenities string for description append
+        amenities = request.form.get('amenities', '')
+        desc_full  = request.form.get('description', '')
+        if amenities:
+            desc_full += f"\n\nAmenities: {amenities}"
+        # Extra details
+        parking    = request.form.get('parking', '')
+        size_unit  = request.form.get('size_unit', 'Sq Yards')
+        owner_type = request.form.get('owner_type', 'Owner')
+        call_time  = request.form.get('call_time', 'Anytime')
+        negotiable = request.form.get('negotiable', 'Yes')
+        desc_full += f"\n\nParking: {parking} | Size Unit: {size_unit} | Owner Type: {owner_type} | Call Time: {call_time} | Negotiable: {negotiable}"
+
+        if purpose == 'rent':
+            cur.execute('''INSERT INTO rent_properties
+                (user_id, owner_name, owner_phone, title, location, area,
+                 property_type, price, bedrooms, bathrooms,
+                 floor, furnished, tenant_preference, description, is_approved)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
+                session.get('user_id'),
+                request.form.get('owner_name',''),
+                request.form.get('owner_phone',''),
+                request.form.get('title',''),
+                request.form.get('location',''),
+                request.form.get('area',''),
+                request.form.get('property_type',''),
+                request.form.get('price',''),
+                request.form.get('bedrooms','0'),
+                request.form.get('bathrooms','1'),
+                request.form.get('floor','Ground'),
+                request.form.get('furnished','Unfurnished'),
+                request.form.get('tenant_preference','Family'),
+                desc_full, auto_approve))
+            pid = cur.lastrowid
+            cat = 'rent'
+            msg = (
+                f"🏠 *Nai Rent Listing!*\n"
+                f"━━━━━━━━━━━━━━━━\n"
+                f"👤 Naam: {request.form.get('owner_name')}\n"
+                f"📞 Phone: {request.form.get('owner_phone')}\n"
+                f"🏡 Property: {request.form.get('title')}\n"
+                f"📍 Area: {request.form.get('location')}\n"
+                f"💰 Kiraya: Rs. {request.form.get('price')}/month\n"
+                f"🛏 Beds: {request.form.get('bedrooms')}\n"
+                f"🔑 Type: {request.form.get('owner_type','Owner')}\n"
+                f"━━━━━━━━━━━━━━━━\n"
+                f"Admin: https://apnagharkarachi.com/admin/panel"
+            )
+        else:
+            cur.execute('''INSERT INTO sale_properties
+                (user_id, owner_name, owner_phone, title, location, area,
+                 property_type, price, bedrooms, bathrooms,
+                 total_area, possession, description, is_approved)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
+                session.get('user_id'),
+                request.form.get('owner_name',''),
+                request.form.get('owner_phone',''),
+                request.form.get('title',''),
+                request.form.get('location',''),
+                request.form.get('area',''),
+                request.form.get('property_type',''),
+                request.form.get('price',''),
+                request.form.get('bedrooms','0'),
+                request.form.get('bathrooms','1'),
+                request.form.get('total_area',''),
+                request.form.get('possession','Immediate'),
+                desc_full, auto_approve))
+            pid = cur.lastrowid
+            cat = 'sale'
+            msg = (
+                f"🏡 *Nai Sale Listing!*\n"
+                f"━━━━━━━━━━━━━━━━\n"
+                f"👤 Naam: {request.form.get('owner_name')}\n"
+                f"📞 Phone: {request.form.get('owner_phone')}\n"
+                f"🏠 Property: {request.form.get('title')}\n"
+                f"📍 Area: {request.form.get('location')}\n"
+                f"💰 Qeemat: Rs. {request.form.get('price')}\n"
+                f"🛏 Beds: {request.form.get('bedrooms')}\n"
+                f"🔑 Type: {request.form.get('owner_type','Owner')}\n"
+                f"━━━━━━━━━━━━━━━━\n"
+                f"Admin: https://apnagharkarachi.com/admin/panel"
+            )
+
+        # Upload photos to Cloudinary
+        for f in request.files.getlist('images'):
+            if f and f.filename:
+                url = upload_to_cloudinary(f, prefix=f"{cat}_{pid}_") if _cloudinary_ready() else None
+                if url:
+                    cur.execute(
+                        "INSERT INTO property_images (property_id, property_cat, filename) VALUES (?,?,?)",
+                        (pid, cat, url))
+
+        conn.commit()
+        conn.close()
+
+        # WhatsApp notification for admin
+        session['wa_notify'] = wa_link(msg)
+        flash('🎉 Aapki property listing submit ho gayi! Hum 24 ghante mein review karke publish kar denge. WhatsApp par rabta hoga.', 'success')
+        return redirect(url_for('submit_property'))
+
+    return render_template('submit_property.html')
+
 @app.route('/purchase-requirement', methods=['GET','POST'])
 def purchase_chahiye():
     if request.method == 'POST':
