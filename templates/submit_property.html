@@ -133,8 +133,8 @@
                             <div class="col-12">
                                 <label class="form-label fw-semibold">Area / Society <span class="required-star">*</span></label>
                                 <input type="text" name="location" class="form-control" required
-                                       placeholder="e.g. DHA Phase 6, Gulshan-e-Iqbal, Clifton, North Nazimabad">
-                                <div class="form-text">Popular: DHA · Clifton · Gulshan · North Nazimabad · Akhtar Colony · PECHS</div>
+                                       placeholder="e.g. DHA Phase 6, Gulshan-e-Iqbal, North Nazimabad">
+                                <div class="form-text">📍 Just the area is fine — exact address is never shown publicly</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Block / Sector</label>
@@ -145,9 +145,9 @@
                                 <input type="text" name="street" class="form-control" placeholder="e.g. Street 12, Main Road">
                             </div>
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Full Address <span class="required-star">*</span></label>
-                                <input type="text" name="area" class="form-control" required
-                                       placeholder="e.g. House 15, Street 8, Block B, North Nazimabad, Karachi">
+                                <label class="form-label fw-semibold">Full Address <span class="text-muted" style="font-size:.8rem;">(optional — shared only with serious buyers)</span></label>
+                                <input type="text" name="area" class="form-control"
+                                       placeholder="e.g. Block B, North Nazimabad — exact address shared privately">
                             </div>
                         </div>
                     </div>
@@ -385,8 +385,7 @@ function goStep(n) {
     if (n > currentStep) {
         if (currentStep === 2) {
             const loc = document.querySelector('input[name="location"]').value.trim();
-            const addr = document.querySelector('input[name="area"]').value.trim();
-            if (!loc || !addr) { alert('Please fill in Area and Full Address.'); return; }
+            if (!loc) { alert('Please fill in the Area / Society.'); return; }
         }
         if (currentStep === 3) {
             const title = document.querySelector('input[name="title"]').value.trim();
