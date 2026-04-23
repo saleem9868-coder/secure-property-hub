@@ -681,7 +681,6 @@ def rent_detail(pid):
     return render_template('property_detail.html', prop=prop, images=images, cat='rent', is_saved=is_saved)
 
 @app.route('/list-for-rent', methods=['GET','POST'])
-@login_required
 def rent_dena():
     if request.method == 'POST':
         conn = get_db()
@@ -690,7 +689,7 @@ def rent_dena():
         cur.execute('''INSERT INTO rent_properties (user_id,owner_name,owner_phone,title,location,area,
             property_type,price,bedrooms,bathrooms,floor,furnished,tenant_preference,description,is_approved)
             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
-            session['user_id'],
+            session.get('user_id'),
             request.form['owner_name'], request.form['owner_phone'],
             request.form['title'], request.form['location'], request.form['area'],
             request.form['property_type'], request.form['price'],
@@ -723,7 +722,7 @@ def rent_dena():
         )
         session['wa_notify'] = wa_link(msg)
         flash('Aapki property list ho gayi! Hum jald aap se rabta karenge.', 'success')
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('dashboard') if session.get('user_id') else url_for('index'))
     return render_template('rent_dena.html')
 
 @app.route('/rent-requirement', methods=['GET','POST'])
@@ -787,7 +786,6 @@ def sale_detail(pid):
     return render_template('property_detail.html', prop=prop, images=images, cat='sale', is_saved=is_saved)
 
 @app.route('/list-for-sale', methods=['GET','POST'])
-@login_required
 def sale_dena():
     if request.method == 'POST':
         conn = get_db()
@@ -796,7 +794,7 @@ def sale_dena():
         cur.execute('''INSERT INTO sale_properties (user_id,owner_name,owner_phone,title,location,area,
             property_type,price,bedrooms,bathrooms,total_area,possession,description,is_approved)
             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
-            session['user_id'],
+            session.get('user_id'),
             request.form['owner_name'], request.form['owner_phone'],
             request.form['title'], request.form['location'], request.form['area'],
             request.form['property_type'], request.form['price'],
@@ -828,7 +826,7 @@ def sale_dena():
         )
         session['wa_notify'] = wa_link(msg)
         flash('Aapki property sale listing ho gayi! Hum jald rabta karenge.', 'success')
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('dashboard') if session.get('user_id') else url_for('index'))
     return render_template('sale_dena.html')
 
 @app.route('/purchase-requirement', methods=['GET','POST'])
