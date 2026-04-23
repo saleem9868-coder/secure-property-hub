@@ -559,12 +559,12 @@ function updateSearchAction(val) {
         if (searchBtn) searchBtn.textContent = '🏠 List for Rent';
         if (typeSelect) typeSelect.closest('.col-md-4').style.display = 'none';
         if (locationInput) locationInput.placeholder = 'Click button to list your property for rent';
-        if (form) form.action = '/rent-dena';
+        if (form) form.action = '/list-for-rent';
     } else if (val === 'Sale') {
         if (searchBtn) searchBtn.textContent = '🏷️ List for Sale';
         if (typeSelect) typeSelect.closest('.col-md-4').style.display = 'none';
         if (locationInput) locationInput.placeholder = 'Click button to list your property for sale';
-        if (form) form.action = '/sale-dena';
+        if (form) form.action = '/list-for-sale';
     } else {
         if (searchBtn) searchBtn.textContent = '🔍 Search';
         if (typeSelect) typeSelect.closest('.col-md-4').style.display = '';
