@@ -342,6 +342,9 @@ class PGCursor:
     def __iter__(self):
         return iter(self.fetchall())
 
+def get_lang():
+    return 'en'
+
 def login_required(f):
     @wraps(f)
     def dec(*a, **kw):
@@ -623,6 +626,10 @@ def search():
     ptype    = request.args.get('type', '')
     bedrooms = request.args.get('beds', '')
 
+    if purpose in ('sale', 'buy'):
+        pass
+    elif purpose in ('tolet', 'to let'):
+        purpose = 'rent'
     if purpose in ('sale', 'buy'):
         q = ("SELECT DISTINCT ON (s.id) s.*, pi.filename FROM sale_properties s "
              "LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' "
@@ -1480,8 +1487,13 @@ def admin_media_upload():
         if f and allowed_file(f.filename):
             fname = save_uploaded_file(f, subfolder)
             if fname:
-                size = os.path.getsize(os.path.join(subfolder, fname))
-                ext  = fname.rsplit('.', 1)[-1].lower()
+                # fname may be a Cloudinary URL (https://...) or a local filename
+                if fname.startswith('http://') or fname.startswith('https://'):
+                    size = 0
+                    ext = f.filename.rsplit('.', 1)[-1].lower() if '.' in f.filename else ''
+                else:
+                    size = os.path.getsize(os.path.join(subfolder, fname))
+                    ext  = fname.rsplit('.', 1)[-1].lower()
                 conn = get_db()
                 conn.execute(
                     "INSERT INTO media_library (filename, original_name, file_type, file_size, folder, alt_text) VALUES (?,?,?,?,?,?)",
@@ -1534,8 +1546,8 @@ def generate_pdf(vid):
         sub_s   = ParagraphStyle('S', parent=styles['Normal'], fontSize=10, textColor=colors.HexColor('#6b7a99'))
         lbl_s   = ParagraphStyle('L', parent=styles['Normal'], fontSize=9, textColor=colors.HexColor('#6b7a99'), fontName='Helvetica-Bold')
         val_s   = ParagraphStyle('V', parent=styles['Normal'], fontSize=11, textColor=colors.HexColor('#1a2535'))
-        story.append(Paragraph("SECURE PROPERTY HUB", title_s))
-        story.append(Paragraph("Akhtar Colony, Karachi | 03111820660 | saleem9868@gmail.com", sub_s))
+        story.append(Paragraph("APNAGHAR | اپنا گھر", title_s))
+        story.append(Paragraph("Akhtar Colony, Karachi | 0311-1820660 | apnagharkarachi.pk@gmail.com", sub_s))
         story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor('#c8973a')))
         story.append(Spacer(1, 0.4*cm))
         story.append(Paragraph("TENANT VERIFICATION REPORT", ParagraphStyle('R', parent=styles['Heading2'], fontSize=14, textColor=colors.HexColor('#2557a7'))))
