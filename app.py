@@ -618,12 +618,12 @@ def index():
 @app.route('/search')
 def search():
     conn = get_db()
-    purpose  = request.args.get('purpose', 'rent').lower()
+    purpose  = request.args.get('purpose', 'rent').strip().lower()
     location = request.args.get('location', '')
     ptype    = request.args.get('type', '')
     bedrooms = request.args.get('beds', '')
 
-    if purpose in ('buy', 'sale'):
+    if purpose in ('buy', 'sale', 'forsale', 'for sale'):
         q = ("SELECT DISTINCT ON (s.id) s.*, pi.filename FROM sale_properties s "
              "LEFT JOIN property_images pi ON s.id=pi.property_id AND pi.property_cat='sale' "
              "WHERE s.is_approved=1")
