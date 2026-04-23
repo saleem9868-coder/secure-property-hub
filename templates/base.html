@@ -320,6 +320,13 @@ Resources
                         {% endif %}
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('submit_property') }}"
+                       style="background:#c8973a;color:#fff!important;border-radius:8px;padding:6px 14px!important;font-weight:700;font-size:.88rem;white-space:nowrap;"
+                       class="nav-link">
+                        <i class="bi bi-plus-circle me-1"></i>List Property FREE
+                    </a>
+                </li>
                 {% if session.user_id %}
                 {% if not session.is_admin %}
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}"><i class="bi bi-person-circle me-1"></i>{{ session.user_name.split()[0] }}</a></li>
@@ -385,6 +392,7 @@ Resources
                     <li><a href="{{ url_for('purchase_lena') }}">🏡 Buy a Property</a></li>
                     <li><a href="{{ url_for('sale_dena') }}">🏷️ Sell My Property</a></li>
                     <li><a href="{{ url_for('purchase_chahiye') }}">📋 Submit Buy Requirement</a></li>
+                    <li><a href="{{ url_for('submit_property') }}" style="color:#f0c060;font-weight:600;">➕ List Property FREE</a></li>
                 </ul>
             </div>
             <div class="col-lg-4">
