@@ -67,8 +67,10 @@
                         <div class="col-md-4">
                             <select name="purpose" class="form-select rounded-pill"
                                     style="font-weight:500;border-color:#e0e0e0;font-size:.88rem;"
-                                    onchange="this.form.action=this.value=='Buy'?'{{ url_for('purchase_lena') }}':'{{ url_for('rent_lena') }}'">
+                                    onchange="this.form.action=(this.value=='Buy'||this.value=='Sale')?'{{ url_for('purchase_lena') }}':'{{ url_for('rent_lena') }}'">
                                 <option value="Rent">🔑 Rent</option>
+                                <option value="ToLet">🏠 To Let</option>
+                                <option value="Sale">🏷️ For Sale</option>
                                 <option value="Buy">🏡 Buy</option>
                             </select>
                         </div>
