@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy — ApnaGhar | اپنا گھر{% endblock %}
+{% block meta_desc %}Privacy Policy for ApnaGhar — Karachi's trusted property portal. Learn how we collect, use, and protect your personal information.{% endblock %}
+
+{% block content %}
+<div class="page-hdr hdr-verif">
+    <div class="container">
+        <h1 class="mb-2">🔒 Privacy Policy</h1>
+        <p class="mb-0">Last updated: April 2026</p>
+    </div>
+</div>
+
+<section class="py-5" style="background:var(--light-bg);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="p-4 rounded-3" style="background:#fff;border:1px solid var(--card-border);">
+
+                    <h4 style="color:var(--primary);">1. Who We Are</h4>
+                    <p>ApnaGhar (اپنا گھر) is a Karachi-based property portal operated from Akhtar Colony, Karachi, Pakistan. We help people rent, buy, and sell property in Karachi. You can contact us at <a href="mailto:apnagharkarachi.pk@gmail.com">apnagharkarachi.pk@gmail.com</a> or by calling <a href="tel:03111820660">0311-1820660</a>.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">2. What Information We Collect</h4>
+                    <p>We collect information you provide directly to us, including:</p>
+                    <ul>
+                        <li><strong>Contact details</strong> — name, phone number, and email address when you submit an enquiry, requirement form, or register an account.</li>
+                        <li><strong>Property information</strong> — details of properties you list with us (address, price, photos, etc.).</li>
+                        <li><strong>Usage data</strong> — pages visited, search queries, and browser type, collected automatically via Google Analytics.</li>
+                    </ul>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">3. How We Use Your Information</h4>
+                    <p>We use your information to:</p>
+                    <ul>
+                        <li>Respond to your enquiries and match you with suitable properties.</li>
+                        <li>List properties on your behalf and notify you of relevant listings.</li>
+                        <li>Send you service-related messages via WhatsApp or phone.</li>
+                        <li>Improve our website using anonymised analytics data.</li>
+                    </ul>
+                    <p>We do <strong>not</strong> sell your personal data to third parties.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">4. WhatsApp & Phone Communication</h4>
+                    <p>When you submit a form on our website, your name, phone number, and enquiry details may be shared with our agents via WhatsApp to allow us to respond to your request. By submitting a form, you consent to being contacted by our team on the phone number you provided.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">5. Cookies & Analytics</h4>
+                    <p>We use Google Analytics to understand how visitors use our website. This service may set cookies on your device and collect anonymised data about your visit (pages viewed, time spent, approximate location). You can opt out of Google Analytics by installing the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a>.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">6. Data Retention</h4>
+                    <p>We retain your contact information for as long as necessary to fulfil the purpose for which it was collected, or as required by Pakistani law. You may request deletion of your data at any time by contacting us.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">7. Third-Party Services</h4>
+                    <p>Our website uses the following third-party services which may process your data under their own privacy policies:</p>
+                    <ul>
+                        <li><strong>Cloudinary</strong> — for property image hosting.</li>
+                        <li><strong>Google Analytics</strong> — for website usage analytics.</li>
+                        <li><strong>Google Maps</strong> — for displaying location maps.</li>
+                        <li><strong>WhatsApp (Meta)</strong> — for click-to-chat enquiry links.</li>
+                    </ul>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">8. Your Rights</h4>
+                    <p>You have the right to request access to, correction of, or deletion of your personal data held by us. To exercise these rights, please contact us at <a href="mailto:apnagharkarachi.pk@gmail.com">apnagharkarachi.pk@gmail.com</a>.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">9. Changes to This Policy</h4>
+                    <p>We may update this Privacy Policy from time to time. The updated version will be posted on this page with a revised date. Continued use of our website constitutes acceptance of the updated policy.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">10. Contact Us</h4>
+                    <p>If you have any questions about this Privacy Policy, please contact us:</p>
+                    <ul>
+                        <li>📍 Akhtar Colony, Karachi, Pakistan</li>
+                        <li>📞 <a href="tel:03111820660">0311-1820660</a></li>
+                        <li>✉️ <a href="mailto:apnagharkarachi.pk@gmail.com">apnagharkarachi.pk@gmail.com</a></li>
+                    </ul>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-primary px-4">← Back to Home</a>
+                        <a href="{{ url_for('contact') }}" class="btn btn-primary px-4">Contact Us</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
