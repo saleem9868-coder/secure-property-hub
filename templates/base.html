@@ -220,7 +220,6 @@ font-family:'Playfair Display',serif;
 
     <!-- ═══ GOOGLE ANALYTICS ═══ -->
     <!-- Replace G-XXXXXXXXXX with your real Measurement ID from analytics.google.com -->
-    <!--
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -228,7 +227,6 @@ font-family:'Playfair Display',serif;
       gtag('js', new Date());
       gtag('config', 'G-XXXXXXXXXX');
     </script>
-    -->
 
     <!-- ═══ PWA — Progressive Web App ═══ -->
     <link rel="manifest" href="/manifest.json">
@@ -404,8 +402,8 @@ Resources
             <div class="d-flex gap-3 mt-2 mt-md-0">
                 <a href="{{ url_for('about') }}" style="color:rgba(255,255,255,.6);">About</a>
                 <a href="{{ url_for('contact') }}" style="color:rgba(255,255,255,.6);">Contact</a>
-                <a href="/privacy-policy" style="color:rgba(255,255,255,.6);">Privacy</a>
-                <a href="/terms" style="color:rgba(255,255,255,.6);">Terms</a>
+                <a href="{{ url_for('privacy_policy') }}" style="color:rgba(255,255,255,.6);">Privacy</a>
+                <a href="{{ url_for('terms') }}" style="color:rgba(255,255,255,.6);">Terms</a>
             </div>
             <p class="mb-0 mt-2 mt-md-0">Akhtar Colony, Karachi, Pakistan</p>
         </div>
