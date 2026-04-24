@@ -526,6 +526,14 @@ def init_db():
         alt_text TEXT DEFAULT '',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
 
+    c.execute('''CREATE TABLE IF NOT EXISTS contact_enquiries (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        phone TEXT NOT NULL,
+        subject TEXT DEFAULT '',
+        message TEXT DEFAULT '',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+
     # Seed default menu items if empty
     c.execute("SELECT COUNT(*) as cnt FROM menu_items")
     row = c.fetchone()
@@ -1603,9 +1611,45 @@ def area_guide():
 def about():
     return redirect(url_for('cms_page', slug='about-us'), 301)
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return redirect(url_for('cms_page', slug='contact-us'), 301)
+    if request.method == 'POST':
+        name    = request.form.get('name', '').strip()
+        phone   = request.form.get('phone', '').strip()
+        subject = request.form.get('subject', 'General Enquiry').strip()
+        message = request.form.get('message', '').strip()
+        if not name or not phone:
+            flash('Naam aur phone number zaroor bharein.', 'warning')
+            return redirect(url_for('contact'))
+        # Save to DB
+        conn = get_db()
+        conn.execute(
+            'INSERT INTO contact_enquiries (name, phone, subject, message) VALUES (?, ?, ?, ?)',
+            (name, phone, subject, message))
+        conn.commit(); conn.close()
+        # WhatsApp notification to admin
+        msg = (
+            f"\U0001f4e9 *Naya Contact Enquiry!*\n"
+            f"\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"
+            f"\U0001f464 Naam: {name}\n"
+            f"\U0001f4de Phone: {phone}\n"
+            f"\U0001f4cb Subject: {subject}\n"
+            f"\U0001f4ac Message: {message}\n"
+            f"\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n"
+            f"Admin: https://apnagharkarachi.com/admin/panel"
+        )
+        session['wa_notify'] = wa_link(msg)
+        flash('Shukriya! Aapka paigham mil gaya. Hum 24 ghante mein rabta karenge.', 'success')
+        return redirect(url_for('contact'))
+    return render_template('contact.html')
+
+@app.route('/privacy-policy')
+def privacy_policy():
+    return render_template('privacy_policy.html')
+
+@app.route('/terms')
+def terms():
+    return render_template('terms.html')
 
 # ─── DYNAMIC BLOG ROUTES ─────────────────────────────────────────────────────
 
