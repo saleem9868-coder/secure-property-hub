@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Terms of Service — ApnaGhar | اپنا گھر{% endblock %}
+{% block meta_desc %}Terms of Service for ApnaGhar — Karachi's trusted property portal. Read the terms governing your use of our website and services.{% endblock %}
+
+{% block content %}
+<div class="page-hdr hdr-verif">
+    <div class="container">
+        <h1 class="mb-2">📄 Terms of Service</h1>
+        <p class="mb-0">Last updated: April 2026</p>
+    </div>
+</div>
+
+<section class="py-5" style="background:var(--light-bg);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="p-4 rounded-3" style="background:#fff;border:1px solid var(--card-border);">
+
+                    <p>By accessing or using the ApnaGhar website at <strong>apnagharkarachi.com</strong>, you agree to be bound by these Terms of Service. Please read them carefully before using our services.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">1. About Our Service</h4>
+                    <p>ApnaGhar is a free property portal connecting property owners, landlords, and buyers/renters in Karachi, Pakistan. We act as an intermediary platform and do not hold, manage, or take ownership of any listed property.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">2. Free Listings</h4>
+                    <p>Property listings on ApnaGhar are currently offered free of charge. We reserve the right to introduce paid plans or premium features in the future, with notice to users.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">3. Accuracy of Listings</h4>
+                    <p>Property owners and agents are solely responsible for the accuracy, legality, and completeness of their listings. ApnaGhar does not independently verify all listing details. Users should conduct their own due diligence before entering into any property transaction.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">4. Prohibited Use</h4>
+                    <p>You must not use this website to:</p>
+                    <ul>
+                        <li>Post false, misleading, or fraudulent property listings.</li>
+                        <li>Harass, spam, or send unsolicited messages to other users or our team.</li>
+                        <li>Scrape, copy, or redistribute our content without permission.</li>
+                        <li>Attempt to gain unauthorised access to our systems or data.</li>
+                        <li>List properties you do not own or have no authority to list.</li>
+                    </ul>
+                    <p>We reserve the right to remove any listing and suspend any account that violates these terms.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">5. No Guarantee of Transactions</h4>
+                    <p>ApnaGhar facilitates connections between parties but is not a party to any rental or sale agreement. We do not guarantee that any listing will result in a completed transaction, nor do we guarantee the conduct of any user on our platform.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">6. Document Services</h4>
+                    <p>Our document services (rent agreements, tenant verification assistance, etc.) are provided as a convenience. ApnaGhar staff are not licensed lawyers. For complex legal matters, you should seek advice from a qualified legal professional.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">7. Intellectual Property</h4>
+                    <p>The ApnaGhar name, logo, and all website content (excluding user-submitted property listings) are the property of ApnaGhar. You may not reproduce, distribute, or create derivative works from our content without prior written permission.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">8. Limitation of Liability</h4>
+                    <p>ApnaGhar is provided on an "as is" basis. To the fullest extent permitted by Pakistani law, we are not liable for any direct, indirect, or consequential loss arising from your use of the website or reliance on any listing or information published on it.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">9. Changes to These Terms</h4>
+                    <p>We may update these Terms of Service at any time. The revised terms will be posted on this page with an updated date. Continued use of the website after changes constitutes your acceptance of the new terms.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">10. Governing Law</h4>
+                    <p>These terms are governed by the laws of the Islamic Republic of Pakistan. Any disputes arising from the use of this website shall be subject to the jurisdiction of the courts of Karachi, Sindh.</p>
+
+                    <hr>
+                    <h4 style="color:var(--primary);">11. Contact Us</h4>
+                    <p>For any questions about these Terms, please contact us:</p>
+                    <ul>
+                        <li>📍 Akhtar Colony, Karachi, Pakistan</li>
+                        <li>📞 <a href="tel:03111820660">0311-1820660</a></li>
+                        <li>✉️ <a href="mailto:apnagharkarachi.pk@gmail.com">apnagharkarachi.pk@gmail.com</a></li>
+                    </ul>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-primary px-4">← Back to Home</a>
+                        <a href="{{ url_for('privacy_policy') }}" class="btn btn-outline-secondary px-4">Privacy Policy</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
