@@ -321,11 +321,16 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">You are the</label>
-                                <select name="owner_type" class="form-select">
+                                <select name="owner_type" class="form-select" id="ownerTypeSelect" onchange="toggleAgencyField()">
                                     <option>Owner</option>
                                     <option>Agent / Broker</option>
                                     <option>Developer</option>
                                 </select>
+                            </div>
+                            <div class="col-md-6" id="agencyNameField" style="display:none;">
+                                <label class="form-label fw-semibold">Agency / Company Name</label>
+                                <input type="text" name="agency_name" class="form-control"
+                                       placeholder="e.g. Hibba Real Estate">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Best time to call</label>
@@ -452,6 +457,12 @@ function buildSummary() {
         <b>Photos:</b> ${photos} uploaded<br>
         ${amenities ? '<b>Amenities:</b> ' + amenities + '<br>' : ''}
     `;
+}
+
+function toggleAgencyField() {
+    const type = document.getElementById('ownerTypeSelect').value;
+    const field = document.getElementById('agencyNameField');
+    field.style.display = (type === 'Agent / Broker' || type === 'Developer') ? 'block' : 'none';
 }
 </script>
 {% endblock %}
