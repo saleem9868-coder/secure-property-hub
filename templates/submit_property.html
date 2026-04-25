@@ -353,7 +353,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <button type="button" class="btn btn-outline-secondary rounded-pill px-4" onclick="goStep(4)">← Back</button>
                     </div>
-                    <button type="submit" class="btn-submit">
+                    <button type="submit" class="btn-submit" onclick="return validateCurrentStep()">
                         ✅ Submit Property Listing — FREE
                     </button>
                     <p class="text-center text-muted mt-2" style="font-size:.8rem;">
@@ -385,18 +385,72 @@ function setPurpose(p, btn) {
     document.getElementById('priceInput').placeholder = p === 'rent' ? 'e.g. 35,000' : 'e.g. 2,50,00,000';
 }
 
+function showError(el, msg) {
+    clearError(el);
+    el.style.border = '2px solid #e53935';
+    const err = document.createElement('div');
+    err.className = '_ferr';
+    err.style.cssText = 'color:#e53935;font-size:.78rem;margin-top:4px;';
+    err.textContent = '⚠ ' + msg;
+    el.parentNode.appendChild(err);
+    el.focus();
+}
+
+function clearError(el) {
+    el.style.border = '';
+    const old = el.parentNode.querySelector('._ferr');
+    if (old) old.remove();
+}
+
+function validateCurrentStep() {
+    if (currentStep === 1) {
+        // property_type is always pre-selected — always passes
+        return true;
+    }
+    if (currentStep === 2) {
+        const loc = document.querySelector('input[name="location"]');
+        const area = document.querySelector('input[name="area"]');
+        let ok = true;
+        if (!loc.value.trim()) { showError(loc, 'Please enter the area / society.'); ok = false; }
+        else clearError(loc);
+        if (ok && !area.value.trim()) { showError(area, 'Please enter the full address.'); ok = false; }
+        else if (ok) clearError(area);
+        return ok;
+    }
+    if (currentStep === 3) {
+        const title = document.querySelector('input[name="title"]');
+        const price = document.querySelector('input[name="price"]');
+        let ok = true;
+        if (!title.value.trim()) { showError(title, 'Please enter a property title.'); ok = false; }
+        else clearError(title);
+        if (!price.value.trim()) { showError(price, 'Please enter the price.'); ok = false; }
+        else clearError(price);
+        return ok;
+    }
+    if (currentStep === 4) {
+        // Photos optional — always passes
+        return true;
+    }
+    if (currentStep === 5) {
+        const name = document.querySelector('input[name="owner_name"]');
+        const phone = document.querySelector('input[name="owner_phone"]');
+        let ok = true;
+        if (!name.value.trim()) { showError(name, 'Please enter your full name.'); ok = false; }
+        else clearError(name);
+        if (!phone.value.trim()) { showError(phone, 'Please enter your WhatsApp number.'); ok = false; }
+        else if (!/^0\d{9,10}$/.test(phone.value.replace(/[-\s]/g,''))) {
+            showError(phone, 'Enter a valid Pakistani number e.g. 03001234567'); ok = false;
+        }
+        else clearError(phone);
+        return ok;
+    }
+    return true;
+}
+
 function goStep(n) {
-    // Basic validation before leaving step
+    // Validate before moving forward
     if (n > currentStep) {
-        if (currentStep === 2) {
-            const loc = document.querySelector('input[name="location"]').value.trim();
-            if (!loc) { alert('Please fill in the Area / Society.'); return; }
-        }
-        if (currentStep === 3) {
-            const title = document.querySelector('input[name="title"]').value.trim();
-            const price = document.querySelector('input[name="price"]').value.trim();
-            if (!title || !price) { alert('Please fill in Property Title and Price.'); return; }
-        }
+        if (!validateCurrentStep()) return;
     }
     document.getElementById('step' + currentStep).style.display = 'none';
     document.getElementById('step' + n).style.display = 'block';
@@ -464,5 +518,17 @@ function toggleAgencyField() {
     const field = document.getElementById('agencyNameField');
     field.style.display = (type === 'Agent / Broker' || type === 'Developer') ? 'block' : 'none';
 }
+
+// Auto-select purpose from URL param e.g. ?purpose=sale or ?purpose=rent
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const p = params.get('purpose');
+    if (p === 'sale') {
+        const btns = document.querySelectorAll('.purpose-btn');
+        btns.forEach(b => b.classList.remove('active'));
+        btns[1] && btns[1].classList.add('active');
+        document.getElementById('purposeInput').value = 'sale';
+    }
+})();
 </script>
 {% endblock %}
