@@ -474,6 +474,13 @@ def init_db():
         except Exception:
             pass
 
+    # Add agency_name to rent and sale properties (safe for existing DBs)
+    for table in ['rent_properties', 'sale_properties']:
+        try:
+            c.execute(f"ALTER TABLE {table} ADD COLUMN agency_name TEXT DEFAULT ''")
+        except Exception:
+            pass
+
     # ── NEW CMS Tables ───────────────────────────────────────────────────────
 
     # Pages CMS
@@ -702,8 +709,8 @@ def rent_dena():
         cur = conn.cursor()
         auto_approve = 1 if session.get('is_admin') else 0
         cur.execute('''INSERT INTO rent_properties (user_id,owner_name,owner_phone,title,location,area,
-            property_type,price,bedrooms,bathrooms,floor,furnished,tenant_preference,description,is_approved)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
+            property_type,price,bedrooms,bathrooms,floor,furnished,tenant_preference,description,is_approved,agency_name)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
             session.get('user_id'),
             request.form['owner_name'], request.form['owner_phone'],
             request.form['title'], request.form['location'], request.form['area'],
@@ -711,7 +718,8 @@ def rent_dena():
             request.form['bedrooms'], request.form.get('bathrooms','1'),
             request.form.get('floor',''), request.form.get('furnished','Unfurnished'),
             request.form.get('tenant_preference','Family'),
-            request.form['description'], auto_approve))
+            request.form['description'], auto_approve,
+            request.form.get('agency_name','')))
         pid = cur.lastrowid
         print(f"DEBUG rent_dena: pid={pid}")
         for f in request.files.getlist('images'):
@@ -807,15 +815,16 @@ def sale_dena():
         cur = conn.cursor()
         auto_approve = 1 if session.get('is_admin') else 0
         cur.execute('''INSERT INTO sale_properties (user_id,owner_name,owner_phone,title,location,area,
-            property_type,price,bedrooms,bathrooms,total_area,possession,description,is_approved)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
+            property_type,price,bedrooms,bathrooms,total_area,possession,description,is_approved,agency_name)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
             session.get('user_id'),
             request.form['owner_name'], request.form['owner_phone'],
             request.form['title'], request.form['location'], request.form['area'],
             request.form['property_type'], request.form['price'],
             request.form['bedrooms'], request.form.get('bathrooms','1'),
             request.form.get('total_area',''), request.form.get('possession','Immediate'),
-            request.form['description'], auto_approve))
+            request.form['description'], auto_approve,
+            request.form.get('agency_name','')))
         pid = cur.lastrowid
         print(f"DEBUG sale_dena: pid={pid}")
         for f in request.files.getlist('images'):
@@ -871,8 +880,8 @@ def submit_property():
             cur.execute('''INSERT INTO rent_properties
                 (user_id, owner_name, owner_phone, title, location, area,
                  property_type, price, bedrooms, bathrooms,
-                 floor, furnished, tenant_preference, description, is_approved)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
+                 floor, furnished, tenant_preference, description, is_approved, agency_name)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
                 session.get('user_id'),
                 request.form.get('owner_name',''),
                 request.form.get('owner_phone',''),
@@ -886,7 +895,8 @@ def submit_property():
                 request.form.get('floor','Ground'),
                 request.form.get('furnished','Unfurnished'),
                 request.form.get('tenant_preference','Family'),
-                desc_full, auto_approve))
+                desc_full, auto_approve,
+                request.form.get('agency_name','')))
             pid = cur.lastrowid
             cat = 'rent'
             msg = (
@@ -906,8 +916,8 @@ def submit_property():
             cur.execute('''INSERT INTO sale_properties
                 (user_id, owner_name, owner_phone, title, location, area,
                  property_type, price, bedrooms, bathrooms,
-                 total_area, possession, description, is_approved)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
+                 total_area, possession, description, is_approved, agency_name)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
                 session.get('user_id'),
                 request.form.get('owner_name',''),
                 request.form.get('owner_phone',''),
@@ -920,7 +930,8 @@ def submit_property():
                 request.form.get('bathrooms','1'),
                 request.form.get('total_area',''),
                 request.form.get('possession','Immediate'),
-                desc_full, auto_approve))
+                desc_full, auto_approve,
+                request.form.get('agency_name','')))
             pid = cur.lastrowid
             cat = 'sale'
             msg = (
