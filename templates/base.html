@@ -279,7 +279,7 @@ font-family:'Playfair Display',serif;
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ url_for('rent_lena') }}"><em class="di">🔑</em><span class="dt">Rent a Property</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('rent_dena') }}"><em class="di">🏠</em><span class="dt">List for Rent</span></a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('submit_property') }}?purpose=rent"><em class="di">🏠</em><span class="dt">List for Rent</span></a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ url_for('rent_chahiye') }}"><em class="di">📋</em><span class="dt">Submit Rent Requirement</span></a></li>
                     </ul>
@@ -290,7 +290,7 @@ font-family:'Playfair Display',serif;
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ url_for('purchase_lena') }}"><em class="di">🏡</em><span class="dt">Buy a Property</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('sale_dena') }}"><em class="di">🏷️</em><span class="dt">Sell My Property</span></a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('submit_property') }}?purpose=sale"><em class="di">🏷️</em><span class="dt">Sell My Property</span></a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ url_for('purchase_chahiye') }}"><em class="di">📋</em><span class="dt">Submit Buy Requirement</span></a></li>
                     </ul>
@@ -373,7 +373,7 @@ Resources
                 <h6 class="mb-2" style="font-size:.9rem;">Rent</h6>
                 <ul>
                     <li><a href="{{ url_for('rent_lena') }}">🔑 Rent a Property</a></li>
-                    <li><a href="{{ url_for('rent_dena') }}">🏠 List for Rent</a></li>
+                    <li><a href="{{ url_for('submit_property') }}?purpose=rent">🏠 List for Rent</a></li>
                     <li><a href="{{ url_for('rent_chahiye') }}">📋 Submit Rent Requirement</a></li>
                 </ul>
             </div>
@@ -381,7 +381,7 @@ Resources
                 <h6 class="mb-2" style="font-size:.9rem;">Buy / Sell</h6>
                 <ul>
                     <li><a href="{{ url_for('purchase_lena') }}">🏡 Buy a Property</a></li>
-                    <li><a href="{{ url_for('sale_dena') }}">🏷️ Sell My Property</a></li>
+                    <li><a href="{{ url_for('submit_property') }}?purpose=sale">🏷️ Sell My Property</a></li>
                     <li><a href="{{ url_for('purchase_chahiye') }}">📋 Submit Buy Requirement</a></li>
                     <li><a href="{{ url_for('submit_property') }}" style="color:#f0c060;font-weight:600;">➕ List Property FREE</a></li>
                 </ul>
