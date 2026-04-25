@@ -180,7 +180,7 @@
                 </a>
             </div>
             <div class="col-6 col-md-3">
-                <a href="{{ url_for('rent_dena') }}" class="action-card card-rd">
+                <a href="{{ url_for('submit_property') }}?purpose=rent" class="action-card card-rd">
                     <span class="c-icon">🏠</span>
                     <div class="c-title">List for Rent</div>
                     <div class="c-sub">Free in 5 minutes</div>
@@ -194,7 +194,7 @@
                 </a>
             </div>
             <div class="col-6 col-md-3">
-                <a href="{{ url_for('sale_dena') }}" class="action-card card-sell">
+                <a href="{{ url_for('submit_property') }}?purpose=sale" class="action-card card-sell">
                     <span class="c-icon">🏷️</span>
                     <div class="c-title">Sell Property</div>
                     <div class="c-sub">Fast & hassle-free</div>
@@ -568,12 +568,12 @@ function updateSearchAction(val) {
         if (searchBtn) searchBtn.textContent = '🏠 List for Rent';
         if (typeSelect) typeSelect.closest('.col-md-4').style.display = 'none';
         if (locationInput) locationInput.placeholder = 'Click button to list your property for rent';
-        if (form) form.action = '/list-for-rent';
+        if (form) form.action = '/submit-property?purpose=rent';
     } else if (val === 'Sale') {
         if (searchBtn) searchBtn.textContent = '🏷️ List for Sale';
         if (typeSelect) typeSelect.closest('.col-md-4').style.display = 'none';
         if (locationInput) locationInput.placeholder = 'Click button to list your property for sale';
-        if (form) form.action = '/list-for-sale';
+        if (form) form.action = '/submit-property?purpose=sale';
     } else {
         if (searchBtn) searchBtn.textContent = '🔍 Search';
         if (typeSelect) typeSelect.closest('.col-md-4').style.display = '';
