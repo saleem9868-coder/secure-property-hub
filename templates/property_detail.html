@@ -264,12 +264,8 @@
             </div>
           </div>
           {% if prop.owner_phone %}
-          <a href="tel:{{ prop.owner_phone }}" style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--gray-50);border-radius:10px;border:1px solid var(--gray-200);text-decoration:none;color:inherit;">
-            <span style="font-size:22px;">📞</span>
-            <div>
-              <div style="font-size:14px;font-weight:600;">{{ prop.owner_phone }}</div>
-              <div style="font-size:12px;color:var(--gray-400);">Tap to call</div>
-            </div>
+          <a href="tel:{{ prop.owner_phone }}" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;background:#25a244;border-radius:10px;text-decoration:none;color:#fff;font-weight:700;font-size:.95rem;">
+            <span style="font-size:20px;">📞</span> Call Now
           </a>
           {% endif %}
         </div>
@@ -346,7 +342,7 @@
         </a>
         {% if prop.owner_phone %}
         <a href="tel:{{ prop.owner_phone }}" class="cta-btn-det cta-call">
-          📞 Call: {{ prop.owner_phone }}
+          📞 Call Now
         </a>
         {% else %}
         <a href="tel:03111820660" class="cta-btn-det cta-call">📞 Call ApnaGhar</a>
