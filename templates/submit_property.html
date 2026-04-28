@@ -43,11 +43,52 @@
                 font-size: .82rem; cursor: pointer; background: #fff; color: #555; transition: all .2s; user-select: none; }
 .amenity-chip.on { border-color: #1a3c5e; background: #e8f0fb; color: #1a3c5e; font-weight: 600; }
 
+/* ── Terms Consent Box ── */
+.terms-consent-box {
+    background: #f0f6ff;
+    border: 1.5px solid #c5d9f0;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 1.2rem;
+}
+.terms-consent-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+}
+.terms-consent-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    margin-top: 3px;
+    accent-color: #1a3c5e;
+    cursor: pointer;
+}
+.terms-consent-row .tc-text {
+    font-size: .88rem;
+    color: #2a3a4a;
+    line-height: 1.6;
+}
+.terms-consent-row .tc-text a {
+    color: #1a6fc4;
+    text-decoration: underline;
+    font-weight: 600;
+}
+.terms-consent-note {
+    font-size: .78rem;
+    color: #777;
+    margin-top: 8px;
+    padding-left: 30px;
+}
+
 /* Submit button */
 .btn-submit { background: #1a3c5e; color: #fff; border: none; border-radius: 12px;
               padding: 14px 40px; font-size: 1rem; font-weight: 700; width: 100%;
-              cursor: pointer; transition: background .2s; margin-top: .5rem; }
-.btn-submit:hover { background: #c8973a; }
+              cursor: pointer; transition: background .2s, opacity .2s; margin-top: .5rem;
+              opacity: 0.45; pointer-events: none; }
+.btn-submit.enabled { opacity: 1; pointer-events: auto; }
+.btn-submit.enabled:hover { background: #c8973a; }
 
 /* Success screen */
 .success-screen { display: none; text-align: center; padding: 3rem 1rem; }
@@ -350,10 +391,29 @@
                         <div id="summaryBox" style="font-size:.9rem; line-height:2; color:#333;"></div>
                     </div>
 
+                    <!-- TERMS & CONDITIONS CONSENT -->
+                    <div class="terms-consent-box">
+                        <div class="terms-consent-row" onclick="toggleTerms(event)">
+                            <input type="checkbox" id="termsCheck" name="terms_agreed" value="yes" onchange="toggleSubmitBtn()">
+                            <span class="tc-text">
+                                میں تصدیق کرتا/کرتی ہوں کہ تمام معلومات درست ہیں اور میں
+                                <a href="{{ url_for('terms') }}" target="_blank" onclick="event.stopPropagation()">Terms &amp; Conditions</a>
+                                اور
+                                <a href="{{ url_for('privacy_policy') }}" target="_blank" onclick="event.stopPropagation()">Privacy Policy</a>
+                                سے متفق ہوں۔<br>
+                                <span style="font-size:.82rem;color:#555;">I confirm all information is accurate and I agree to the
+                                <a href="{{ url_for('terms') }}" target="_blank" onclick="event.stopPropagation()">Terms &amp; Conditions</a>
+                                and <a href="{{ url_for('privacy_policy') }}" target="_blank" onclick="event.stopPropagation()">Privacy Policy</a>
+                                of apnagharkarachi.com.</span>
+                            </span>
+                        </div>
+                        <p class="terms-consent-note">⚠ You must tick this box to submit your listing.</p>
+                    </div>
+
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <button type="button" class="btn btn-outline-secondary rounded-pill px-4" onclick="goStep(4)">← Back</button>
                     </div>
-                    <button type="submit" class="btn-submit" onclick="return validateCurrentStep()">
+                    <button type="submit" class="btn-submit" id="submitBtn" onclick="return validateCurrentStep()">
                         ✅ Submit Property Listing — FREE
                     </button>
                     <p class="text-center text-muted mt-2" style="font-size:.8rem;">
@@ -442,9 +502,28 @@ function validateCurrentStep() {
             showError(phone, 'Enter a valid Pakistani number e.g. 03001234567'); ok = false;
         }
         else clearError(phone);
+        if (!document.getElementById('termsCheck').checked) {
+            const box = document.querySelector('.terms-consent-box');
+            box.style.border = '2px solid #e53935';
+            box.style.background = '#fff5f5';
+            setTimeout(() => { box.style.border = '1.5px solid #c5d9f0'; box.style.background = '#f0f6ff'; }, 3000);
+            ok = false;
+        }
         return ok;
     }
     return true;
+}
+
+function toggleTerms(e) {
+    const cb = document.getElementById('termsCheck');
+    if (e && e.target !== cb) cb.checked = !cb.checked;
+    toggleSubmitBtn();
+}
+
+function toggleSubmitBtn() {
+    const checked = document.getElementById('termsCheck').checked;
+    const btn = document.getElementById('submitBtn');
+    btn.classList.toggle('enabled', checked);
 }
 
 function goStep(n) {
